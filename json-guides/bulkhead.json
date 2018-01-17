@@ -1,0 +1,44 @@
+{
+    "name": "Bulkhead",
+    "title": "Bulkhead",
+    "description": "Using @Bulkhead to limit concurrent requests",
+    "duration": "25 minutes",
+    "audience": "developer",
+    "repo": "https://github.com/OpenLiberty/draft-iguide-bulkhead",
+    "steps": [
+        {
+            "name": "Intro",
+            "title": "What you'll learn",
+            "guide_duration" : "25 minutes",
+            "description": [""],
+            "sections" : [
+                {
+                  "name": "backgroundConcepts",
+                  "title": "Background concepts",
+                  "description": [
+                  ]
+                }
+            ]
+        },
+        {
+            "name": "ExampleScenario",
+            "title": "Example: Sinking Ship",
+            "description": []
+        },
+        {
+            "name": "EnableBulkhead",
+            "title": "Enabling Bulkhead",
+            "description": [
+                "Begin by enabling the MicroProfile Bulkhead 1.1 feature in your <code>server.xml</code> file. This feature allows you to use the @Bulkhead annotation."
+            ],
+            "instruction": [
+            ]
+        },
+        {
+            "name": "WhatNext",
+            "title": "Great work!  You're done!",
+            "description": []
+        }
+
+    ]
+}
