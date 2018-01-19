@@ -1,7 +1,7 @@
 {
     "name": "Bulkhead",
     "title": "Bulkhead",
-    "description": "Using @Bulkhead to limit concurrent requests",
+    "description": "Learn how to use the MicroProfile Bulkhead policy to prevent cascading failures.",
     "duration": "25 minutes",
     "audience": "developer",
     "repo": "https://github.com/OpenLiberty/draft-iguide-bulkhead",
@@ -10,13 +10,21 @@
             "name": "Intro",
             "title": "What you'll learn",
             "guide_duration" : "25 minutes",
-            "description": [""],
+            "description": [
+                "Explore how to prevent a single failure from bringing down the entire system. MicroProfile makes it easy to do this with the Bulkhead policy in its Fault Tolerance feature."
+            ],
             "sections" : [
                 {
-                  "name": "backgroundConcepts",
-                  "title": "Background concepts",
-                  "description": [
-                  ]
+                    "name": "backgroundConcepts",
+                    "title": "Background concepts",
+                    "description": [
+                        "We will use the MicroProfile <b>Bulkhead</b> and <b>Asynchronous</b> policies.<br>",
+                        "<h4>Bulkhead</h4>",
+                        "The term <b>bulkhead</b> comes from the structure used in ships to create partitions. In the event of a hull breach, these partitions can be sealed off to prevent the rest of the ship from getting damaged.<br>",
+                        "The bulkhead pattern in software systems work similarly by isolating failures to allow the rest of the system to continue functioning.<br>",
+                        "<h4>Asynchronous</h4>",
+                        "Asynchronous definition?"
+                    ]
                 }
             ]
         },
@@ -29,7 +37,7 @@
             "name": "EnableBulkhead",
             "title": "Enabling Bulkhead",
             "description": [
-                "Begin by enabling the MicroProfile Bulkhead 1.1 feature in your <code>server.xml</code> file. This feature allows you to use the @Bulkhead annotation."
+                "Begin by enabling the MicroProfile Fault Tolerance 1.0 feature in your <code>server.xml</code> file. This feature allows you to use the Bulkhead and Asynchronous policy."
             ],
             "instruction": [
             ]
@@ -37,7 +45,9 @@
         {
             "name": "WhatNext",
             "title": "Great work!  You're done!",
-            "description": []
+            "description": [
+                
+            ]
         }
 
     ]
