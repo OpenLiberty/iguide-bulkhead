@@ -21,7 +21,7 @@
                         "We will use the MicroProfile <b>Bulkhead</b> and <b>Asynchronous</b> policies.<br>",
                         "<h4>Bulkhead</h4>",
                         "The term <b>bulkhead</b> comes from the structure used in ships to create partitions. In the event of a hull breach, these partitions can be sealed off to prevent the rest of the ship from getting damaged.<br>",
-                        "The bulkhead pattern in software systems work similarly by isolating failures to allow the rest of the system to continue functioning.<br>",
+                        "The bulkhead pattern in software systems work similarly by isolating failures to prevent the rest of the system from failing.<br>",
                         "<h4>Asynchronous</h4>",
                         "Asynchronous definition?"
                     ]
@@ -143,12 +143,12 @@
         {   "name": "playground",
             "title": "Interactive bulkhead playground",
             "description": [
-              "Now that you learned about bulkhead, you can explore the parameters in the <code>@Bulkhead</code> annotation and see the bulkhead in action.",
-              "<br>You learned about the following parameters:",
-              "<ul>",
-              "<li><b>value</b>: ",
-              "<li><b>waitingTaskQueue</b>: ",
-              "</ul>"
+                "Now that you learned about bulkhead, you can explore the parameters in the <code>@Bulkhead</code> annotation and see the bulkhead in action.",
+                "<br>You learned about the following parameters:",
+                "<ul>",
+                "<li><b>value</b>: ",
+                "<li><b>waitingTaskQueue</b>: ",
+                "</ul>"
             ]
         },
         {
@@ -161,7 +161,7 @@
             "name": "WhatNext",
             "title": "Great work!  You're done!",
             "description": [
-                
+
             ]
         }
 
