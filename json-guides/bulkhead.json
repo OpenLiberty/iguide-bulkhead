@@ -30,16 +30,90 @@
         },
         {
             "name": "ExampleScenario",
-            "title": "Example: Sinking Ship",
-            "description": []
+            "title": "Example: Bank Scenario",
+            "description": [],
+            "content": [],
+            "sections": [
+                {
+                    "name": "FinancialAdvisor",
+                    "title": "Request financial advsior",
+                    "description": [
+                        "Visit your bank's website to request a financial advisor</br"
+                    ],
+                    "instruction": [
+                        "Enter the following URL into the browser that follows, or click <action></action>"
+                    ],
+                    "content":[
+                        {
+                            "displayType":"webBrowser",
+                            "url": "",
+                            "browserContent": "",
+                            "callback": ""
+                        },
+                        {
+                            "displayType":"pod"
+                        }
+                    ]
+                }
+            ]            
+        },
+        {
+            "name": "AsyncWithoutBulkhead",
+            "title": "Future and Executor",
+            "description": [
+                "Future and Executor async scenario without @Bulkhead"
+            ],
+            "instruction": [
+            ]
         },
         {
             "name": "EnableBulkhead",
-            "title": "Enabling Bulkhead",
+            "title": "Enabling MicroProfile Fault Tolerance",
             "description": [
                 "Begin by enabling the MicroProfile Fault Tolerance 1.0 feature in your <code>server.xml</code> file. This feature allows you to use the Bulkhead and Asynchronous policy."
             ],
             "instruction": [
+            ],
+            "content": [
+            ]
+        },
+        {
+            "name": "AddingBulkheadAnnotation",
+            "title": "Adding the @Bulkhead annotation",
+            "description": [ 
+                "Semaphore style Bulkhead"         
+            ],
+            "instruction": [
+            ],
+            "content": [
+            ]
+        },
+        {
+            "name": "AddingAsyncAnnotation",
+            "title": "Adding the @Asynchronous annotation",
+            "description": [  
+                "Thread pool style Bulkhead"        
+            ],
+            "instruction": [
+            ],
+            "content": [
+            ]
+        },
+        {   "name": "playground",
+            "title": "Interactive bulkhead playground",
+            "description": [
+              "Now that you learned about bulkhead, you can explore the parameters in the <code>@Bulkhead</code> annotation and see the bulkhead in action.",
+              "<br>You learned about the following parameters:",
+              "<ul>",
+              "<li><b>value</b>: ",
+              "<li><b>waitingTaskQueue</b>: ",
+              "</ul>"
+            ]
+        },
+        {
+            "name": "Fallback",
+            "title": "Requesting financial advisor with fallback",
+            "description": [               
             ]
         },
         {
