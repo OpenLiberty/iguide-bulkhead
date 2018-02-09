@@ -1,0 +1,14 @@
+.newSessionButton {
+    color: blue;
+    background-color: bisque;
+    border-radius: 20px;
+    padding: 5px;
+}
+
+.chatMessageImg {
+    height: 30px;
+}
+
+.browserHolder {
+    margin-top: 10px;
+}
