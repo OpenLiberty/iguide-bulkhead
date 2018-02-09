@@ -43,14 +43,14 @@ var bulkheadCallBack = (function() {
     
     var __checkEditorContent = function(stepName, content) {
         var contentIsCorrect = true;
-        if (stepName === "UsingJavaConcurrency") {
+        if (stepName === "AsyncWithoutBulkhead") {
             // to be implemented
         }
         return contentIsCorrect;
     };
 
     var __correctEditorError = function(stepName) {
-        if (stepName === "UsingJavaConcurrency") {
+        if (stepName === "AsyncWithoutBulkhead") {
             __addJavaConcurrencyInEditor(stepName);
         }
     };
@@ -81,8 +81,8 @@ var bulkheadCallBack = (function() {
     };
 
     var clickChat = function(event, stepName) {
-        if (stepName === "UsingJavaConcurrency") {
-            $('#usingJavaConcurrencyStep').find('.newSessionButton').trigger('click');
+        if (stepName === "AsyncWithoutBulkhead") {
+            $('#asyncWithoutBulkheadStep').find('.newSessionButton').trigger('click');
         }
     };
 
