@@ -1,0 +1,63 @@
+<div id="usingJavaConcurrencyStep" class="pod-animation-slide-from-right" tabindex="0">
+    <div class="virtualFinancialAdvisorNewSession">
+        <button class="newSessionButton" aria-label="New virtual financial advisor session request">
+            <img src="/guides/draft-iguide-bulkhead/html/images/chat-message_32.svg" class="chatMessageImg" alt="chat"/>
+             Chat with a financial advisor
+        </button>
+    </div>
+    <div class='browserHolder'></div>
+</div>
+<script>
+    var stepName = "UsingJavaConcurrency";
+    var numOfRequests = 0;
+    var browserVirtualAdvisorBaseURL = "https://global-ebank.openliberty.io/virtualFinancialAdvisor/";
+    var browser;
+    var advisors = ["Bob", "John", "Jenny", "Mary", "Lee", "Mike", "Sam", "Sandy", "Joann", "Frank" ];
+
+    var content = {
+        url: "https://global-ebank.openliberty.io/",
+        statusBarText: ""
+        //browserContent: "/guides/draft-iguide-bulkhead/html/bank.html",
+        //callback: "(function test(webBrowser) {bulkheadCallBack.listenToBrowserForNewSessionRequest(webBrowser, stepName); })"
+    };
+    webBrowser.create($('#usingJavaConcurrencyStep').find('.browserHolder'), stepName,  content).done(function(newWebBrowser){
+        contentManager.setWebBrowser(stepName, newWebBrowser, 0);
+        browser = newWebBrowser;
+    });
+
+    $requestButtonElement = $('#usingJavaConcurrencyStep').find('.newSessionButton');
+    $requestButtonElement.on("keydown", function (event) {
+        event.stopPropagation();
+        if (event.which === 13 || event.which === 32) { // Enter key, Space key
+            __handleRequest();
+        }
+    });
+    $requestButtonElement.on("click", function (event) {
+        event.stopPropagation();
+        __handleRequest();
+    });
+    var __handleRequest = function() {
+        contentManager.markCurrentInstructionComplete(stepName);
+        contentManager.updateWithNewInstructionNoMarkComplete(stepName);
+        numOfRequests++;
+        
+        //bulkheadCallback.handleNewSessionRequestInBrowser(stepName, browser, numOfRequests);
+        browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-chat.html";
+        statusBarMessage = "You are talking to advisor # " + numOfRequests + " out of 10 avaiable";
+        if (numOfRequests >= 4) {
+            browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-error-500.html";
+            statusBarMessage = "Error";
+        }
+        contentManager.setBrowserURL(stepName, browserVirtualAdvisorBaseURL + "/Advisor" + numOfRequests, 0);
+        browser.setBrowserStatusBar(statusBarMessage);
+        browser.setBrowserContent(browserContentHTML);
+
+        if (numOfRequests < 4) {
+            setTimeout(function () {
+                var advisor = advisors[numOfRequests - 1];
+                var chatIntro = advisor + ": Hi, I am " + advisor + ", a financial advisor from Global eBank. How can I help you?\nYou:"
+                browser.getIframeDOM().find(".chat").text(chatIntro);
+            }, 100);
+        }
+    }
+</script>
