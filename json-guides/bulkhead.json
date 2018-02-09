@@ -122,9 +122,11 @@
             "name": "AddingBulkheadAnnotation",
             "title": "Adding the @Bulkhead annotation",
             "description": [ 
-                "Semaphore style Bulkhead"         
+                "Now that you've seen how our application can easily fail when overloaded, we will fix that by using the Bulkhead pattern. Add the @Bulkhead annotation to the requestDoctor microservice to limit the maximum concurrent requests.<br>",
+                "By default, the annotation limits the maximum concurrent requests to 10. Optionally, you may provide a number to customize this limit. Once this limit is reached, extra requests will fail with <code>BulkheadException</code>."
             ],
             "instruction": [
+                "Add the <code>@Bulkhead</code> annotation on line x, before the requestDoctor method, or click <action>@Bulkhead</action>. Then, click <action>Save</action> on the editor menu pane."
             ],
             "content": [
             ]
