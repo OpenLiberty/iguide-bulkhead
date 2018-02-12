@@ -59,7 +59,7 @@
                 var advisor = advisors[numOfRequests - 1];
                 var advisorBackgroundColor = advisorColors[numOfRequests - 1];
                 var chatAdvisorCount  = "You are talking to advisor #" + numOfRequests;
-                var chatIntro = "Hi, I am " + advisor + ", a financial advisor from Global eBank. How can I help you?"
+                var chatIntro = "Hi, I am " + advisor + ", a financial advisor from Global eBank. Let me review your account. I'll be with you shortly."
                 browser.getIframeDOM().find(".chatAdvisorCount").text(chatAdvisorCount);
                 browser.getIframeDOM().find(".advisor").css("background-color", advisorBackgroundColor);
                 browser.getIframeDOM().find(".advisor").text(chatIntro);
