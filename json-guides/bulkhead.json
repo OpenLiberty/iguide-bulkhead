@@ -11,8 +11,7 @@
             "title": "What you'll learn",
             "guide_duration" : "25 minutes",
             "description": [
-                "Explore how to prevent a single failure from bringing down the entire system. MicroProfile makes this easy to do with its Fault Tolerance feature's Bulkhead policy.<br>",
-                "You'll start with a sample online banking scenario and see how it fails when no fault tolerance is implenented. You'll then enable the MicroProfile Fault Tolerance feature and use the Bulkhead policy to prevent the failing method from taking down the whole application. You will explore the two approaches to Bulkhead, semaphore isolation and thread pool isolation, and the parameters used for the annotation. Finally, you will add a fallback class which will be invoked if the BulkheadException is thrown."
+                "Explore how to prevent a single failure from bringing down the entire system. MicroProfile makes it easy to do this with the Bulkhead policy in its Fault Tolerance feature."
             ],
             "sections" : [
                 {
@@ -22,7 +21,7 @@
                         "We will use the MicroProfile <b>Bulkhead</b> and <b>Asynchronous</b> policies.<br>",
                         "<h4>Bulkhead</h4>",
                         "The term <b>bulkhead</b> comes from the structure used in ships to create partitions. In the event of a hull breach, these partitions can be sealed off to prevent the rest of the ship from getting damaged.<br>",
-                        "The bulkhead pattern in software systems work similarly by isolating failures to prevent the rest of the system from failing.<br>",
+                        "The bulkhead pattern in software systems work similarly by isolating failures to allow the rest of the system to continue functioning.<br>",
                         "<h4>Asynchronous</h4>",
                         "Asynchronous definition?"
                     ]
@@ -149,11 +148,9 @@
             "name": "AddingBulkheadAnnotation",
             "title": "Adding the @Bulkhead annotation",
             "description": [ 
-                "Now that you've seen how our application can easily fail when overloaded, we will fix that by using the Bulkhead pattern. Add the @Bulkhead annotation to the requestAVirtualFinancialAdvisor microservice to limit the maximum concurrent requests.<br>",
-                "By default, the annotation limits the maximum concurrent requests to 10. Optionally, you may provide a number to customize this limit. Once this limit is reached, extra requests will fail with <code>BulkheadException</code>."
+                "Semaphore style Bulkhead"         
             ],
             "instruction": [
-                "Add the <code>@Bulkhead</code> annotation on line x, before the requestAVirtualFinancialAdvisor method, or click <action>@Bulkhead</action>. Then, click <action>Save</action> on the editor menu pane."
             ],
             "content": [
             ]
@@ -172,12 +169,12 @@
         {   "name": "playground",
             "title": "Interactive bulkhead playground",
             "description": [
-                "Now that you learned about MicroProfile Bulkhead and Asynchronous, you can explore the parameters in the <code>@Bulkhead</code> annotation and see the bulkhead in action.",
-                "<br>You learned about the following parameters:",
-                "<ul>",
-                "<li><b>value</b>: ",
-                "<li><b>waitingTaskQueue</b>: ",
-                "</ul>"
+              "Now that you learned about bulkhead, you can explore the parameters in the <code>@Bulkhead</code> annotation and see the bulkhead in action.",
+              "<br>You learned about the following parameters:",
+              "<ul>",
+              "<li><b>value</b>: ",
+              "<li><b>waitingTaskQueue</b>: ",
+              "</ul>"
             ]
         },
         {
@@ -190,7 +187,7 @@
             "name": "WhatNext",
             "title": "Great work!  You're done!",
             "description": [
-
+                
             ]
         }
 
