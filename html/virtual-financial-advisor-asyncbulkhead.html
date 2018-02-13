@@ -47,12 +47,12 @@
         //statusBarMessage = "You are talking to advisor # " + numOfRequests + " out of 2 avaiable";     
         if (numOfRequests > 3) {
             console.log("retry");
-            browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-asyncbulkhead-error.html";
-            statusBarMessage = "Error";
+            browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html";
+            //statusBarMessage = "Error";
         } else if (numOfRequests > 2) {
             console.log("waiting queue");
             browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-waitingqueue.html";
-            statusBarMessage = "Waiting queue";
+            //statusBarMessage = "Waiting queue";
         }
         contentManager.setBrowserURL(stepName, browserVirtualAdvisorBaseURL + "Advisor" + numOfRequests, 0);
         //browser.setBrowserStatusBar(statusBarMessage);
