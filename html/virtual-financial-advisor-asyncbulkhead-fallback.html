@@ -1,8 +1,8 @@
-<div id="asyncBulkheadStep" class="pod-animation-slide-from-right" tabindex="0">
+<div id="asyncBulkheadFallbackStep" class="pod-animation-slide-from-right" tabindex="0">
     <div class="virtualFinancialAdvisorNewSession">
         <button class="newSessionButton" aria-label="New virtual financial advisor session request">
             <img src="/guides/draft-iguide-bulkhead/html/images/chat-message_32.svg" class="chatMessageImg" alt="chat"/>
-             Chat with a financial advisor
+            <spam class="chatText">Chat with a financial advisor</spam>
         </button>
     </div>
     <div class='browserHolder'></div>
@@ -12,18 +12,17 @@
     var numOfRequests = 0;
     var browserVirtualAdvisorBaseURL = "https://global-ebank.openliberty.io/virtualFinancialAdvisor/";
     var browser;
-    //var advisors = ["Bob", "John", "Jenny", "Mary", "Lee", "Mike", "Sam", "Sandy", "Joann", "Frank" ];
 
     var content = {
         url: "https://global-ebank.openliberty.io/",
         statusBarText: ""
     };
-    webBrowser.create($('#asyncBulkheadStep').find('.browserHolder'), stepName,  content).done(function(newWebBrowser){
+    webBrowser.create($('#asyncBulkheadFallbackStep').find('.browserHolder'), stepName,  content).done(function(newWebBrowser){
         contentManager.setWebBrowser(stepName, newWebBrowser, 0);
         browser = newWebBrowser;
     });
 
-    $requestButtonElement = $('#asyncBulkheadStep').find('.newSessionButton');
+    $requestButtonElement = $('#asyncBulkheadFallbackStep').find('.newSessionButton');
     $requestButtonElement.on("keydown", function (event) {
         event.stopPropagation();
         if (event.which === 13 || event.which === 32) { // Enter key, Space key
@@ -39,10 +38,10 @@
         contentManager.updateWithNewInstructionNoMarkComplete(stepName);
         
         browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-retry.html";
-        statusBarMessage = "";
+        //statusBarMessage = "";
 
-        contentManager.setBrowserURL(stepName, browserVirtualAdvisorBaseURL + "/Advisor" + numOfRequests, 0);
-        browser.setBrowserStatusBar(statusBarMessage);
+        contentManager.setBrowserURL(stepName, browserVirtualAdvisorBaseURL + "Advisor" + numOfRequests, 0);
+        //browser.setBrowserStatusBar(statusBarMessage);
         browser.setBrowserContent(browserContentHTML);
     }
 </script>
