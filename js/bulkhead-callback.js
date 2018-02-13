@@ -238,11 +238,25 @@ var bulkheadCallBack = (function() {
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 11, 11, newContent, 4);
     };
 
+    var __addBulkheadInEditor = function(stepName, fileName) {
+        contentManager.resetTabbedEditorContents(stepName, fileName);
+        var content = contentManager.getTabbedEditorContents(stepName, fileName);
+        var newContent = "    @Bulkhead(2)";
+        contentManager.replaceTabbedEditorContents(stepName, fileName, 7, 7, newContent, 1);
+    }
+
     var addJavaConcurrencyButton = function(event, stepName) {
         if (event.type === "click" ||
            (event.type === "keypress" && (event.which === 13 || event.which === 32))) {
             // Click or 'Enter' or 'Space' key event...
             __addJavaConcurrencyInEditor(stepName);
+        }
+    };
+
+    var addBulkheadButton = function(event, stepName) {
+        if (event.type === "click" ||
+           (event.type === "keypress" && (event.which === 13 || event.which === 32))) {
+            __addBulkheadInEditor(stepName, 'VirtualFinancialAdvisor.java');
         }
     };
 
@@ -257,6 +271,7 @@ var bulkheadCallBack = (function() {
         addMicroProfileFaultToleranceFeatureButton: addMicroProfileFaultToleranceFeatureButton,
         saveServerXMLButton: saveServerXMLButton,
         addJavaConcurrencyButton: addJavaConcurrencyButton,
+        addBulkheadButton: addBulkheadButton,
         saveButtonEditorButton: saveButtonEditorButton,
         listenToEditorForJavaConcurrency: listenToEditorForJavaConcurrency,
         clickChat: clickChat

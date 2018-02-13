@@ -159,9 +159,52 @@
                 "By default, the annotation limits the maximum concurrent requests to 10. Optionally, you may provide a number to customize this limit. Once this limit is reached, extra requests will fail with <code>BulkheadException</code>."
             ],
             "instruction": [
-                "Add the <code>@Bulkhead</code> annotation on line x, before the requestAVirtualFinancialAdvisor method, or click <action>@Bulkhead</action>. Then, click <action>Save</action> on the editor menu pane."
+                "Add the <code>@Bulkhead</code> annotation with a value of 2 on line 7, before the requestAVirtualFinancialAdvisor method, or click <action title='Add @Bulkhead' onclick=\"bulkheadCallBack.addBulkheadButton(event, 'AddingBulkheadAnnotation')\">@Bulkhead(2)</action>. Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AddingBulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane."
             ],
             "content": [
+                {
+                    "displayType": "tabbedEditor",
+                    "activeTab": "VirtualFinancialAdvisor.java",
+                    "editorList": [
+                        {
+                            "displayType": "tabbedEditor",
+                            "fileName": "VirtualFinancialAdvisor.java",
+                            "preload": [
+                                "package global.eBank.microservices;",
+                                "import java.util.concurrent.Future;",
+                                "import java.util.concurrent.Executors;",
+                                "import java.util.concurrent.ExecutorService;",
+                                "",
+                                "public class BankService {",
+                                "",
+                                "    public Service requestAVirtualFinancialAdvisor() {",
+                                "        counterForVirtualFinancialAdvisor++;",
+                                "        ExecutorService executor = Executors.newFixedThreadPool(1);",
+                                "        Future serviceRequest = executor.submit(() -> {",
+                                "            return virtualFinancialAdvisorService();",
+                                "        });",
+                                "    }",
+                                "}"
+                            ],
+                            "readonly": [
+                                {
+                                    "from": "1",
+                                    "to": "6"
+                                },
+                                {
+                                    "from": "8",
+                                    "to": "15"
+                                }
+                            ],
+                            "save": false,
+                            "callback": "(function test(tabbedEditor) {bulkheadCallBack.listenToEditorForJavaConcurrency(tabbedEditor, 'VirtualFinancialAdvisor.java'); })"
+                        }
+                    ]
+                },
+                {
+                    "displayType": "pod",
+                    "diffcontent": "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-new-session.html"
+                }   
             ]
         },
         {
