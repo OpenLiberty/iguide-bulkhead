@@ -1,0 +1,47 @@
+<div id="asyncBulkheadFallbackStep" class="pod-animation-slide-from-right" tabindex="0">
+    <div class="virtualFinancialAdvisorNewSession">
+        <button class="newSessionButton" aria-label="New virtual financial advisor session request">
+            <img src="/guides/draft-iguide-bulkhead/html/images/chat-message_32.svg" class="chatMessageImg" alt="chat"/>
+            <spam class="chatText">Chat with a financial advisor</spam>
+        </button>
+    </div>
+    <div class='browserHolder'></div>
+</div>
+<script>
+    var stepName = "Fallback";
+    var numOfRequests = 0;
+    var browserVirtualAdvisorBaseURL = "https://global-ebank.openliberty.io/virtualFinancialAdvisor/";
+    var browser;
+
+    var content = {
+        url: "https://global-ebank.openliberty.io/",
+        statusBarText: ""
+    };
+    webBrowser.create($('#asyncBulkheadFallbackStep').find('.browserHolder'), stepName,  content).done(function(newWebBrowser){
+        contentManager.setWebBrowser(stepName, newWebBrowser, 0);
+        browser = newWebBrowser;
+    });
+
+    $requestButtonElement = $('#asyncBulkheadFallbackStep').find('.newSessionButton');
+    $requestButtonElement.on("keydown", function (event) {
+        event.stopPropagation();
+        if (event.which === 13 || event.which === 32) { // Enter key, Space key
+            __handleRequest();
+        }
+    });
+    $requestButtonElement.on("click", function (event) {
+        event.stopPropagation();
+        __handleRequest();
+    });
+    var __handleRequest = function() {
+        contentManager.markCurrentInstructionComplete(stepName);
+        contentManager.updateWithNewInstructionNoMarkComplete(stepName);
+        
+        browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-fallback.html";
+        //statusBarMessage = "";
+
+        contentManager.setBrowserURL(stepName, browserVirtualAdvisorBaseURL + "Advisor" + numOfRequests, 0);
+        //browser.setBrowserStatusBar(statusBarMessage);
+        browser.setBrowserContent(browserContentHTML);
+    }
+</script>
