@@ -152,23 +152,25 @@
             ]
         } ,
         {
-            "name": "AddingBulkheadAnnotation",
+            "name": "BulkheadAnnotation",
             "title": "Adding the @Bulkhead annotation",
             "description": [ 
                 "Now that you've seen how our application can easily fail when overloaded, we will fix that by using the Bulkhead pattern. Add the @Bulkhead annotation to the requestAVirtualFinancialAdvisor microservice to limit the maximum concurrent requests.<br>",
                 "By default, the annotation limits the maximum concurrent requests to 10. Optionally, you may provide a number to customize this limit. Once this limit is reached, extra requests will fail with <code>BulkheadException</code>."
             ],
             "instruction": [
-                "Add the <code>@Bulkhead</code> annotation with a value of 2 on line 7, before the requestAVirtualFinancialAdvisor method, or click <action title='Add @Bulkhead' onclick=\"bulkheadCallBack.addBulkheadButton(event, 'AddingBulkheadAnnotation')\">@Bulkhead(2)</action>. Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AddingBulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane."
+                "Add the <code>@Bulkhead</code> annotation with a value of 2 on line 7, before the requestAVirtualFinancialAdvisor method, or click <action title='Add @Bulkhead' onclick=\"bulkheadCallBack.addBulkheadButton(event, 'BulkheadAnnotation')\">@Bulkhead(2)</action>. Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'BulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane.",
+                "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation')\"><b>Chat with a financial advisor</b></action> to open a chat session with an available advisor.<br>",
+                "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation')\"><b>Chat with a financial advisor</b></action> the 2nd time to open another chat session with another available advisor.<br>",
+                "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation')\"><b>Chat with a financial advisor</b></action> the 3rd time to open another chat session with another available advisor.<br>"
             ],
             "content": [
                 {
                     "displayType": "tabbedEditor",
-                    "activeTab": "VirtualFinancialAdvisor.java",
                     "editorList": [
                         {
                             "displayType": "tabbedEditor",
-                            "fileName": "VirtualFinancialAdvisor.java",
+                            "fileName": "BankService.java",
                             "preload": [
                                 "package global.eBank.microservices;",
                                 "import java.util.concurrent.Future;",
@@ -197,13 +199,12 @@
                                 }
                             ],
                             "save": false,
-                            "callback": "(function test(tabbedEditor) {bulkheadCallBack.listenToEditorForJavaConcurrency(tabbedEditor, 'VirtualFinancialAdvisor.java'); })"
+                            "callback": "(function test(tabbedEditor) {bulkheadCallBack.listenToEditorForJavaConcurrency(tabbedEditor, 'BankService.java'); })"
                         }
                     ]
                 },
                 {
-                    "displayType": "pod",
-                    "diffcontent": "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-new-session.html"
+                    "displayType": "pod"
                 }   
             ]
         },

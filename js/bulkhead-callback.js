@@ -196,8 +196,12 @@ var bulkheadCallBack = (function() {
                 contentManager.markCurrentInstructionComplete(stepName);
                 contentManager.updateWithNewInstructionNoMarkComplete(stepName);
                 // display the pod with chat button and web browser in it
-                contentManager.setPodContent(stepName,
+                if (stepName === 'AsyncWithoutBulkhead') {
+                    contentManager.setPodContent(stepName,
                     "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-new-session.html");
+                } else if (stepName === 'BulkheadAnnotation') {
+                    contentManager.setPodContent(stepName, '/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead.html');
+                }
             }
         } else {
             // display error and provide link to fix it
@@ -238,11 +242,15 @@ var bulkheadCallBack = (function() {
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 11, 11, newContent, 4);
     };
 
-    var __addBulkheadInEditor = function(stepName, fileName) {
-        contentManager.resetTabbedEditorContents(stepName, fileName);
-        var content = contentManager.getTabbedEditorContents(stepName, fileName);
+    var listenToEditorForBulkheadAnnotation = function(editor) {
+        editor.addSaveListener(__showPodWithRequestButtonAndBrowser)
+    }
+
+    var __addBulkheadInEditor = function(stepName) {
+        contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
+        var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
         var newContent = "    @Bulkhead(2)";
-        contentManager.replaceTabbedEditorContents(stepName, fileName, 7, 7, newContent, 1);
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 7, 7, newContent, 1);
     }
 
     var addJavaConcurrencyButton = function(event, stepName) {
@@ -256,13 +264,15 @@ var bulkheadCallBack = (function() {
     var addBulkheadButton = function(event, stepName) {
         if (event.type === "click" ||
            (event.type === "keypress" && (event.which === 13 || event.which === 32))) {
-            __addBulkheadInEditor(stepName, 'VirtualFinancialAdvisor.java');
+            __addBulkheadInEditor(stepName);
         }
     };
 
     var clickChat = function(event, stepName) {
         if (stepName === "AsyncWithoutBulkhead") {
             $('#asyncWithoutBulkheadStep').find('.newSessionButton').trigger('click');
+        } else if (stepName === 'BulkheadAnnotation') {
+            $('#bulkheadStep').find('.newSessionButton').trigger('click');
         }
     };
 
