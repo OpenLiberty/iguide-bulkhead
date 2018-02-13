@@ -243,7 +243,7 @@ var bulkheadCallBack = (function() {
     };
 
     var listenToEditorForBulkheadAnnotation = function(editor) {
-        editor.addSaveListener(__showPodWithRequestButtonAndBrowser)
+        editor.addSaveListener(__showPodWithRequestButtonAndBrowser);
     }
 
     var __addBulkheadInEditor = function(stepName) {
