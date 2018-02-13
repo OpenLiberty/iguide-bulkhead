@@ -189,6 +189,16 @@ var bulkheadCallBack = (function() {
     var __showPodWithRequestButtonAndBrowser = function(editor) {
         var stepName = editor.getStepName();
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
+        
+        var htmlFile;
+        if (stepName === "AsyncWithoutBulkhead") {
+            htmlFile = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-new-session.html";
+        } else if (stepName === "AsyncBulkheadAnnotation") {
+            htmlFile = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-asyncbulkhead.html";
+        } else if (stepName === "Fallback") {
+            htmlFile = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-asyncbulkhead-fallback.html";
+        }
+
         if (__checkEditorContent(stepName, content)) {
             //editor.closeEditorErrorBox(stepName);
             var index = contentManager.getCurrentInstructionIndex();
@@ -196,8 +206,8 @@ var bulkheadCallBack = (function() {
                 contentManager.markCurrentInstructionComplete(stepName);
                 contentManager.updateWithNewInstructionNoMarkComplete(stepName);
                 // display the pod with chat button and web browser in it
-                contentManager.setPodContent(stepName,
-                    "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-new-session.html");
+                contentManager.setPodContent(stepName, htmlFile);
+                    //"/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-new-session.html");
             }
         } else {
             // display error and provide link to fix it
@@ -346,27 +356,8 @@ var bulkheadCallBack = (function() {
     };
 
     var listenToEditorForAsyncBulkhead = function(editor) {
-        editor.addSaveListener(__showPodWithRequestButtonAndBrowserAsyncBulkhead);
+        editor.addSaveListener(__showPodWithRequestButtonAndBrowser);
     }
-
-    var __showPodWithRequestButtonAndBrowserAsyncBulkhead = function(editor) {
-        var stepName = editor.getStepName();
-        var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
-        if (__checkEditorContent(stepName, content)) {
-            //editor.closeEditorErrorBox(stepName);
-            var index = contentManager.getCurrentInstructionIndex();
-            if(index === 0){
-                contentManager.markCurrentInstructionComplete(stepName);
-                contentManager.updateWithNewInstructionNoMarkComplete(stepName);
-                // display the pod with chat button and web browser in it
-                contentManager.setPodContent(stepName,
-                    "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-asyncbulkhead.html");
-            }
-        } else {
-            // display error and provide link to fix it
-            editor.createErrorLinkForCallBack(true, __correctEditorError);
-        }
-    };
 
     var addFallbackAsyncBulkheadButton = function(event, stepName) {
         if (event.type === "click" ||
@@ -389,27 +380,8 @@ var bulkheadCallBack = (function() {
     };
 
     var listenToEditorForAsyncBulkheadFallback = function(editor) {
-        editor.addSaveListener(__showPodWithRequestButtonAndBrowserAsyncBulkheadFallback);
+        editor.addSaveListener(__showPodWithRequestButtonAndBrowser);
     }
-
-    var __showPodWithRequestButtonAndBrowserAsyncBulkheadFallback = function(editor) {
-        var stepName = editor.getStepName();
-        var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
-        if (__checkEditorContent(stepName, content)) {
-            //editor.closeEditorErrorBox(stepName);
-            var index = contentManager.getCurrentInstructionIndex();
-            if(index === 0){
-                contentManager.markCurrentInstructionComplete(stepName);
-                contentManager.updateWithNewInstructionNoMarkComplete(stepName);
-                // display the pod with chat button and web browser in it
-                contentManager.setPodContent(stepName,
-                    "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-asyncbulkhead-fallback.html");
-            }
-        } else {
-            // display error and provide link to fix it
-            editor.createErrorLinkForCallBack(true, __correctEditorError);
-        }
-    };
 
     return {
         listenToEditorForFeatureInServerXML: __listenToEditorForFeatureInServerXML,
