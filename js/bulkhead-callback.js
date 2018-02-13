@@ -189,6 +189,16 @@ var bulkheadCallBack = (function() {
     var __showPodWithRequestButtonAndBrowser = function(editor) {
         var stepName = editor.getStepName();
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
+        
+        var htmlFile;
+        if (stepName === "AsyncWithoutBulkhead") {
+            htmlFile = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-new-session.html";
+        } else if (stepName === "AsyncBulkheadAnnotation") {
+            htmlFile = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-asyncbulkhead.html";
+        } else if (stepName === "Fallback") {
+            htmlFile = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-asyncbulkhead-fallback.html";
+        }
+
         if (__checkEditorContent(stepName, content)) {
             //editor.closeEditorErrorBox(stepName);
             var index = contentManager.getCurrentInstructionIndex();
@@ -196,8 +206,8 @@ var bulkheadCallBack = (function() {
                 contentManager.markCurrentInstructionComplete(stepName);
                 contentManager.updateWithNewInstructionNoMarkComplete(stepName);
                 // display the pod with chat button and web browser in it
-                contentManager.setPodContent(stepName,
-                    "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-new-session.html");
+                contentManager.setPodContent(stepName, htmlFile);
+                    //"/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-new-session.html");
             }
         } else {
             // display error and provide link to fix it
@@ -209,7 +219,9 @@ var bulkheadCallBack = (function() {
         var contentIsCorrect = true;
         if (stepName === "AsyncWithoutBulkhead") {
             // to be implemented
-        } 
+        } else if (stepName === "AsyncBulkheadAnnotation") {
+
+        }
         return contentIsCorrect;
     };
 
@@ -249,8 +261,127 @@ var bulkheadCallBack = (function() {
     var clickChat = function(event, stepName) {
         if (stepName === "AsyncWithoutBulkhead") {
             $('#asyncWithoutBulkheadStep').find('.newSessionButton').trigger('click');
+        } else if (stepName === "AsyncBulkheadAnnotation") {
+            $('#asyncBulkheadStep').find('.newSessionButton').trigger('click');  
+        } else if (stepName === 'Fallback') {
+            $('#asyncBulkheadFallbackStep').find('.newSessionButton').trigger('click'); 
         }
     };
+
+    var addAsyncBulkheadButton = function(event, stepName) {
+        if (event.type === "click" ||
+           (event.type === "keypress" && (event.which === 13 || event.which === 32))) {
+            // Click or 'Enter' or 'Space' key event...
+            __addAsyncBulkheadInEditor(stepName);
+        }
+    };
+
+    var __addAsyncBulkheadInEditor = function(stepName) {
+        contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
+        var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
+        //var newContent =
+        //    "    @Asynchronous\n"; + 
+        //    "    @Bulkhead(value = 2, waitingTaskQueue = 1)";
+        //contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 9, 9, newContent, 2);
+
+        var newContent = 
+            "  @Asynchronous;"; +
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 9, 9, newContent, 1);
+
+        var params = [];
+        var constructAnnotation = function(params) {
+            var bulkheadAnnotation = "  @Bulkhead(";
+            if ($.isArray(params) && params.length > 0) {
+                bulkheadAnnotation += params.join(",\n            ");
+            }
+            bulkheadAnnotation += ")";
+            return bulkheadAnnotation;
+        };
+
+        params[0] = "value=2";
+        params[1] = "waitingTaskQueue=1";
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 10, 10, constructAnnotation(params), 2);
+        var readOnlyLines = [];
+        readOnlyLines.push({from: 1, to: 8}, {from: 12, to: 16});
+        contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
+    };
+
+    var addMethodFutureReturnTypeButton = function(event, stepName) {
+        if (event.type === "click" ||
+           (event.type === "keypress" && (event.which === 13 || event.which === 32))) {
+            // Click or 'Enter' or 'Space' key event...
+            __addMethodFutureReturnTypeInEditor(stepName);
+        }        
+    };
+
+    var __addMethodFutureReturnTypeInEditor = function(stepName, performReset) {
+        /*var hasAsyncAnnotation;
+        var hasReturnType;
+        if (performReset === undefined || performReset) {
+            var content = contentManager.getEditorContents(stepName);
+            hasAsyncAnnotation = __checkAsyncAnnotation(content);
+            hasReturnType = __checkReturnType(content); 
+            contentManager.resetEditorContents(stepName); 
+        }*/
+        var returnMethodType = 
+            "  public Future<Service> requestAVirtualFinancialAdvisor() {";
+        var readOnlyLines = [];
+        readOnlyLines.push({from: 1, to: 8}, {from: 13, to: 16});
+        contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 12, 12, returnMethodType, 1);      
+        readOnlyLines.push({from: 1, to: 8}, {from: 12, to: 16});
+        contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
+        /*
+        if (hasAsyncAnnotation) {
+            __addAsyncBulkheadInEditor(stepName);
+        }
+        if (hasReturnType) {
+            __addReturnTypeInEditor(stepName);
+        }*/
+    };
+
+    var __addReturnTypeInEditor = function(stepName, performReset) {
+        //var content = contentManager.getEditorContents(stepName);
+        var newReturnType = 
+            "  return CompletableFuture.completedFuture(virtualFinancialAdvisorService());";
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 14, 14, newReturnType, 1);
+    };
+
+    var addReturnTypeButton = function(event, stepName) {
+        if (event.type === "click" ||
+           (event.type === "keypress" && (event.which === 13 || event.which === 32))) {
+            // Click or 'Enter' or 'Space' key event...
+            __addReturnTypeInEditor(stepName);
+        }        
+    };
+
+    var listenToEditorForAsyncBulkhead = function(editor) {
+        editor.addSaveListener(__showPodWithRequestButtonAndBrowser);
+    }
+
+    var addFallbackAsyncBulkheadButton = function(event, stepName) {
+        if (event.type === "click" ||
+           (event.type === "keypress" && (event.which === 13 || event.which === 32))) {
+            // Click or 'Enter' or 'Space' key event...
+            __addFallbackAsyncBulkheadInEditor(stepName);
+        }
+    };
+
+    var __addFallbackAsyncBulkheadInEditor = function(stepName) {
+        contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
+        var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
+        var newContent =
+            "  @Fallback(BulkheadFallbackHandler.class)"; + 
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 9, 9, newContent, 1);
+
+        var readOnlyLines = [];
+        readOnlyLines.push({from: 1, to: 10}, {from: 13, to: 16});
+        contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
+    };
+
+    var listenToEditorForAsyncBulkheadFallback = function(editor) {
+        editor.addSaveListener(__showPodWithRequestButtonAndBrowser);
+    }
 
     return {
         listenToEditorForFeatureInServerXML: __listenToEditorForFeatureInServerXML,
@@ -259,7 +390,13 @@ var bulkheadCallBack = (function() {
         addJavaConcurrencyButton: addJavaConcurrencyButton,
         saveButtonEditorButton: saveButtonEditorButton,
         listenToEditorForJavaConcurrency: listenToEditorForJavaConcurrency,
-        clickChat: clickChat
+        clickChat: clickChat,
+        listenToEditorForAsyncBulkhead: listenToEditorForAsyncBulkhead,
+        addAsyncBulkheadButton: addAsyncBulkheadButton,
+        addReturnTypeButton: addReturnTypeButton,
+        addMethodFutureReturnTypeButton: addMethodFutureReturnTypeButton,
+        addFallbackAsyncBulkheadButton: addFallbackAsyncBulkheadButton,
+        listenToEditorForAsyncBulkheadFallback: listenToEditorForAsyncBulkheadFallback
     };
 
 })();

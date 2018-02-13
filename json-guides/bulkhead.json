@@ -165,14 +165,66 @@
             ]
         },
         {
-            "name": "AddingAsyncAnnotation",
-            "title": "Adding the @Asynchronous annotation",
+            "name": "AsyncBulkheadAnnotation",
+            "title": "Adding the @Asynchronous annotation with Bulkhead",
             "description": [  
-                "Thread pool style Bulkhead"        
+                "When <code>@Bulkhead</code> is used with <code>@Asynchronous</code>, the thread pool isolation approach will be used. The thread pool approach allows to configure the maximum concurrent requests together with the waiting queue size. When a request cannot be added to the waiting queue, BulkheadException will be thrown.</br>",
+                "Multiple virtual financial advisors can service the requests at the same time. If there are no financial advisor available, requests are allow in the waiting queue. When the maximum number of requests on the waiting queue are reach, an error message will be display.",
+                "You can modify these two parameters:",
+                "<ul>",
+                "<li><b>value</b>: the maximum number of concurrent requests ",
+                "<li><b>waitingTaskQueue</b>: the waiting task queue. This setting only takes effect on asynchronous invocation, achieved by using <code>@Asynchronous</code>",
+                "</ul>"         
             ],
             "instruction": [
+                "Change the <code>@Bulkhead()</code> annotation on line 9 to the following code, or click <br><action title='Bulkhead annotation with Asynchronous' onclick=\"bulkheadCallBack.addAsyncBulkheadButton(event, 'AsyncBulkheadAnnotation')\"><b>@Asynchronous\n@Bulkhead(value = 2, waitingTaskQueue = 1)</b></action>.<br>The method annotated with @Asynchronous must return a Future. Change the method return type on line 12 to the following code, or click <br><action title='Bulkhead return type method' onclick=\"bulkheadCallBack.addMethodFutureReturnTypeButton(event, 'AsyncBulkheadAnnotation')\"><b>public Future<Service> requestAVirtualFinancialAdvisor() {</b></action>.<br>Change the return type on line 14 to the following code, or click<br><action title='Bulkhead return type' onclick=\"bulkheadCallBack.addReturnTypeButton(event, 'AsyncBulkheadAnnotation')\"><b>return CompletableFuture.completedFuture(virtualFinancialAdvisorService());</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncBulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane.",
+                "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation')\"><b>Chat with a financial advisor</b></action> to open a chat session with an available advisor.<br>",
+                "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation')\"><b>Chat with a financial advisor</b></action> the second time to open a chat session with another available advisor.<br>",
+                "Since the maximum number of requests has reach. The next request will be place in the waiting queue. Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation')\"><b>Chat with a financial advisor</b></action> the third time to be place in the waiting queue.<br>",
+                "There is a limit to the number of requests that can be add to the waiting queue to prevent the system overloads. Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation')\"><b>Chat with a financial advisor</b></action> the fourth time to see the error message.<br>"
             ],
-            "content": [
+            "content":[
+                {
+                    "displayType":"tabbedEditor",
+                    "activeTab": "BankService.java",
+                    "editorList": [
+                        {
+                            "displayType":"fileEditor",
+                            "fileName": "BankService.java",
+                            "preload": [
+                                "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
+                                "import java.util.concurrent.Future;",
+                                "import org.eclipse.microprofile.faulttolerance.Asynchronous;",
+                                "import org.eclipse.microprofile.faulttolerance.Bulkhead;",
+                                "import java.util.concurrent.CompletableFuture;",
+                                "",
+                                "public class BankService {",
+                                "",
+                                "  @Bulkhead(2)",
+                                "  public Service requestForVFA() {",
+                                "    counterForVirtualFinancialAdvisor++;",
+                                "    return serviceForVFG();",
+                                "  }",
+                                "}"
+                            ],
+                            "readonly": [
+                                {
+                                    "from": "1",
+                                    "to": "8"
+                                },
+                                {
+                                    "from": "10",
+                                    "to": "14"
+                                }
+                            ],
+                            "save": false,
+                            "callback": "(function test(editor) {bulkheadCallBack.listenToEditorForAsyncBulkhead(editor); })"
+                        }
+                    ]
+                },
+                {
+                    "displayType": "pod"
+                }
             ]
         },
         {   "name": "playground",
@@ -188,8 +240,79 @@
         },
         {
             "name": "Fallback",
-            "title": "Requesting financial advisor with fallback",
-            "description": [               
+            "title": "Adding the @Fallback annotation",
+            "description": [  
+                "Use <code>@Fallback(FallbackHandler.class)</code> annotation to identify a fallback class that run when the requests are failed.",
+                "When the maximum number of requests on the waiting queue are reach, the fallback class can be execute to display a friendly message for the user to try the request again later."
+            ],
+            "instruction": [
+                "In <code>BankService.java</code> add the <code>@Fallback(BulkheadFallbackHandler.class)</code> annotation on line 9 to the following code, or click <br><action title='Async Bulkhead annotation with Fallback' onclick=\"bulkheadCallBack.addFallbackAsyncBulkheadButton(event, 'Fallback')\"><b>@Fallback(BulkheadFallbackHandler.class)</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'Fallback')\"><b>Run</b></action> on the editor menu pane.",
+                "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'Fallback')\"><b>Chat with a financial advisor</b></action> to see the message to retry again later.<br>"
+            ],
+            "content":[
+                {
+                    "displayType":"tabbedEditor",
+                    "activeTab": "BankService.java",
+                    "editorList": [
+                        {
+                            "displayType":"fileEditor",
+                            "fileName": "BulkheadFallbackHandler.java",
+                            "preload": [
+                                "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
+                                "import org.eclipse.microprofile.faulttolerance.ExecutionContext;",
+                                "import org.eclipse.microprofile.faulttolerance.FallbackHandler;",
+                                "",
+                                "public class BulkheadFallbackHandler implements FallbackHandler<Service> {",
+                                "",
+                                "  @Override",
+                                "  public Service handle(ExecutionContext context) {",
+                                "    return handleRequest(context);",
+                                "  }",
+                                "}"
+                            ],
+                            "readonly": true,
+                            "save": false
+                        },
+                        {
+                            "displayType":"fileEditor",
+                            "fileName": "BankService.java",
+                            "preload": [
+                                "package io.openliberty.guides.bulkhead;",
+                                "import java.util.concurrent.Future;",
+                                "import org.eclipse.microprofile.faulttolerance.Asynchronous;",
+                                "import org.eclipse.microprofile.faulttolerance.Bulkhead;",
+                                "import org.eclipse.microprofile.faulttolerance.Fallback;",
+                                "import java.util.concurrent.CompletableFuture;",
+                                "",
+                                "public class BankService {",
+                                "",
+                                "  @Asynchronous",
+                                "  @Bulkhead(value = 2,",
+                                "            waitingTaskQueue = 1)",
+                                "  public Future<Service> requestForVFA() {",
+                                "    counterForVirtualFinancialAdvisor++;",
+                                "    return CompletableFuture.completedFuture(serviceForVFG());",
+                                "  }",
+                                "}"
+                            ],
+                            "readonly": [
+                                {
+                                    "from": "1",
+                                    "to": "8"
+                                },
+                                {
+                                    "from": "10",
+                                    "to": "17"
+                                }
+                            ],
+                            "save": false,
+                            "callback": "(function test(editor) {bulkheadCallBack.listenToEditorForAsyncBulkheadFallback(editor); })"
+                        }
+                    ]
+                },
+                {
+                    "displayType": "pod"
+                }
             ]
         },
         {
