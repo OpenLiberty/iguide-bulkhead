@@ -199,6 +199,8 @@ var bulkheadCallBack = (function() {
             htmlFile = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-asyncbulkhead.html";
         } else if (stepName === "Fallback") {
             htmlFile = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-asyncbulkhead-fallback.html";
+        } else if (stepName === "FinancialAdvisor") {
+            htmlFile = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-async-without-bulkhead.html";
         }
 
         if (__checkEditorContent(stepName, content)) {
@@ -208,13 +210,8 @@ var bulkheadCallBack = (function() {
                 contentManager.markCurrentInstructionComplete(stepName);
                 contentManager.updateWithNewInstructionNoMarkComplete(stepName);
                 // display the pod with chat button and web browser in it
-<<<<<<< HEAD
                 contentManager.setPodContent(stepName, htmlFile);
                     //"/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-new-session.html");
-=======
-                contentManager.setPodContent(stepName,
-                    "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-async-without-bulkhead.html");
->>>>>>> Refactor chat session codes
             }
         } else {
             // display error and provide link to fix it
@@ -292,6 +289,8 @@ var bulkheadCallBack = (function() {
             $('#asyncBulkheadStep').find('.newSessionButton').trigger('click');  
         } else if (stepName === 'Fallback') {
             $('#asyncBulkheadFallbackStep').find('.newSessionButton').trigger('click'); 
+        } else if (stepName = "FinancialAdvisor") {
+            $('#financialAdvisorStep').find('.newSessionButton').trigger('click');
         }
     };
 
@@ -300,7 +299,7 @@ var bulkheadCallBack = (function() {
            (event.type === "keypress" && (event.which === 13 || event.which === 32))) {
             // Click or 'Enter' or 'Space' key event...
             __addAsyncBulkheadInEditor(stepName);
-        }
+           }
     };
 
     var __addAsyncBulkheadInEditor = function(stepName) {
@@ -431,7 +430,7 @@ var bulkheadCallBack = (function() {
                 //statusBarMessage = "Error";
             }
             requestLimits = 4;               
-        } else if (stepName === "ExampleScenario") {
+        } else if (stepName === "FinancialAdvisor") {
             requestLimits = 2;
             if (requestNum >= requestLimits) {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-error-500.html";

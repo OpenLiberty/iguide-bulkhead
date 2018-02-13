@@ -1,4 +1,4 @@
-<div id="exampleScenarioStep" tabindex="0">
+<div id="financialAdvisorStep" tabindex="0">
         <div class="virtualFinancialAdvisorNewSession">
             <button class="newSessionButton" aria-label="New virtual financial advisor session request">
                 <img src="/guides/draft-iguide-bulkhead/html/images/chat-message_32.svg" class="chatMessageImg" alt="chat"/>
@@ -8,16 +8,13 @@
         <div class='browserHolder'></div>
     </div>
     <script>
-        var stepName = "ExampleScenario";
-        var stepElementId = "exampleScenarioStep";
+        var stepName = "FinancialAdvisor";
+        var stepElementId = "financialAdvisorStep";
         var numOfRequests = 0;
         var browser;
     
         var content = {
-            url: "https://global-ebank.openliberty.io/",
-            statusBarText: ""
-            //browserContent: "/guides/draft-iguide-bulkhead/html/bank.html",
-            //callback: "(function test(webBrowser) {bulkheadCallBack.listenToBrowserForNewSessionRequest(webBrowser, stepName); })"
+            url: "https://global-ebank.openliberty.io/"
         };
         webBrowser.create($('#' + stepElementId).find('.browserHolder'), stepName,  content).done(function(newWebBrowser){
             contentManager.setWebBrowser(stepName, newWebBrowser, 0);
