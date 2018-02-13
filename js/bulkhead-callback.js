@@ -193,6 +193,8 @@ var bulkheadCallBack = (function() {
         var htmlFile;
         if (stepName === "AsyncWithoutBulkhead") {
             htmlFile = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-new-session.html";
+        } else if (stepName === "BulkheadAnnotation") {
+            htmlFile = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead.html";
         } else if (stepName === "AsyncBulkheadAnnotation") {
             htmlFile = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-asyncbulkhead.html";
         } else if (stepName === "Fallback") {
@@ -250,6 +252,17 @@ var bulkheadCallBack = (function() {
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 11, 11, newContent, 4);
     };
 
+    var listenToEditorForBulkheadAnnotation = function(editor) {
+        editor.addSaveListener(__showPodWithRequestButtonAndBrowser);
+    }
+
+    var __addBulkheadInEditor = function(stepName) {
+        contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
+        var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
+        var newContent = "    @Bulkhead(2)";
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 7, 7, newContent, 1);
+    }
+
     var addJavaConcurrencyButton = function(event, stepName) {
         if (event.type === "click" ||
            (event.type === "keypress" && (event.which === 13 || event.which === 32))) {
@@ -258,9 +271,18 @@ var bulkheadCallBack = (function() {
         }
     };
 
+    var addBulkheadButton = function(event, stepName) {
+        if (event.type === "click" ||
+           (event.type === "keypress" && (event.which === 13 || event.which === 32))) {
+            __addBulkheadInEditor(stepName);
+        }
+    };
+
     var clickChat = function(event, stepName) {
         if (stepName === "AsyncWithoutBulkhead") {
             $('#asyncWithoutBulkheadStep').find('.newSessionButton').trigger('click');
+        } else if (stepName === 'BulkheadAnnotation') {
+            $('#bulkheadStep').find('.newSessionButton').trigger('click');
         } else if (stepName === "AsyncBulkheadAnnotation") {
             $('#asyncBulkheadStep').find('.newSessionButton').trigger('click');  
         } else if (stepName === 'Fallback') {
@@ -388,6 +410,7 @@ var bulkheadCallBack = (function() {
         addMicroProfileFaultToleranceFeatureButton: addMicroProfileFaultToleranceFeatureButton,
         saveServerXMLButton: saveServerXMLButton,
         addJavaConcurrencyButton: addJavaConcurrencyButton,
+        addBulkheadButton: addBulkheadButton,
         saveButtonEditorButton: saveButtonEditorButton,
         listenToEditorForJavaConcurrency: listenToEditorForJavaConcurrency,
         clickChat: clickChat,
