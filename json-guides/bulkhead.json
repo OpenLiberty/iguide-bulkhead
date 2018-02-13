@@ -32,28 +32,25 @@
         {
             "name": "ExampleScenario",
             "title": "Example: Bank Scenario",
-            "description": [],
+            "description": [
+                "Image that you're developing a VirtualFinancialAdvisor microservice for a bank to allow online chat with an available financial advisor. The initial implementation of the micorservice allows only one financial advisor chat at a time. As you progress through the guide, you could see how the number of available chat session impacts the service and the system."
+            ],
             "content": [],
             "sections": [
                 {
                     "name": "FinancialAdvisor",
                     "title": "Request financial advsior",
                     "description": [
-                        "Image that you're developing a VirtualFinancialAdvisor microservice for a bank to allow online chat with an available financial advisor. The micorservice will allow only one working financial advisor chat at a time. As you progress through the guide, you could see how the number of available chat session impacts the service and the system.",
-                        "Visit your bank's website to request a financial advisor</br"
+                        "Begin by requesting an online chat with a financial advisor in the bank."
                     ],
                     "instruction": [
-                        "Enter the following URL into the browser that follows, or click <action></action>"
+                        "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'ExampleScenario')\"><b>Chat with a financial advisor</b></action> to open a chat session with an available advisor.<br>",
+                        "Since the microservice allows only one active chat session, the next chat session request will not be allowed.<br>Click <action title='Chat with a financial advisor the second time' onclick=\"bulkheadCallBack.clickChat(event, 'ExampleScenario')\"><b>Chat with a financial advisor</b></action> the 2nd time to see the failure to open a chat session.<br>"
                     ],
                     "content":[
                         {
-                            "displayType":"webBrowser",
-                            "url": "",
-                            "browserContent": "",
-                            "callback": ""
-                        },
-                        {
-                            "displayType":"pod"
+                            "displayType":"pod",
+                            "content": "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-new-session.html"
                         }
                     ]
                 }

@@ -26,7 +26,7 @@
         browser = newWebBrowser;
     });
 
-    $requestButtonElement = $('#asyncWithoutBulkheadStep').find('.newSessionButton');
+    var $requestButtonElement = $('#asyncWithoutBulkheadStep').find('.newSessionButton');
     $requestButtonElement.on("keydown", function (event) {
         event.stopPropagation();
         if (event.which === 13 || event.which === 32) { // Enter key, Space key
@@ -42,7 +42,7 @@
         contentManager.updateWithNewInstructionNoMarkComplete(stepName);
         numOfRequests++;
         
-        //bulkheadCallback.handleNewSessionRequestInBrowser(stepName, browser, numOfRequests);
+        bulkheadCallback.handleNewChatRequestInBrowser(stepName, browser, stepElementId, numOfRequests);
         browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-chat.html";       
         if (numOfRequests === 3) {
             $requestButtonElement.find(".chatText").text('Chat with a financial advisor 100 times');

@@ -405,6 +405,40 @@ var bulkheadCallBack = (function() {
         editor.addSaveListener(__showPodWithRequestButtonAndBrowser);
     }
 
+    var browserVirtualAdvisorBaseURL = "https://global-ebank.openliberty.io/virtualFinancialAdvisor/";
+    var advisors = ["Bob", "Jenny", "John", "Mary", "Lee", "Mike", "Sam", "Sandy", "Joann", "Frank" ];
+    var advisorColors = ['royalblue', 'gray', 'seagreen'];
+    var handleNewChatRequestInBrowser = function(stepName, browser, stepElementId, requestNum) {
+        var browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-chat.html";  
+        var browserVirtualAdvisorBaseURL = "https://global-ebank.openliberty.io/virtualFinancialAdvisor/";
+        var advisors = ["Bob", "Jenny", "John", "Mary", "Lee", "Mike", "Sam", "Sandy", "Joann", "Frank" ];
+        var advisorColors = ['royalblue', 'gray', 'seagreen'];
+        if (stepName === "AsyncWithoutBulkhead") {     
+            if (requestNum === 3) {
+                $requestButtonElement.find(".chatText").text('Chat with a financial advisor 100 times');
+            }
+            else if (requestNum >= 4) {
+                browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-error-500.html";
+                statusBarMessage = "Error";
+            }
+            contentManager.setBrowserURL(stepName, browserVirtualAdvisorBaseURL + "Advisor" + requestNum, 0);
+            browser.setBrowserContent(browserContentHTML);
+
+            if (requestNum < 4) {
+                // timeout is needed to make sure 
+                setTimeout(function (numOfRequest) {
+                    var advisor = advisors[numOfRequests - 1];
+                    var advisorBackgroundColor = advisorColors[numOfRequests - 1];
+                    var chatAdvisorCount  = "You are talking to advisor #" + numOfRequests;
+                    var chatIntro = "Hi, I am " + advisor + ", a financial advisor from Global eBank. Let me review your account. I'll be with you shortly."
+                    browser.getIframeDOM().find(".chatAdvisorCount").text(chatAdvisorCount);
+                    browser.getIframeDOM().find(".advisor").css("background-color", advisorBackgroundColor);
+                    browser.getIframeDOM().find(".advisor").text(chatIntro);
+                }, 100);
+            }
+        }
+    }
+
     return {
         listenToEditorForFeatureInServerXML: __listenToEditorForFeatureInServerXML,
         addMicroProfileFaultToleranceFeatureButton: addMicroProfileFaultToleranceFeatureButton,
