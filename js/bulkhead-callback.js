@@ -10,6 +10,8 @@
 *******************************************************************************/
 var bulkheadCallBack = (function() {
 
+    var bankServiceFileName = "BankService.java";
+  
     /** AddLibertyMPFaultTolerance step  begin */
     var addMicroProfileFaultToleranceFeatureButton = function(event) {
         if (event.type === "click" ||
@@ -172,9 +174,8 @@ var bulkheadCallBack = (function() {
     };
     /** AddLibertyMPFaultTolerance step  end */
 
-
     var __saveButtonEditor = function(stepName) {
-        contentManager.saveEditor(stepName);
+        contentManager.saveTabbedEditor(stepName, bankServiceFileName);
     };
 
     var saveButtonEditorButton = function(event, stepName) {
@@ -187,7 +188,7 @@ var bulkheadCallBack = (function() {
 
     var __showPodWithRequestButtonAndBrowser = function(editor) {
         var stepName = editor.getStepName();
-        var content = contentManager.getEditorContents(stepName);
+        var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
         if (__checkEditorContent(stepName, content)) {
             //editor.closeEditorErrorBox(stepName);
             var index = contentManager.getCurrentInstructionIndex();
@@ -227,14 +228,14 @@ var bulkheadCallBack = (function() {
     var __addJavaConcurrencyInEditor = function(stepName) {
         // reset content every time annotation is added through the button so as to clear out any
         // manual editing
-        contentManager.resetEditorContents(stepName);
-        var content = contentManager.getEditorContents(stepName);
+        contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
+        var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
         var newContent = 
-            "        ExecutorService executor = Executors.newFixedThreadPool(1);\n" +
-            "        Future serviceRequest = executor.submit(() -> {\n" + 
-            "            return virtualFinancialAdvisorService();\n" + 
-            "        });\n";
-        contentManager.replaceEditorContents(stepName, 10, 10, newContent, 4);
+            "    ExecutorService executor = Executors.newFixedThreadPool(1);\n" +
+            "    Future serviceRequest = executor.submit(() -> {\n" + 
+            "      return serviceForVFA();\n" + 
+            "    });\n";
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 11, 11, newContent, 4);
     };
 
     var addJavaConcurrencyButton = function(event, stepName) {

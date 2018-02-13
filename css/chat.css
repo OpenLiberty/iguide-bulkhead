@@ -1,0 +1,47 @@
+.chat {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 95%;
+}
+
+.chatAdvisorCount {
+    font-size: 12px; 
+    padding-bottom: 10px;
+}
+
+.chatIntro {
+    background-color: slategray;
+}
+
+ul li{
+    display:inline-block;
+    clear: both;
+    padding: 12px;
+    border-radius: 30px;
+    margin-bottom: 2px;
+}
+  
+.customer {
+    background: #eee;
+    float: left;
+}
+  
+.advisor {
+    float: right;
+    background: #0084ff;
+    color: #fff;
+}
+  
+.customer + .advisor {
+    border-bottom-right-radius: 5px;
+}
+  
+.advisor + .advisor {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+  
+.advisor:last-of-type {
+    border-bottom-right-radius: 30px;
+}

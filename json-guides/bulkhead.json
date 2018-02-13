@@ -39,6 +39,7 @@
                     "name": "FinancialAdvisor",
                     "title": "Request financial advsior",
                     "description": [
+                        "Image that you're developing a VirtualFinancialAdvisor microservice for a bank to allow online chat with an available financial advisor. The micorservice will allow only one working financial advisor chat at a time. As you progress through the guide, you could see how the number of available chat session impacts the service and the system.",
                         "Visit your bank's website to request a financial advisor</br"
                     ],
                     "instruction": [
@@ -62,50 +63,55 @@
             "name": "AsyncWithoutBulkhead",
             "title": "Java Concurrency with Future and Executors",
             "description": [
-                "Adding Java concurrency such as Executors and Future, removes the limitation of one \"working\" virtual financial advisor. This allows multiple virtual financial advisors working at the same time."
+                "In the <a href='#example-bank-scenario'>Example: Bank Scenario</a> step, it allows only a single virtual financial advisor chat session available at a time. Implementing Java concurrency by using <a href='#background-concepts'>Executors and Future</a> removes the single chat limitation and allows multiple virtual financial advisor chat sessions available at the same time."
             ],
             "instruction": [
-                "Change the <code>return virtualFinancialAdvisorService();</code> on line 10 to the following code, or click <br><action title='Adding Java Concurrency' onclick=\"bulkheadCallBack.addJavaConcurrencyButton(event, 'AsyncWithoutBulkhead')\"><b>ExecutorService executor = Executors.newFixedThreadPool(1);\nFuture<Boolean> serviceRequest = executor.submit(() -> {\n    return virtualFinancialAdvisorService();\n});</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncWithoutBulkhead')\"><b>Run</b></action> on the editor menu pane.",
+                "Change the <code>return serviceforVFA();</code> on line 10 to the following code, or click <br><action title='Adding Java Concurrency' onclick=\"bulkheadCallBack.addJavaConcurrencyButton(event, 'AsyncWithoutBulkhead')\"><b>ExecutorService executor = Executors.newFixedThreadPool(1);\nFuture serviceRequest = executor.submit(() -> {\n  return serviceForVFA();\n});</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncWithoutBulkhead')\"><b>Run</b></action> on the editor menu pane.",
                 "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Chat with a financial advisor</b></action> to open a chat session with an available advisor.<br>",
-                "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Chat with a financial advisor</b></action> to open a second chat session with another available advisor.<br>",
-                "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Chat with a financial advisor</b></action> to open a third chat session with another available advisor.<br>",
-                "Since there is no limit to the number of available advisor sessions, the system eventually overloads. Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Chat with a financial advisor</b></action> to see the failure to open a chat session.<br>"
+                "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Chat with a financial advisor</b></action> the 2nd time to open another chat session with another available advisor.<br>",
+                "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Chat with a financial advisor</b></action> the 3rd time to open another chat session with another available advisor.<br>",
+                "Since the new codes do not implement a limit to the number of available advisor sessions, the system eventually runs out of CPU or memory resources causing it to overload.<br>Click <action title='Chat with a financial advisor 100 times' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Chat with a financial advisor 100 times</b></action> to see the failure to open a chat session.<br>"
             ],
             "content":[
                 {
-                  "displayType":"fileEditor",
-                  "fileName": "VirtualFinancialAdvisor.java",
-                  "preload": [
-                      "package global.eBank.microservices;",
-                      "import java.util.concurrent.Future;",
-                      "import java.util.concurrent.Executors;",
-                      "import java.util.concurrent.ExecutorService;",
-                      "",
-                      "public class BankService {",
-                      "",
-                      "    public Service requestAVirtualFinancialAdvisor() {",
-                      "        counterForVirtualFinancialAdvisor++;",
-                      "        return virtualFinancialAdvisorService();",
-                      "    }",
-                      "}"
-                  ],
-                  "readonly": [
-                    {
-                        "from": "1",
-                        "to": "9"
-                    },
-                    {
-                        "from": "11",
-                        "to": "12"
-                    }
-                  ],
-                  "save": false,
-                  "callback": "(function test(editor) {bulkheadCallBack.listenToEditorForJavaConcurrency(editor); })"
+                    "displayType": "tabbedEditor",
+                    "editorList": [
+                        {
+                            "displayType":"fileEditor",
+                            "fileName": "BankService.java",
+                            "preload": [
+                                "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
+                                "import java.util.concurrent.Future;",
+                                "import java.util.concurrent.Executors;",
+                                "import java.util.concurrent.ExecutorService;",
+                                "",
+                                "public class BankService {",
+                                "",
+                                "  // VFA = Virtual Financial Advisor",
+                                "  public Service requestForVFA() {",
+                                "    counterForVirtualFinancialAdvisor++;",
+                                "    return serviceForVFG();",
+                                "  }",
+                                "}"
+                            ],
+                            "readonly": [
+                                {
+                                    "from": "1",
+                                    "to": "10"
+                                },
+                                {
+                                    "from": "12",
+                                    "to": "13"
+                                }
+                            ],
+                            "save": false,
+                            "callback": "(function test(editor) {bulkheadCallBack.listenToEditorForJavaConcurrency(editor); })"
+                        }
+                    ]
                 },
                 {
-                    "displayType": "pod",
-                    "diffcontent": "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-new-session.html"
-                  }
+                    "displayType": "pod"
+                }
             ]
         },
         {
