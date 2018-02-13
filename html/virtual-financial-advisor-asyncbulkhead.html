@@ -2,7 +2,7 @@
     <div class="virtualFinancialAdvisorNewSession">
         <button class="newSessionButton" aria-label="New virtual financial advisor session request">
             <img src="/guides/draft-iguide-bulkhead/html/images/chat-message_32.svg" class="chatMessageImg" alt="chat"/>
-             Chat with a financial advisor
+            <spam class="chatText">Chat with a financial advisor</spam>
         </button>
     </div>
     <div class='browserHolder'></div>
@@ -12,7 +12,8 @@
     var numOfRequests = 0;
     var browserVirtualAdvisorBaseURL = "https://global-ebank.openliberty.io/virtualFinancialAdvisor/";
     var browser;
-    var advisors = ["Bob", "John", "Jenny", "Mary", "Lee", "Mike", "Sam", "Sandy", "Joann", "Frank" ];
+    var advisors = ["Bob", "Jenny", "John", "Mary", "Lee", "Mike", "Sam", "Sandy", "Joann", "Frank" ];
+    var advisorColors = ['royalblue', 'gray', 'seagreen'];
 
     var content = {
         url: "https://global-ebank.openliberty.io/",
@@ -41,27 +42,31 @@
         contentManager.updateWithNewInstructionNoMarkComplete(stepName);
         numOfRequests++;
         console.log("numOfRequests ", numOfRequests);
-        //bulkheadCallback.handleNewSessionRequestInBrowser(stepName, browser, numOfRequests);
+        
         browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-chat.html";
-        statusBarMessage = "You are talking to advisor # " + numOfRequests + " out of 2 avaiable";
+        //statusBarMessage = "You are talking to advisor # " + numOfRequests + " out of 2 avaiable";     
         if (numOfRequests > 3) {
             console.log("retry");
             browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-asyncbulkhead-error.html";
-            statusBarMessage = "Retry";
+            statusBarMessage = "Error";
         } else if (numOfRequests > 2) {
             console.log("waiting queue");
             browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-waitingqueue.html";
             statusBarMessage = "Waiting queue";
-        } 
-        contentManager.setBrowserURL(stepName, browserVirtualAdvisorBaseURL + "/Advisor" + numOfRequests, 0);
-        browser.setBrowserStatusBar(statusBarMessage);
+        }
+        contentManager.setBrowserURL(stepName, browserVirtualAdvisorBaseURL + "Advisor" + numOfRequests, 0);
+        //browser.setBrowserStatusBar(statusBarMessage);
         browser.setBrowserContent(browserContentHTML);
 
         if (numOfRequests < 3) {
-            setTimeout(function () {
+            setTimeout(function (numOfRequest) {
                 var advisor = advisors[numOfRequests - 1];
-                var chatIntro = advisor + ": Hi, I am " + advisor + ", a financial advisor from Global eBank. How can I help you?\nYou:"
-                browser.getIframeDOM().find(".chat").text(chatIntro);
+                var advisorBackgroundColor = advisorColors[numOfRequests - 1];
+                var chatAdvisorCount  = "You are talking to advisor #" + numOfRequests;
+                var chatIntro = "Hi, I am " + advisor + ", a financial advisor from Global eBank. Let me review your account. I'll be with you shortly."
+                browser.getIframeDOM().find(".chatAdvisorCount").text(chatAdvisorCount);
+                browser.getIframeDOM().find(".advisor").css("background-color", advisorBackgroundColor);
+                browser.getIframeDOM().find(".advisor").text(chatIntro);
             }, 100);
         }
     }
