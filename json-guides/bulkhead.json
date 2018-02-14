@@ -217,7 +217,7 @@
                 "In the previous <a href='#adding-the-bulkhead-annotation'>Adding the@Bulkhead annotation</a> step, once requests reach the maximum limit, the extra request still fail. Using <code>@Asynchronous</code> annotation allows the extra requests to be place in the waiting queue. When a request cannot be added to the waiting queue, a friendly message will be display for the user to try the request again later. <br>"         
             ],
             "instruction": [
-                "Change the <code>@Bulkhead()</code> annotation on line 9 to the following code, or click <br><action title='Bulkhead annotation with Asynchronous' onclick=\"bulkheadCallBack.addAsyncBulkheadButton(event, 'AsyncBulkheadAnnotation')\"><b>@Asynchronous\n@Bulkhead(value = 2, waitingTaskQueue = 1)</b></action>.<br>The method annotated with @Asynchronous must return a Future. Change the method return type on line 12 to the following code, or click <br><action title='Bulkhead return type method' onclick=\"bulkheadCallBack.addMethodFutureReturnTypeButton(event, 'AsyncBulkheadAnnotation')\"><b>public Future<Service> requestAVirtualFinancialAdvisor() {</b></action>.<br>Change the return type on line 14 to the following code, or click<br><action title='Bulkhead return type' onclick=\"bulkheadCallBack.addReturnTypeButton(event, 'AsyncBulkheadAnnotation')\"><b>return CompletableFuture.completedFuture(virtualFinancialAdvisorService());</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncBulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane.",
+                "Change the <code>@Bulkhead()</code> annotation on line 9 to the following code, or click <br><action title='Bulkhead annotation with Asynchronous' onclick=\"bulkheadCallBack.addAsyncBulkheadButton(event, 'AsyncBulkheadAnnotation')\"><b>@Asynchronous\n@Bulkhead(value = 2, waitingTaskQueue = 1)</b></action>.<br>The method annotated with @Asynchronous must return a Future. Change the method return type on line 12 to the following code, or click <br><action title='Bulkhead return type method' onclick=\"bulkheadCallBack.addMethodFutureReturnTypeButton(event, 'AsyncBulkheadAnnotation')\"><b>public Future<Service> requestForVFA() {</b></action>.<br>Change the return type on line 14 to the following code, or click<br><action title='Bulkhead return type' onclick=\"bulkheadCallBack.addReturnTypeButton(event, 'AsyncBulkheadAnnotation')\"><b>return CompletableFuture.completedFuture(serviceForVFA());</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncBulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane.",
                 "In the previous step, after the maximum number of requests has reach, the extra request fails. Retry the 3rd request by clicking <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation')\"><b>Chat with a financial advisor</b></action> to be place in the waiting queue.<br>",
                 "Once the extra request can not be add to the waiting queue, a message will be display. Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation')\"><b>Chat with a financial advisor</b></action> the 4th time to see the message display to the user.<br>"
             ],
@@ -240,7 +240,7 @@
                                 "",
                                 "  @Bulkhead(2)",
                                 "  public Service requestForVFA() {",
-                                "    counterForVirtualFinancialAdvisor++;",
+                                "    counterForVFA++;",
                                 "    return serviceForVFA();",
                                 "  }",
                                 "}"
@@ -337,7 +337,7 @@
                                 "            waitingTaskQueue = 1)",
                                 "  public Future<Service> requestForVFA() {",
                                 "    counterForVFA++;",
-                                "    return CompletableFuture.completedFuture(serviceForVFG());",
+                                "    return CompletableFuture.completedFuture(serviceForVFA());",
                                 "  }",
                                 "}"
                             ],
