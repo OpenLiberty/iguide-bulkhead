@@ -14,7 +14,8 @@
     var browser;
 
     var content = {
-        url: "https://global-ebank.openliberty.io/",
+        //url: "https://global-ebank.openliberty.io/",
+        url: "https://global-ebank.openliberty.io/virtualFinancialAdvisor/error",
         statusBarText: "",
         browserContent: "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html"
     };
@@ -40,7 +41,7 @@
         
         browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-fallback.html";
 
-        contentManager.setBrowserURL(stepName, browserVirtualAdvisorBaseURL, 0);
+        contentManager.setBrowserURL(stepName, browserVirtualAdvisorBaseURL + "fallback", 0);
         browser.setBrowserContent(browserContentHTML);
     }
 </script>

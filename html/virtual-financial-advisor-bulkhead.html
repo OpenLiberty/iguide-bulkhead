@@ -16,7 +16,8 @@
     var advisorColors = ['royalblue', 'gray', 'seagreen'];
 
     var content = {
-        url: "https://global-ebank.openliberty.io/",
+        //url: "https://global-ebank.openliberty.io/",
+        url: "https://global-ebank.openliberty.io/virtualFinancialAdvisor/error",
         statusBarText: ""
         //browserContent: "/guides/draft-iguide-bulkhead/html/bank.html",
         //callback: "(function test(webBrowser) {bulkheadCallBack.listenToBrowserForNewSessionRequest(webBrowser, stepName); })"
@@ -42,17 +43,19 @@
         contentManager.updateWithNewInstructionNoMarkComplete(stepName);
         numOfRequests++;
         
+        var browserUrl = browserVirtualAdvisorBaseURL + "Advisor" + numOfRequests;
+        var browserErrorUrl = browserVirtualAdvisorBaseURL + "error";
+
         //bulkheadCallback.handleNewSessionRequestInBrowser(stepName, browser, numOfRequests);
         browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-chat.html";       
         if (numOfRequests >= 3) {
-            contentManager.setBrowserURL(stepName, browserVirtualAdvisorBaseURL, 0);
+            browserUrl = browserErrorUrl;
             browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html";
         }
    
         browser.setBrowserContent(browserContentHTML);
-
+        contentManager.setBrowserURL(stepName, browserUrl, 0);
         if (numOfRequests < 3) {
-            contentManager.setBrowserURL(stepName, browserVirtualAdvisorBaseURL + "Advisor" + numOfRequests, 0);
             setTimeout(function (numOfRequest) {
                 var advisor = advisors[numOfRequests - 1];
                 var advisorBackgroundColor = advisorColors[numOfRequests - 1];
