@@ -210,20 +210,12 @@
             "name": "AsyncBulkheadAnnotation",
             "title": "Adding the @Asynchronous annotation with Bulkhead",
             "description": [  
-                "When <code>@Bulkhead</code> is used with <code>@Asynchronous</code>, the thread pool isolation approach will be used. The thread pool approach allows to configure the maximum concurrent requests together with the waiting queue size. When a request cannot be added to the waiting queue, BulkheadException will be thrown.</br>",
-                "Multiple virtual financial advisors can service the requests at the same time. If there are no financial advisor available, requests are allow in the waiting queue. When the maximum number of requests on the waiting queue are reach, an error message will be display.",
-                "You can modify these two parameters:",
-                "<ul>",
-                "<li><b>value</b>: the maximum number of concurrent requests ",
-                "<li><b>waitingTaskQueue</b>: the waiting task queue. This setting only takes effect on asynchronous invocation, achieved by using <code>@Asynchronous</code>",
-                "</ul>"         
+                "In previous Bulkhead step once requests reach the maximum limit, the extra request still fail. Using <code>@Asynchronous</code> annotation allows the extra requests to be place in the waiting queue. When a request cannot be added to the waiting queue, a friendly message will be display for the user to try the request again later. <br><br>The waiting queue can be configure using <b>waitTaskQueue</b> parameter of the <code>@Bulkhead</code> annotation. By default the maximum number of requests on the waiting queue is 10. This value only takes effect on asynchronous invocation by using <code>@Asynchronous</code> annotation."         
             ],
             "instruction": [
                 "Change the <code>@Bulkhead()</code> annotation on line 9 to the following code, or click <br><action title='Bulkhead annotation with Asynchronous' onclick=\"bulkheadCallBack.addAsyncBulkheadButton(event, 'AsyncBulkheadAnnotation')\"><b>@Asynchronous\n@Bulkhead(value = 2, waitingTaskQueue = 1)</b></action>.<br>The method annotated with @Asynchronous must return a Future. Change the method return type on line 12 to the following code, or click <br><action title='Bulkhead return type method' onclick=\"bulkheadCallBack.addMethodFutureReturnTypeButton(event, 'AsyncBulkheadAnnotation')\"><b>public Future<Service> requestAVirtualFinancialAdvisor() {</b></action>.<br>Change the return type on line 14 to the following code, or click<br><action title='Bulkhead return type' onclick=\"bulkheadCallBack.addReturnTypeButton(event, 'AsyncBulkheadAnnotation')\"><b>return CompletableFuture.completedFuture(virtualFinancialAdvisorService());</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncBulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane.",
-                "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation')\"><b>Chat with a financial advisor</b></action> to open a chat session with an available advisor.<br>",
-                "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation')\"><b>Chat with a financial advisor</b></action> the second time to open a chat session with another available advisor.<br>",
-                "Since the maximum number of requests has reach. The next request will be place in the waiting queue. Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation')\"><b>Chat with a financial advisor</b></action> the third time to be place in the waiting queue.<br>",
-                "There is a limit to the number of requests that can be add to the waiting queue to prevent the system overloads. Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation')\"><b>Chat with a financial advisor</b></action> the fourth time to see the error message.<br>"
+                "In the previous step, after the maximum number of requests has reach, the extra request fails. Retry the 3rd request by clicking <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation')\"><b>Chat with a financial advisor</b></action> to be place in the waiting queue.<br>",
+                "Once the extra request can not be add to the waiting queue, a message will be display. Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation')\"><b>Chat with a financial advisor</b></action> the 4th time to see the message display to the user.<br>"
             ],
             "content":[
                 {
@@ -245,7 +237,7 @@
                                 "  @Bulkhead(2)",
                                 "  public Service requestForVFA() {",
                                 "    counterForVirtualFinancialAdvisor++;",
-                                "    return serviceForVFG();",
+                                "    return serviceForVFA();",
                                 "  }",
                                 "}"
                             ],
@@ -255,8 +247,16 @@
                                     "to": "8"
                                 },
                                 {
-                                    "from": "10",
-                                    "to": "14"
+                                    "from": "11",
+                                    "to": "11"
+                                },
+                                {
+                                    "from": "13",
+                                    "to": "13"
+                                },
+                                {
+                                    "from": "15",
+                                    "to": "16"
                                 }
                             ],
                             "save": false,
@@ -285,7 +285,7 @@
             "title": "Adding the @Fallback annotation",
             "description": [  
                 "Use <code>@Fallback(FallbackHandler.class)</code> annotation to identify a fallback class that run when the requests are failed.",
-                "When the maximum number of requests on the waiting queue are reach, the fallback class can be execute to display a friendly message for the user to try the request again later."
+                "When the maximum number of requests on the waiting queue are reach, the fallback class can be execute to display a message for the user to schedule the request later."
             ],
             "instruction": [
                 "In <code>BankService.java</code> add the <code>@Fallback(BulkheadFallbackHandler.class)</code> annotation on line 9 to the following code, or click <br><action title='Async Bulkhead annotation with Fallback' onclick=\"bulkheadCallBack.addFallbackAsyncBulkheadButton(event, 'Fallback')\"><b>@Fallback(BulkheadFallbackHandler.class)</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'Fallback')\"><b>Run</b></action> on the editor menu pane.",

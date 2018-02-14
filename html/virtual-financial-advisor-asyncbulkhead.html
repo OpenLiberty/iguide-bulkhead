@@ -41,21 +41,15 @@
         contentManager.markCurrentInstructionComplete(stepName);
         contentManager.updateWithNewInstructionNoMarkComplete(stepName);
         numOfRequests++;
-        console.log("numOfRequests ", numOfRequests);
+        //console.log("numOfRequests ", numOfRequests);
         
         browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-chat.html";
-        //statusBarMessage = "You are talking to advisor # " + numOfRequests + " out of 2 avaiable";     
-        if (numOfRequests > 3) {
-            console.log("retry");
+        if (numOfRequests > 1) {
             browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html";
-            //statusBarMessage = "Error";
-        } else if (numOfRequests > 2) {
-            console.log("waiting queue");
+        } else if (numOfRequests == 1) {         
             browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-waitingqueue.html";
-            //statusBarMessage = "Waiting queue";
         }
         contentManager.setBrowserURL(stepName, browserVirtualAdvisorBaseURL + "Advisor" + numOfRequests, 0);
-        //browser.setBrowserStatusBar(statusBarMessage);
         browser.setBrowserContent(browserContentHTML);
 
         if (numOfRequests < 3) {
