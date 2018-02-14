@@ -33,7 +33,7 @@
             "name": "ExampleScenario",
             "title": "Example: Bank Scenario",
             "description": [
-                "Image that you're developing a VirtualFinancialAdvisor microservice for a bank to allow online chat with an available financial advisor. The initial implementation of the micorservice allows only one financial advisor chat at a time. As you progress through the guide, you could see how the number of available chat session impacts the service and the system."
+                "Imagine that you're developing a VirtualFinancialAdvisor microservice for a bank to allow online chat with an available financial advisor. The initial implementation of the micorservice allows only one financial advisor chat at a time. As you progress through the guide, you could see how the number of available chat session impacts the service and the system."
             ],
             "content": [],
             "sections": [
@@ -60,14 +60,14 @@
             "name": "AsyncWithoutBulkhead",
             "title": "Java Concurrency with Future and Executors",
             "description": [
-                "In the <a href='#example-bank-scenario'>Example: Bank Scenario</a> step, it allows only a single virtual financial advisor chat session available at a time. Implementing Java concurrency by using <a href='#background-concepts'>Executors and Future</a> removes the single chat limitation and allows multiple virtual financial advisor chat sessions available at the same time."
+                "The initial implementation of VirtualFinancialAdvisor (VFA) microservices allows only a single virtual financial advisor chat session at a time. Implementing Java concurrency using <a href='#background-concepts'>Executors and Future</a> removes the single chat limitation and allows multiple chat sessions available at the same time.",
+                "<br>Let us start by adding Future and Executors to the codes."
             ],
             "instruction": [
-                "Change the <code>return serviceforVFA();</code> on line 10 to the following code, or click <br><action title='Adding Java Concurrency' onclick=\"bulkheadCallBack.addJavaConcurrencyButton(event, 'AsyncWithoutBulkhead')\"><b>ExecutorService executor = Executors.newFixedThreadPool(1);\nFuture serviceRequest = executor.submit(() -> {\n  try{\n    return serviceForVFA();\n  } catch {Exception ex} {\n    handleBulkheadException()\n  }\n  return null;\n});</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncWithoutBulkhead')\"><b>Run</b></action> on the editor menu pane.",
-                "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Chat with a financial advisor</b></action> to open a chat session with an available advisor.<br>",
-                "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Chat with a financial advisor</b></action> the 2nd time to open another chat session with another available advisor.<br>",
-                "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Chat with a financial advisor</b></action> the 3rd time to open another chat session with another available advisor.<br>",
-                "Since the new codes do not implement a limit to the number of available advisor sessions, the system eventually runs out of CPU or memory resources causing it to overload.<br>Click <action title='Chat with a financial advisor 100 times' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Chat with a financial advisor 100 times</b></action> to see the failure to open a chat session.<br>"
+                "Change the <code>return serviceforVFA(counterForVFA);</code> on line 11 to the following code, or click <br><action title='Adding Java Concurrency' onclick=\"bulkheadCallBack.addJavaConcurrencyButton(event, 'AsyncWithoutBulkhead')\"><b>ExecutorService executor = Executors.newFixedThreadPool(1);\nFuture serviceRequest = executor.submit(() -> {\n  try{\n    return serviceForVFA(counterForVFA);\n  } catch {Exception ex} {\n    handleBulkheadException();\n  }\n  return null;\n});</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncWithoutBulkhead')\"><b>Run</b></action> on the editor menu pane.",
+                "Click <action title='Customer 1 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Customer 1 request chat</b></action> to open a chat session with an available financial advisor.<br>",
+                "While customer 1 is still chating with a financial advisor, click <action title='Customer 2 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Customer 2 request chat</b></action> to open a separate chat session with an available financial advisor.<br>",
+                "Since then 97 more customers have requested chat sessions with an available advisor and all the chats are still active.<br>As the new codes do not implement a limit to the number of available advisor sessions, the system runs out of CPU or memory resources causing it to overload.<br>Click <action title='Customer 100 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Customer 100 request chat</b></action> to get the failure to open a chat session.<br>"
             ],
             "content":[
                 {
@@ -182,7 +182,7 @@
                                 "",
                                 "public class BankService {",
                                 "",
-                                "    public Service serviceForVFA(counterForVFA) {",
+                                "    public Service serviceForVFA(int counterForVFA) {",
                                 "        Service chatService = new ChatSession(counterForVFA)",
                                 "        return chatService;",
                                 "    }",

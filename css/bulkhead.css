@@ -12,3 +12,22 @@
 .browserHolder {
     margin-top: 10px;
 }
+
+#guide_content .codeeditor .CodeMirror {
+    height: 100%;
+    border-bottom: none;
+}
+
+#guide_content .editorContainer{
+    height: 448px;
+}
+
+#guide_content .teContainer .editorContainer{
+    height: 423px;
+}
+
+.codeeditor {
+    height: 100%;
+    overflow: auto;
+    border-bottom: 1px solid black;
+}
