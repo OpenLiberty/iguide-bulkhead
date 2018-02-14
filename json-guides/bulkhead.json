@@ -286,8 +286,8 @@
             "name": "Fallback",
             "title": "Adding the @Fallback annotation",
             "description": [  
-                "Use <code>@Fallback(FallbackHandler.class)</code> annotation to identify a fallback class that run when the requests are failed.",
-                "When the maximum number of requests on the waiting queue are reach, the fallback class can be execute to display a message for the user to schedule the request later."
+                "Use <code>@Fallback(FallbackHandler.class)</code> annotation to identify a method under a class that runs when the requests are failed.<br>",
+                "In the previous <a href='#adding-the-asynchronous-annotation-with-bulkhead'>Adding the @Asynchronous annotation with Bulkhead</a> step, when a request can not be added to the waiting queue, a message display for the user to try again later. With <code>@Fallback(FallbackHandler.class)</code> annotation, the <code>FallbackHandler</code> class is executed to display a message for the user to schedule the request."
             ],
             "instruction": [
                 "In <code>BankService.java</code> add the <code>@Fallback(ServiceFallbackHandler.class)</code> annotation on line 9 to the following code, or click <br><action title='Async Bulkhead annotation with Fallback' onclick=\"bulkheadCallBack.addFallbackAsyncBulkheadButton(event, 'Fallback')\"><b>@Fallback(ServiceFallbackHandler.class)</b></action>.<br><note>Note: When the method <code>requestForVFA()</code> failed, the fallback operation will be performed. In <code>ServiceFallBackHandler.java</code> the method <code>ServiceFallbackHandler.handle(ExecutionContext context)</code> will be invoked. The return type of <code>ServiceFallbackHandler.handle(ExecutionContext context)</code> must be <code>Service</code>. Otherwise, the <code>FaultToleranceDefinitionException</code> will be thrown.</note>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'Fallback')\"><b>Run</b></action> on the editor menu pane.",
