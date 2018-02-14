@@ -17,14 +17,13 @@
     var advisorColors = ['royalblue', 'gray', 'seagreen'];
 
     var content = {
-        url: "https://global-ebank.openliberty.io/",
+        url: "https://global-ebank.openliberty.io/virtualFinancialAdvisor/error",
         statusBarText: "",
         browserContent: "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html"
         //callback: "(function test(webBrowser) {bulkheadCallBack.listenToBrowserForNewSessionRequest(webBrowser, stepName); })"
     };
     webBrowser.create($('#asyncBulkheadStep').find('.browserHolder'), stepName,  content).done(function(newWebBrowser){
         contentManager.setWebBrowser(stepName, newWebBrowser, 0);
-        contentManager.setBrowserURL(browserVirtualAdvisorBaseURL + "error");
         browser = newWebBrowser;
     });
 
