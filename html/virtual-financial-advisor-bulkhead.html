@@ -45,7 +45,7 @@
         //bulkheadCallback.handleNewSessionRequestInBrowser(stepName, browser, numOfRequests);
         browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-chat.html";       
         if (numOfRequests >= 3) {
-            browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-limit.html";
+            browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html";
         }
 
         contentManager.setBrowserURL(stepName, browserVirtualAdvisorBaseURL + "Advisor" + numOfRequests, 0);

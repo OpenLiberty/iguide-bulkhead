@@ -17,8 +17,8 @@
 
     var content = {
         url: "https://global-ebank.openliberty.io/",
-        statusBarText: ""
-        //browserContent: "/guides/draft-iguide-bulkhead/html/bank.html",
+        statusBarText: "",
+        browserContent: "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html"
         //callback: "(function test(webBrowser) {bulkheadCallBack.listenToBrowserForNewSessionRequest(webBrowser, stepName); })"
     };
     webBrowser.create($('#asyncBulkheadStep').find('.browserHolder'), stepName,  content).done(function(newWebBrowser){
