@@ -63,7 +63,7 @@
                 "In the <a href='#example-bank-scenario'>Example: Bank Scenario</a> step, it allows only a single virtual financial advisor chat session available at a time. Implementing Java concurrency by using <a href='#background-concepts'>Executors and Future</a> removes the single chat limitation and allows multiple virtual financial advisor chat sessions available at the same time."
             ],
             "instruction": [
-                "Change the <code>return serviceforVFA();</code> on line 10 to the following code, or click <br><action title='Adding Java Concurrency' onclick=\"bulkheadCallBack.addJavaConcurrencyButton(event, 'AsyncWithoutBulkhead')\"><b>ExecutorService executor = Executors.newFixedThreadPool(1);\nFuture serviceRequest = executor.submit(() -> {\n  return serviceForVFA();\n});</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncWithoutBulkhead')\"><b>Run</b></action> on the editor menu pane.",
+                "Change the <code>return serviceforVFA();</code> on line 10 to the following code, or click <br><action title='Adding Java Concurrency' onclick=\"bulkheadCallBack.addJavaConcurrencyButton(event, 'AsyncWithoutBulkhead')\"><b>ExecutorService executor = Executors.newFixedThreadPool(1);\nFuture serviceRequest = executor.submit(() -> {\n  try{\n    return serviceForVFA();\n  } catch {Exception ex} {\n    handleBulkheadException()\n  }\n  return null;\n});</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncWithoutBulkhead')\"><b>Run</b></action> on the editor menu pane.",
                 "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Chat with a financial advisor</b></action> to open a chat session with an available advisor.<br>",
                 "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Chat with a financial advisor</b></action> the 2nd time to open another chat session with another available advisor.<br>",
                 "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Chat with a financial advisor</b></action> the 3rd time to open another chat session with another available advisor.<br>",
@@ -86,8 +86,13 @@
                                 "",
                                 "  // VFA = Virtual Financial Advisor",
                                 "  public Service requestForVFA() {",
-                                "    counterForVirtualFinancialAdvisor++;",
-                                "    return serviceForVFG();",
+                                "    counterForVFA++;",
+                                "    return serviceForVFA(counterForVFA);",
+                                "  }",
+                                "",
+                                "  private Service serviceForVFA(int counterForVFA) {",
+                                "    Service chatService = new ChatSession(counterForVFA);",
+                                "    return chatService;",
                                 "  }",
                                 "}"
                             ],
@@ -98,7 +103,7 @@
                                 },
                                 {
                                     "from": "12",
-                                    "to": "13"
+                                    "to": "18"
                                 }
                             ],
                             "save": false,

@@ -247,9 +247,14 @@ var bulkheadCallBack = (function() {
         var newContent = 
             "    ExecutorService executor = Executors.newFixedThreadPool(1);\n" +
             "    Future serviceRequest = executor.submit(() -> {\n" + 
-            "      return serviceForVFA();\n" + 
-            "    });\n";
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 11, 11, newContent, 4);
+            "      try {\n" +
+            "        return serviceForVFA();\n" +
+            "      } catch {Exception ex} {\n" + 
+            "        handleBulkheadException();\n" +
+            "      }\n" +
+            "      return null;\n" +
+            "    });";
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 11, 11, newContent, 9);
     };
 
     var listenToEditorForBulkheadAnnotation = function(editor) {
