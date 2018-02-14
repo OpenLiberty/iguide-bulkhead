@@ -421,9 +421,8 @@ var bulkheadCallBack = (function() {
     var __advisorColors = ['royalblue', 'gray', 'seagreen'];
     var handleNewChatRequestInBrowser = function(stepName, browser, stepElementId, requestNum) {
         var browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-chat.html";  
-        var browserVirtualAdvisorBaseURL = "https://global-ebank.openliberty.io/virtualFinancialAdvisor/";
-        var advisors = ["Bob", "Jenny", "John", "Mary", "Lee", "Mike", "Sam", "Sandy", "Joann", "Frank" ];
-        var advisorColors = ['royalblue', 'gray', 'seagreen'];
+        var browserUrl = __browserVirtualAdvisorBaseURL + "Advisor" + requestNum;
+        var browserErrorUrl = __browserVirtualAdvisorBaseURL + "error";
         var requestLimits = 1;
 
         contentManager.markCurrentInstructionComplete(stepName);
@@ -434,6 +433,7 @@ var bulkheadCallBack = (function() {
             }
             else if (requestNum >= 4) {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-error-500.html";
+                browserUrl = browserErrorUrl;
                 //statusBarMessage = "Error";
             }
             requestLimits = 4;               
@@ -441,12 +441,13 @@ var bulkheadCallBack = (function() {
             requestLimits = 2;
             if (requestNum >= requestLimits) {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-no-available.html";
+                browserUrl = browserErrorUrl;
             }
         }
         
+        contentManager.setBrowserURL(stepName, browserUrl, 0); 
         browser.setBrowserContent(browserContentHTML);       
         if (requestNum < requestLimits) {
-            contentManager.setBrowserURL(stepName, __browserVirtualAdvisorBaseURL + "Advisor" + requestNum, 0);
             // timeout is needed to make sure the content is rendered before accessing the elements
             setTimeout(function (numOfRequest) {
                 var advisor = __advisors[numOfRequests - 1];
