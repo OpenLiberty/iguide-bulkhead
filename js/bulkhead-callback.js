@@ -192,16 +192,14 @@ var bulkheadCallBack = (function() {
         
         var htmlFile;
         if (stepName === "AsyncWithoutBulkhead") {
-            htmlFile = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-new-session.html";
+            htmlFile = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-async-without-bulkhead.html";
         } else if (stepName === "BulkheadAnnotation") {
             htmlFile = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead.html";
         } else if (stepName === "AsyncBulkheadAnnotation") {
             htmlFile = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-asyncbulkhead.html";
         } else if (stepName === "Fallback") {
             htmlFile = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-asyncbulkhead-fallback.html";
-        } else if (stepName === "FinancialAdvisor") {
-            htmlFile = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-async-without-bulkhead.html";
-        }
+        } 
 
         if (__checkEditorContent(stepName, content)) {
             //editor.closeEditorErrorBox(stepName);
@@ -433,7 +431,7 @@ var bulkheadCallBack = (function() {
         } else if (stepName === "FinancialAdvisor") {
             requestLimits = 2;
             if (requestNum >= requestLimits) {
-                browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-error-500.html";
+                browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-no-available.html";
             }
         }
         contentManager.setBrowserURL(stepName, __browserVirtualAdvisorBaseURL + "Advisor" + requestNum, 0);
