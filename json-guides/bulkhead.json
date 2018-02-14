@@ -24,7 +24,7 @@
                         "The term <b>bulkhead</b> comes from the structure used in ships to create partitions. In the event of a hull breach, these partitions can be sealed off to prevent the rest of the ship from getting damaged.<br>",
                         "The bulkhead pattern in software systems work similarly by isolating failures to prevent the rest of the system from failing.<br>",
                         "<h4>Asynchronous</h4>",
-                        "Asynchronous definition?"
+                        "Asynchronous means the execution of the client request will be on a separate thread."
                     ]
                 }
             ]
@@ -209,8 +209,10 @@
         {
             "name": "AsyncBulkheadAnnotation",
             "title": "Adding the @Asynchronous annotation with Bulkhead",
-            "description": [  
-                "In previous Bulkhead step once requests reach the maximum limit, the extra request still fail. Using <code>@Asynchronous</code> annotation allows the extra requests to be place in the waiting queue. When a request cannot be added to the waiting queue, a friendly message will be display for the user to try the request again later. <br><br>The waiting queue can be configure using <b>waitTaskQueue</b> parameter of the <code>@Bulkhead</code> annotation. By default the maximum number of requests on the waiting queue is 10. This value only takes effect on asynchronous invocation by using <code>@Asynchronous</code> annotation."         
+            "description": [ 
+                "When <code>@Bulkhead</code> is used with <code>@Asynchronous</code>, the thread pool isolation approach will be used. The thread pool approach allows to configure the maximum concurrent requests together with the waiting queue size. When a request cannot be added to the waiting queue, <code>BulkheadException</code> will be thrown.</br>",
+                "The waiting queue can be configure using <b>waitTaskQueue</b> parameter of the <code>@Bulkhead</code> annotation. By default the maximum number of requests on the waiting queue is 10. This value only takes effect on asynchronous invocation by using <code>@Asynchronous</code> annotation.<br>", 
+                "In previous Bulkhead step, once requests reach the maximum limit, the extra request still fail. Using <code>@Asynchronous</code> annotation allows the extra requests to be place in the waiting queue. When a request cannot be added to the waiting queue, a friendly message will be display for the user to try the request again later. <br>"         
             ],
             "instruction": [
                 "Change the <code>@Bulkhead()</code> annotation on line 9 to the following code, or click <br><action title='Bulkhead annotation with Asynchronous' onclick=\"bulkheadCallBack.addAsyncBulkheadButton(event, 'AsyncBulkheadAnnotation')\"><b>@Asynchronous\n@Bulkhead(value = 2, waitingTaskQueue = 1)</b></action>.<br>The method annotated with @Asynchronous must return a Future. Change the method return type on line 12 to the following code, or click <br><action title='Bulkhead return type method' onclick=\"bulkheadCallBack.addMethodFutureReturnTypeButton(event, 'AsyncBulkheadAnnotation')\"><b>public Future<Service> requestAVirtualFinancialAdvisor() {</b></action>.<br>Change the return type on line 14 to the following code, or click<br><action title='Bulkhead return type' onclick=\"bulkheadCallBack.addReturnTypeButton(event, 'AsyncBulkheadAnnotation')\"><b>return CompletableFuture.completedFuture(virtualFinancialAdvisorService());</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncBulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane.",
