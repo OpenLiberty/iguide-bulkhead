@@ -157,12 +157,12 @@
             "name": "BulkheadAnnotation",
             "title": "Adding the @Bulkhead annotation",
             "description": [ 
-                "Now that you've seen how our application can easily fail when overloaded, we will fix that by using the Bulkhead pattern. Add the @Bulkhead annotation to the serviceForVFA microservice to limit the maximum concurrent requests.<br>",
+                "Now that you've seen how our application can easily fail when overloaded, we will fix that by using the Bulkhead pattern. Add the <code>@Bulkhead</code> annotation to the serviceForVFA microservice to limit the maximum concurrent requests.<br>",
                 "When <code>@Bulkhead</code> is used by itself, the semaphore approach to bulkhead will be used. When reaching the maximum concurrent request count, extra requests will fail with <code>BulkheadException</code>.<br>", 
                 "You may specify the maximum number of concurrent requests using the <code>value</code> parameter, or by just passing the number into the annotation. If a value is not specified, the annotation defaults to 10 requests."
             ],
             "instruction": [
-                "Add the <code>@Bulkhead</code> annotation with a value of 2 on line 7, before the requestAVirtualFinancialAdvisor method, or click <action title='Add @Bulkhead' onclick=\"bulkheadCallBack.addBulkheadButton(event, 'BulkheadAnnotation')\">@Bulkhead(2)</action>. Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'BulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane.",
+                "Add the <code>@Bulkhead</code> annotation with a value of 2 on line 7, before the serviceForVFA method, or click <action title='Add @Bulkhead' onclick=\"bulkheadCallBack.addBulkheadButton(event, 'BulkheadAnnotation')\">@Bulkhead(2)</action>. Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'BulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane.",
                 "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation')\"><b>Chat with a financial advisor</b></action> to open a chat session with an available advisor.<br>",
                 "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation')\"><b>Chat with a financial advisor</b></action> the 2nd time to open another chat session with another available advisor.<br>",
                 "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation')\"><b>Chat with a financial advisor</b></action> the 3rd time to open another chat session with another available advisor.<br>"

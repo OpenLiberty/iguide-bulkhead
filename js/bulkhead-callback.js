@@ -353,7 +353,7 @@ var bulkheadCallBack = (function() {
             contentManager.resetEditorContents(stepName); 
         }*/
         var returnMethodType = 
-            "  public Future<Service> requestAVirtualFinancialAdvisor() {";
+            "  public Future<Service> requestForVFA() {";
         var readOnlyLines = [];
         //readOnlyLines.push({from: 13, to: 16});
         //contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
@@ -373,7 +373,7 @@ var bulkheadCallBack = (function() {
     var __addReturnTypeInEditor = function(stepName, performReset) {
         //var content = contentManager.getEditorContents(stepName);
         var newReturnType = 
-            "    return CompletableFuture.completedFuture(virtualFinancialAdvisorService());";
+            "    return CompletableFuture.completedFuture(serviceForVFA());";
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 14, 14, newReturnType, 1);
         var readOnlyLines = [];
         readOnlyLines.push({from: 14, to: 14});
