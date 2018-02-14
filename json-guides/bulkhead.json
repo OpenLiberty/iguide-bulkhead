@@ -290,7 +290,7 @@
                 "When the maximum number of requests on the waiting queue are reach, the fallback class can be execute to display a message for the user to schedule the request later."
             ],
             "instruction": [
-                "In <code>BankService.java</code> add the <code>@Fallback(BulkheadFallbackHandler.class)</code> annotation on line 9 to the following code, or click <br><action title='Async Bulkhead annotation with Fallback' onclick=\"bulkheadCallBack.addFallbackAsyncBulkheadButton(event, 'Fallback')\"><b>@Fallback(BulkheadFallbackHandler.class)</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'Fallback')\"><b>Run</b></action> on the editor menu pane.",
+                "In <code>BankService.java</code> add the <code>@Fallback(ServiceFallbackHandler.class)</code> annotation on line 9 to the following code, or click <br><action title='Async Bulkhead annotation with Fallback' onclick=\"bulkheadCallBack.addFallbackAsyncBulkheadButton(event, 'Fallback')\"><b>@Fallback(ServiceFallbackHandler.class)</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'Fallback')\"><b>Run</b></action> on the editor menu pane.",
                 "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'Fallback')\"><b>Chat with a financial advisor</b></action> to see the message to retry again later.<br>"
             ],
             "content":[
@@ -300,17 +300,17 @@
                     "editorList": [
                         {
                             "displayType":"fileEditor",
-                            "fileName": "BulkheadFallbackHandler.java",
+                            "fileName": "ServiceFallbackHandler.java",
                             "preload": [
                                 "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
                                 "import org.eclipse.microprofile.faulttolerance.ExecutionContext;",
                                 "import org.eclipse.microprofile.faulttolerance.FallbackHandler;",
                                 "",
-                                "public class BulkheadFallbackHandler implements FallbackHandler<Service> {",
+                                "public class ServiceFallbackHandler implements FallbackHandler<Service> {",
                                 "",
                                 "  @Override",
                                 "  public Service handle(ExecutionContext context) {",
-                                "    return handleRequest(context);",
+                                "    return new Service('All of our financial advisor are busy with another customer.\\nPlease click on the <button> Schedule an appointment </button> to request the service.');",
                                 "  }",
                                 "}"
                             ],
