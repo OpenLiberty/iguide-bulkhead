@@ -325,9 +325,9 @@ var bulkheadCallBack = (function() {
         params[0] = "value=2";
         params[1] = "waitingTaskQueue=1";
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 10, 10, constructAnnotation(params), 2);
-        var readOnlyLines = [];
-        readOnlyLines.push({from: 1, to: 8}, {from: 12, to: 16});
-        contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
+        //var readOnlyLines = [];
+        //readOnlyLines.push({from: 1, to: 8}, {from: 12, to: 16});
+        //contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
     };
 
     var addMethodFutureReturnTypeButton = function(event, stepName) {
@@ -350,10 +350,11 @@ var bulkheadCallBack = (function() {
         var returnMethodType = 
             "  public Future<Service> requestAVirtualFinancialAdvisor() {";
         var readOnlyLines = [];
-        readOnlyLines.push({from: 1, to: 8}, {from: 13, to: 16});
-        contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
+        //readOnlyLines.push({from: 13, to: 16});
+        //contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 12, 12, returnMethodType, 1);      
-        readOnlyLines.push({from: 1, to: 8}, {from: 12, to: 16});
+        readOnlyLines.push({from: 12, to: 12});
+        //readOnlyLines.push({from: 1, to: 8}, {from: 12, to: 16});
         contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
         /*
         if (hasAsyncAnnotation) {
@@ -367,8 +368,11 @@ var bulkheadCallBack = (function() {
     var __addReturnTypeInEditor = function(stepName, performReset) {
         //var content = contentManager.getEditorContents(stepName);
         var newReturnType = 
-            "  return CompletableFuture.completedFuture(virtualFinancialAdvisorService());";
+            "    return CompletableFuture.completedFuture(virtualFinancialAdvisorService());";
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 14, 14, newReturnType, 1);
+        var readOnlyLines = [];
+        readOnlyLines.push({from: 14, to: 14});
+        contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
     };
 
     var addReturnTypeButton = function(event, stepName) {
@@ -395,12 +399,12 @@ var bulkheadCallBack = (function() {
         contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
         var newContent =
-            "  @Fallback(BulkheadFallbackHandler.class)"; + 
+            "  @Fallback(ServiceFallbackHandler.class)"; + 
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 9, 9, newContent, 1);
 
-        var readOnlyLines = [];
-        readOnlyLines.push({from: 1, to: 10}, {from: 13, to: 16});
-        contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
+        //var readOnlyLines = [];
+        //readOnlyLines.push({from: 1, to: 10}, {from: 13, to: 16});
+        //contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
     };
 
     var listenToEditorForAsyncBulkheadFallback = function(editor) {

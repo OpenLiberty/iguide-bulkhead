@@ -15,7 +15,8 @@
 
     var content = {
         url: "https://global-ebank.openliberty.io/",
-        statusBarText: ""
+        statusBarText: "",
+        browserContent: "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html"
     };
     webBrowser.create($('#asyncBulkheadFallbackStep').find('.browserHolder'), stepName,  content).done(function(newWebBrowser){
         contentManager.setWebBrowser(stepName, newWebBrowser, 0);
@@ -38,10 +39,8 @@
         contentManager.updateWithNewInstructionNoMarkComplete(stepName);
         
         browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-fallback.html";
-        //statusBarMessage = "";
 
         contentManager.setBrowserURL(stepName, browserVirtualAdvisorBaseURL + "Advisor" + numOfRequests, 0);
-        //browser.setBrowserStatusBar(statusBarMessage);
         browser.setBrowserContent(browserContentHTML);
     }
 </script>
