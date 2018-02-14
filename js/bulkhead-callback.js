@@ -443,9 +443,10 @@ var bulkheadCallBack = (function() {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-no-available.html";
             }
         }
-        contentManager.setBrowserURL(stepName, __browserVirtualAdvisorBaseURL + "Advisor" + requestNum, 0);
+        
         browser.setBrowserContent(browserContentHTML);       
         if (requestNum < requestLimits) {
+            contentManager.setBrowserURL(stepName, __browserVirtualAdvisorBaseURL + "Advisor" + requestNum, 0);
             // timeout is needed to make sure the content is rendered before accessing the elements
             setTimeout(function (numOfRequest) {
                 var advisor = __advisors[numOfRequests - 1];

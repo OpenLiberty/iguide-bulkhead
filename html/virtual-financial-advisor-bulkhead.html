@@ -45,13 +45,14 @@
         //bulkheadCallback.handleNewSessionRequestInBrowser(stepName, browser, numOfRequests);
         browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-chat.html";       
         if (numOfRequests >= 3) {
+            contentManager.setBrowserURL(stepName, browserVirtualAdvisorBaseURL, 0);
             browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html";
         }
-
-        contentManager.setBrowserURL(stepName, browserVirtualAdvisorBaseURL + "Advisor" + numOfRequests, 0);
+   
         browser.setBrowserContent(browserContentHTML);
 
         if (numOfRequests < 3) {
+            contentManager.setBrowserURL(stepName, browserVirtualAdvisorBaseURL + "Advisor" + numOfRequests, 0);
             setTimeout(function (numOfRequest) {
                 var advisor = advisors[numOfRequests - 1];
                 var advisorBackgroundColor = advisorColors[numOfRequests - 1];
