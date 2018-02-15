@@ -264,8 +264,8 @@ var bulkheadCallBack = (function() {
     var __addBulkheadInEditor = function(stepName) {
         contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
-        var newContent = "    @Bulkhead(2)";
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 7, 7, newContent, 1);
+        var newContent = "  @Bulkhead(50)";
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 20, 20, newContent, 1);
     }
 
     var addJavaConcurrencyButton = function(event, stepName) {
@@ -428,25 +428,31 @@ var bulkheadCallBack = (function() {
         contentManager.markCurrentInstructionComplete(stepName);
         contentManager.updateWithNewInstructionNoMarkComplete(stepName);
         if (stepName === "AsyncWithoutBulkhead") { 
-            //requestNum++;
-            //browserUrl = __browserVirtualAdvisorBaseURL + "Advisor" + requestNum;    
+            requestLimits = 3;     
             if (requestNum === 1) {
                 $("#" + stepElementId).find(".chatText").text('Customer 2 request chat');
             } else if (requestNum === 2) {
                 $("#" + stepElementId).find(".chatText").text('Customer 100 request chat');
             }
-            else if (requestNum >= 3) {
+            else if (requestNum >= requestLimits) {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-error-500.html";
                 browserUrl = browserErrorUrl;
                 //statusBarMessage = "Error";
-            }
-            requestLimits = 3;               
+            }             
         } else if (stepName === "FinancialAdvisor") {
             requestLimits = 2;
             if (requestNum === 1) {
                 $("#" + stepElementId).find(".chatText").text('Customer 2 request chat');
             } else if (requestNum >= requestLimits) {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-no-available.html";
+                browserUrl = browserErrorUrl;
+            }
+        } else if (stepName == "BulkheadAnnotation") {
+            requestLimits = 2;
+            if (requestNum === 1) {
+                $("#" + stepElementId).find(".chatText").text('Customer 51 request chat');
+            } else if (requestNum >= requestLimits) {
+                browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html";
                 browserUrl = browserErrorUrl;
             }
         }
