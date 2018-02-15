@@ -314,7 +314,7 @@ var bulkheadCallBack = (function() {
         //contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 9, 9, newContent, 2);
 
         var newContent = 
-            "  @Asynchronous;"; +
+            "  @Asynchronous"; +
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 9, 9, newContent, 1);
 
         var params = [];
@@ -455,8 +455,32 @@ var bulkheadCallBack = (function() {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html";
                 browserUrl = browserErrorUrl;
             }
+        } else if (stepName === "AsyncBulkheadAnnotation") {
+            requestLimits = 2;
+            if (requestNum === 1) {
+                $("#" + stepElementId).find(".chatText").text('Customer 51 request chat');
+            } else if (requestNum === 2) { 
+                $("#" + stepElementId).find(".chatText").text('Customer 101 request chat');
+                browserUrl = __browserVirtualAdvisorBaseURL + "waitingqueue";        
+                browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-waitingqueue.html";
+            } else if (requestNum >= 3) {
+                browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html";
+                browserUrl = browserErrorUrl;
+            }
+        } else if (stepName === "Fallback") {
+            requestLimits = 2;
+            if (requestNum === 1) {
+                $("#" + stepElementId).find(".chatText").text('Customer 51 request chat');
+            } else if (requestNum === 2) { 
+                $("#" + stepElementId).find(".chatText").text('Customer 101 request chat');
+                browserUrl =  __browserVirtualAdvisorBaseURL + "waitingqueue";        
+                browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-waitingqueue.html";
+            } else if (requestNum >= 3) {
+                browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-fallback.html";
+                browserUrl = __browserVirtualAdvisorBaseURL + "fallback";
+            }  
         }
-        
+
         contentManager.setBrowserURL(stepName, browserUrl, 0); 
         browser.setBrowserContent(browserContentHTML);       
         if (requestNum < requestLimits) {
