@@ -248,13 +248,13 @@ var bulkheadCallBack = (function() {
             "    ExecutorService executor = Executors.newFixedThreadPool(1);\n" +
             "    Future serviceRequest = executor.submit(() -> {\n" + 
             "      try {\n" +
-            "        return serviceForVFA();\n" +
+            "        return serviceForVFA(counterForVFA);\n" +
             "      } catch {Exception ex} {\n" + 
             "        handleBulkheadException();\n" +
             "      }\n" +
             "      return null;\n" +
             "    });";
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 11, 11, newContent, 9);
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 10, 10, newContent, 9);
     };
 
     var listenToEditorForBulkheadAnnotation = function(editor) {
@@ -427,19 +427,25 @@ var bulkheadCallBack = (function() {
 
         contentManager.markCurrentInstructionComplete(stepName);
         contentManager.updateWithNewInstructionNoMarkComplete(stepName);
-        if (stepName === "AsyncWithoutBulkhead") {     
-            if (requestNum === 3) {
-                $("#" + stepElementId).find(".chatText").text('Chat with a financial advisor 100 times');
+        if (stepName === "AsyncWithoutBulkhead") { 
+            //requestNum++;
+            //browserUrl = __browserVirtualAdvisorBaseURL + "Advisor" + requestNum;    
+            if (requestNum === 1) {
+                $("#" + stepElementId).find(".chatText").text('Customer 2 request chat');
+            } else if (requestNum === 2) {
+                $("#" + stepElementId).find(".chatText").text('Customer 100 request chat');
             }
-            else if (requestNum >= 4) {
+            else if (requestNum >= 3) {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-error-500.html";
                 browserUrl = browserErrorUrl;
                 //statusBarMessage = "Error";
             }
-            requestLimits = 4;               
+            requestLimits = 3;               
         } else if (stepName === "FinancialAdvisor") {
             requestLimits = 2;
-            if (requestNum >= requestLimits) {
+            if (requestNum === 1) {
+                $("#" + stepElementId).find(".chatText").text('Customer 2 request chat');
+            } else if (requestNum >= requestLimits) {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-no-available.html";
                 browserUrl = browserErrorUrl;
             }
@@ -450,8 +456,8 @@ var bulkheadCallBack = (function() {
         if (requestNum < requestLimits) {
             // timeout is needed to make sure the content is rendered before accessing the elements
             setTimeout(function (numOfRequest) {
-                var advisor = __advisors[numOfRequests - 1];
-                var advisorBackgroundColor = __advisorColors[numOfRequests - 1];
+                var advisor = __advisors[requestNum - 1];
+                var advisorBackgroundColor = __advisorColors[requestNum - 1];
                 var chatAdvisorCount  = "You are talking to advisor #" + numOfRequests;
                 var chatIntro = "Hi, I am " + advisor + ", a financial advisor from Global eBank. Let me review your account. I'll be with you shortly."
                 browser.getIframeDOM().find(".chatAdvisorCount").text(chatAdvisorCount);
