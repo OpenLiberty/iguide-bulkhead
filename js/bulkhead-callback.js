@@ -327,8 +327,8 @@ var bulkheadCallBack = (function() {
             return bulkheadAnnotation;
         };
 
-        params[0] = "value=2";
-        params[1] = "waitingTaskQueue=1";
+        params[0] = "value=50";
+        params[1] = "waitingTaskQueue=50";
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 10, 10, constructAnnotation(params), 2);
         //var readOnlyLines = [];
         //readOnlyLines.push({from: 1, to: 8}, {from: 12, to: 16});
