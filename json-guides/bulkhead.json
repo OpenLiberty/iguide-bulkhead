@@ -33,7 +33,7 @@
             "name": "ExampleScenario",
             "title": "Example: Bank Scenario",
             "description": [
-                "Imagine that you're developing a VirtualFinancialAdvisor microservice for a bank to allow online chat with an available financial advisor. The initial implementation of the micorservice allows only one financial advisor chat at a time. As you progress through the guide, you could see how the number of available chat session impacts the service and the system."
+                "Imagine that you're developing a VirtualFinancialAdvisor (VFA) microservice for a bank to allow online chat with an available financial advisor. The initial implementation of the microservice allows only one financial advisor chat at a time. As you progress through the guide, you could see how the number of available chat session impacts the service and the system."
             ],
             "content": [],
             "sections": [
@@ -58,9 +58,9 @@
         },
         {
             "name": "AsyncWithoutBulkhead",
-            "title": "Java Concurrency with Future and Executors",
+            "title": "Adding Java Concurrency with Future and Executors",
             "description": [
-                "The initial implementation of VirtualFinancialAdvisor (VFA) microservices allows only a single virtual financial advisor chat session at a time. Implementing Java concurrency using <a href='#background-concepts'>Executors and Future</a> removes the single chat limitation and allows multiple chat sessions available at the same time.",
+                "The initial implementation of VirtualFinancialAdvisor microservices allows only a single virtual financial advisor chat session at a time. Implementing Java concurrency using <a href='#background-concepts'>Future and Executors</a> removes the single chat limitation and allows multiple chat sessions available at the same times.",
                 "<br>Let us start by adding Future and Executors to the codes."
             ],
             "instruction": [
@@ -156,15 +156,15 @@
             "name": "BulkheadAnnotation",
             "title": "Adding the @Bulkhead annotation",
             "description": [ 
-                "Now that you've seen how our application can easily fail when overloaded, we will fix that by using the Bulkhead pattern. Add the <code>@Bulkhead</code> annotation to the serviceForVFA microservice to limit the maximum concurrent requests.<br>",
-                "When <code>@Bulkhead</code> is used by itself, the semaphore approach to bulkhead will be used. When reaching the maximum concurrent request count, extra requests will fail with <code>BulkheadException</code>.<br>", 
-                "You may specify the maximum number of concurrent requests using the <code>value</code> parameter, or by just passing the number into the annotation. If a value is not specified, the annotation defaults to 10 requests."
+                "Now that you've seen how our application can easily fail when overloaded, let's fix that by applying the Bulkhead policy. Add <code>@Bulkhead</code> to the serviceForVFA microservice to limit the maximum number of concurrent chat requests.<br>",
+                "When <code>@Bulkhead</code> is used by itself, the microservice executes on the current thread. When the maximum number of concurrent chat requests is reached, any subsequent concurrent request fails with <code>BulkheadException</code>.<br>", 
+                "Configure @bulkhead using the following parameter",
+                "<br><ul><li><b>value</b>: The maximum number of concurrent requests. This parameter is optional. If the parameter is not specified, the default is 10 requests."
             ],
             "instruction": [
-                "Add the <code>@Bulkhead</code> annotation with a value of 2 on line 7, before the serviceForVFA method, or click <action title='Add @Bulkhead' onclick=\"bulkheadCallBack.addBulkheadButton(event, 'BulkheadAnnotation')\">@Bulkhead(2)</action>. Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'BulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane.",
-                "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation')\"><b>Chat with a financial advisor</b></action> to open a chat session with an available advisor.<br>",
-                "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation')\"><b>Chat with a financial advisor</b></action> the 2nd time to open another chat session with another available advisor.<br>",
-                "Click <action title='Chat with a financial advisor' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation')\"><b>Chat with a financial advisor</b></action> the 3rd time to open another chat session with another available advisor.<br>"
+                "Add <code>@Bulkhead</code> with a value of 50 on line 20, before the serviceForVFA method, or click <action title='Add @Bulkhead' onclick=\"bulkheadCallBack.addBulkheadButton(event, 'BulkheadAnnotation')\">@Bulkhead(50)</action>. Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'BulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane.",
+                "Click <action title='Customer 1 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation')\"><b>Customer 1 request chat</b></action> to open a chat session with an available advisor.<br>",
+                "Since then 49 more customers have requested chat sessions with an available advisor and all 50 chats are still active. Once the maximum number of concurrent chat requests is reached, the next concurrent chat request is rejected.<br>Click <action title='Customer 51 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation')\"><b>Customer 51 request chat</b></action> to get the failure to open a chat session.<br>"
             ],
             "content": [
                 {
@@ -181,20 +181,33 @@
                                 "",
                                 "public class BankService {",
                                 "",
-                                "    public Service serviceForVFA(int counterForVFA) {",
-                                "        Service chatService = new ChatSession(counterForVFA)",
-                                "        return chatService;",
-                                "    }",
+                                "  public Service requestForVFA() {",
+                                "    counterForVFA++;",
+                                "    ExecutorService executor = Executors.newFixedThreadPool(1);",
+                                "    Future serviceRequest = executor.submit(() -> {",
+                                "      try {",
+                                "        return serviceForVFA(counterForVFA);",
+                                "      } catch {Exception ex} {",
+                                "        handleBulkheadException();",
+                                "      }",
+                                "      return null;",
+                                "    });",
+                                "  }",
+                                "",
+                                "  public Service serviceForVFA(int counterForVFA) {",
+                                "    Service chatService = new ChatSession(counterForVFA)",
+                                "    return chatService;",
+                                "  }",
                                 "}"
                             ],
                             "readonly": [
                                 {
                                     "from": "1",
-                                    "to": "6"
+                                    "to": "19"
                                 },
                                 {
-                                    "from": "8",
-                                    "to": "15"
+                                    "from": "21",
+                                    "to": "24"
                                 }
                             ],
                             "save": false,
