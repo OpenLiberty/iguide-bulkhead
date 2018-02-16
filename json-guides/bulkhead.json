@@ -12,19 +12,23 @@
             "guide_duration" : "25 minutes",
             "description": [
                 "Explore how to prevent a single failure from bringing down the entire system. MicroProfile makes this easy to do with its Fault Tolerance feature's Bulkhead policy.<br>",
-                "You'll start with a sample online banking scenario and see how it fails when no fault tolerance is implenented. You'll then enable the MicroProfile Fault Tolerance feature and use the Bulkhead policy to prevent the failing method from taking down the whole application. You will explore the two approaches to Bulkhead, semaphore isolation and thread pool isolation, and the parameters used for the annotation. Finally, you will add a fallback class which will be invoked if the BulkheadException is thrown."
+                "You'll start with a simple online banking microservice and see the shortcomings of single-threaded programs. You'll then implement concurrency to scale your microservice, and see how it fails when no fault tolerance is implemented. Next, you'll enable the MicroProfile Fault Tolerance feature and use the Bulkhead policy to prevent the failing method from taking down the whole application. You will explore the two approaches to Bulkhead, semaphore isolation and thread pool isolation, and the parameters used for the annotation. Finally, you will add a fallback class which will be invoked if the BulkheadException is thrown."
             ],
             "sections" : [
                 {
                     "name": "backgroundConcepts",
                     "title": "Background concepts",
                     "description": [
-                        "We will use the MicroProfile <b>Bulkhead</b> and <b>Asynchronous</b> policies.<br>",
+                        "We will use some concepts from Java Concurrency and the MicroProfile <b>Bulkhead</b> and <b>Asynchronous</b> policies.<br>",
+                        "<h4>Futures and Executors</h4>",
+                        "A <code>Future</code> is a special return type used in Java Concurrency that is used to fetch the result of a task when it is available.<br>",
+                        "The <code>Executors</code> class provides convenient factory methods for creating executor services, which handle running tasks asynchronously.",
                         "<h4>Bulkhead</h4>",
                         "The term <b>bulkhead</b> comes from the structure used in ships to create partitions. In the event of a hull breach, these partitions can be sealed off to prevent the rest of the ship from getting damaged.<br>",
-                        "The bulkhead pattern in software systems work similarly by isolating failures to prevent the rest of the system from failing.<br>",
+                        "The bulkhead pattern in software systems work similarly by isolating failures to prevent the rest of the system from failing. There are two approaches to bulkhead: sempahore isolation and thread pool isolation.<br>",
+                        "In semaphore isolation, requests will fail upon exceeding the maximum concurrent requests. In thread pool isolation, extra requests are added to a waiting queue until currently running requests finish and free up space in the thread pool.",
                         "<h4>Asynchronous</h4>",
-                        "Asynchronous means the execution of the client request will be on a separate thread."
+                        "Asynchronous programming allows multiple tasks to run simultaneously, rather than waiting for a task to finish before executing the next. This is usually achieved by running tasks on separate threads."
                     ]
                 }
             ]
