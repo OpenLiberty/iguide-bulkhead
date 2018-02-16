@@ -313,13 +313,14 @@ var bulkheadCallBack = (function() {
         //    "    @Bulkhead(value = 2, waitingTaskQueue = 1)";
         //contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 9, 9, newContent, 2);
 
-        var newContent = 
-            "  @Asynchronous;"; +
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 9, 9, newContent, 1);
+        //var newContent = 
+        //    "  @Asynchronous";
+        //contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 9, 9, newContent, 1);
 
         var params = [];
         var constructAnnotation = function(params) {
-            var bulkheadAnnotation = "  @Bulkhead(";
+            var bulkheadAnnotation = "  @Asynchronous\n" +
+                                     "  @Bulkhead(";
             if ($.isArray(params) && params.length > 0) {
                 bulkheadAnnotation += params.join(",\n            ");
             }
@@ -327,9 +328,9 @@ var bulkheadCallBack = (function() {
             return bulkheadAnnotation;
         };
 
-        params[0] = "value=2";
-        params[1] = "waitingTaskQueue=1";
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 10, 10, constructAnnotation(params), 2);
+        params[0] = "value=50";
+        params[1] = "waitingTaskQueue=50";
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 9, 9, constructAnnotation(params), 3);
         //var readOnlyLines = [];
         //readOnlyLines.push({from: 1, to: 8}, {from: 12, to: 16});
         //contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
@@ -353,7 +354,7 @@ var bulkheadCallBack = (function() {
             contentManager.resetEditorContents(stepName); 
         }*/
         var returnMethodType = 
-            "  public Future<Service> requestForVFA() {";
+            "  public Future<Service> serviceForVFA(int counterForVFA) {";
         var readOnlyLines = [];
         //readOnlyLines.push({from: 13, to: 16});
         //contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
@@ -373,7 +374,7 @@ var bulkheadCallBack = (function() {
     var __addReturnTypeInEditor = function(stepName, performReset) {
         //var content = contentManager.getEditorContents(stepName);
         var newReturnType = 
-            "    return CompletableFuture.completedFuture(serviceForVFA());";
+            "    return CompletableFuture.completedFuture(chatService);";
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 14, 14, newReturnType, 1);
         var readOnlyLines = [];
         readOnlyLines.push({from: 14, to: 14});
@@ -455,8 +456,32 @@ var bulkheadCallBack = (function() {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html";
                 browserUrl = browserErrorUrl;
             }
+        } else if (stepName === "AsyncBulkheadAnnotation") {
+            requestLimits = 2;
+            if (requestNum === 1) {
+                $("#" + stepElementId).find(".chatText").text('Customer 51 request chat');
+            } else if (requestNum === 2) { 
+                $("#" + stepElementId).find(".chatText").text('Customer 101 request chat');
+                browserUrl = __browserVirtualAdvisorBaseURL + "waitingqueue";        
+                browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-waitingqueue.html";
+            } else if (requestNum >= 3) {
+                browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html";
+                browserUrl = browserErrorUrl;
+            }
+        } else if (stepName === "Fallback") {
+            requestLimits = 2;
+            if (requestNum === 1) {
+                $("#" + stepElementId).find(".chatText").text('Customer 51 request chat');
+            } else if (requestNum === 2) { 
+                $("#" + stepElementId).find(".chatText").text('Customer 101 request chat');
+                browserUrl =  __browserVirtualAdvisorBaseURL + "waitingqueue";        
+                browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-waitingqueue.html";
+            } else if (requestNum >= 3) {
+                browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-fallback.html";
+                browserUrl = __browserVirtualAdvisorBaseURL + "fallback";
+            }  
         }
-        
+
         contentManager.setBrowserURL(stepName, browserUrl, 0); 
         browser.setBrowserContent(browserContentHTML);       
         if (requestNum < requestLimits) {

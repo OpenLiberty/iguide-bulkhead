@@ -2,32 +2,26 @@
     <div class="virtualFinancialAdvisorNewSession">
         <button class="newSessionButton" aria-label="New virtual financial advisor session request">
             <img src="/guides/draft-iguide-bulkhead/html/images/chat-message_32.svg" class="chatMessageImg" alt="chat"/>
-            <spam class="chatText">Chat with a financial advisor</spam>
+            <spam class="chatText">Customer 1 request chat</spam>
         </button>
     </div>
     <div class='browserHolder'></div>
 </div>
 <script>
     var stepName = "AsyncBulkheadAnnotation";
-    var numOfRequests = 2;
-
-    var browserVirtualAdvisorBaseURL = "https://global-ebank.openliberty.io/virtualFinancialAdvisor/";
+    var stepElementId = "asyncBulkheadStep";
+    var numOfRequests = 0;
     var browser;
-    var advisors = ["Bob", "Jenny", "John", "Mary", "Lee", "Mike", "Sam", "Sandy", "Joann", "Frank" ];
-    var advisorColors = ['royalblue', 'gray', 'seagreen'];
 
     var content = {
-        url: "https://global-ebank.openliberty.io/virtualFinancialAdvisor/error",
-        statusBarText: "",
-        browserContent: "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html"
-        //callback: "(function test(webBrowser) {bulkheadCallBack.listenToBrowserForNewSessionRequest(webBrowser, stepName); })"
+        url: "https://global-ebank.openliberty.io/"
     };
-    webBrowser.create($('#asyncBulkheadStep').find('.browserHolder'), stepName,  content).done(function(newWebBrowser){
+    webBrowser.create($('#' + stepElementId).find('.browserHolder'), stepName,  content).done(function(newWebBrowser){
         contentManager.setWebBrowser(stepName, newWebBrowser, 0);
         browser = newWebBrowser;
     });
 
-    $requestButtonElement = $('#asyncBulkheadStep').find('.newSessionButton');
+    var $requestButtonElement = $('#' + stepElementId).find('.newSessionButton');
     $requestButtonElement.on("keydown", function (event) {
         event.stopPropagation();
         if (event.which === 13 || event.which === 32) { // Enter key, Space key
@@ -39,36 +33,7 @@
         __handleRequest();
     });
     var __handleRequest = function() {
-        contentManager.markCurrentInstructionComplete(stepName);
-        contentManager.updateWithNewInstructionNoMarkComplete(stepName);
         numOfRequests++;
-        //console.log("numOfRequests ", numOfRequests);
-        
-        var browserUrl = browserVirtualAdvisorBaseURL + "Advisor" + numOfRequests;
-        var browserErrorUrl = browserVirtualAdvisorBaseURL + "error";
-
-        browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-chat.html";
-        if (numOfRequests > 3) {
-            browserUrl = browserErrorUrl;
-            browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html";
-        } else if (numOfRequests == 3) { 
-            browserUrl = browserVirtualAdvisorBaseURL + "waitingqueue";        
-            browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-waitingqueue.html";
-        }
-        
-        browser.setBrowserContent(browserContentHTML);
-        contentManager.setBrowserURL(stepName, browserUrl, 0);
-        if (numOfRequests < 3) {
-            //contentManager.setBrowserURL(stepName, browserVirtualAdvisorBaseURL + "Advisor" + numOfRequests, 0);
-            setTimeout(function (numOfRequest) {
-                var advisor = advisors[numOfRequests - 1];
-                var advisorBackgroundColor = advisorColors[numOfRequests - 1];
-                var chatAdvisorCount  = "You are talking to advisor #" + numOfRequests;
-                var chatIntro = "Hi, I am " + advisor + ", a financial advisor from Global eBank. Let me review your account. I'll be with you shortly."
-                browser.getIframeDOM().find(".chatAdvisorCount").text(chatAdvisorCount);
-                browser.getIframeDOM().find(".advisor").css("background-color", advisorBackgroundColor);
-                browser.getIframeDOM().find(".advisor").text(chatIntro);
-            }, 100);
-        }
+        bulkheadCallBack.handleNewChatRequestInBrowser(stepName, browser, stepElementId, numOfRequests);
     }
 </script>
