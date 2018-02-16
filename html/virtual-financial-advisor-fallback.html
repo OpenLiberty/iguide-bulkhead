@@ -14,10 +14,10 @@
 <head>
     <style>
             .scheduleButton {
-                /*color: blue;
-                background-color: #ABD155;*/
-                /*border-radius: 20px;*/
-                border: none;
+                /*color: blue;*/
+                background-color: #ABD155;
+                border-radius: 20px;
+                /*border: none;*/
                 /*padding: 15px 32px;*/
                 text-align: center;
                 text-decoration: none;
@@ -25,9 +25,42 @@
                 font-size: 14px;
             }
     </style>
+    <script>
+        function submitSchedule() {
+            document.getElementById("textHolder").innerHTML  = "Thank you!";
+        }
+    </script>
 </head>
 <body>    
-    <p>All of our financial advisor are busy with another customer. <br>Please <button class="scheduleButton"> schedule an appointment </button> to request the service.</p>
+    <p>All of our financial advisor are busy with another customer. <br><br>Please schedule an appointment to see a financial advisor.</p>
+    <form>
+      <fieldset>
+       <legend>Selecting available times for tomorrow</legend>
+       <p>      
+          <input type = "radio"
+                 name = "radSize"
+                 id = "sizeSmall"
+                 value = "9:00am"
+                 checked = "checked" />
+          <label for = "sizeSmall">9:00am</label>
+          <br>
+          <input type = "radio"
+                 name = "radSize"
+                 id = "sizeMed"
+                 value = "2:00pm" />
+          <label for = "sizeMed">2:00pm</label>
+          <br>
+          <input type = "radio"
+                 name = "radSize"
+                 id = "sizeLarge"
+                 value = "3:00pm" />
+          <label for = "sizeLarge">3:00pm</label>
+        </p>       
+      </fieldset>     
+    </form>
+    <br>
+    <div><button id="scheduleSubmitButton" class="scheduleButton" onclick="submitSchedule()"> Submit </button></div>
+    <div><p id="textHolder"></p></div>
 </body>
 
 </html>

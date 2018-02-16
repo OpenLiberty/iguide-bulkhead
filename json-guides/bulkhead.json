@@ -262,7 +262,7 @@
                             "readonly": [
                                 {
                                     "from": "1",
-                                    "to": "7"
+                                    "to": "8"
                                 },
                                 {
                                     "from": "11",
@@ -349,7 +349,7 @@
                                 "            waitingTaskQueue = 1)",
                                 "  public Future<Service> serviceForVFA(int counterForVFA) {",
                                 "    Service chatService = new ChatSession(counterForVFA)",
-                                "    return CompletableFuture.completedFuture(chatService;",
+                                "    return CompletableFuture.completedFuture(chatService);",
                                 "  }",
                                 "}"
                             ],
