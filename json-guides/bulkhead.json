@@ -33,7 +33,7 @@
             "name": "ExampleScenario",
             "title": "Example: Bank Scenario",
             "description": [
-                "Imagine that you're developing a VirtualFinancialAdvisor (VFA) microservice for a bank to allow online chat with an available financial advisor. The initial implementation of the microservice allows only one financial advisor chat at a time. As you progress through the guide, you could see how the number of available chat session impacts the service and the system."
+                "Imagine that you're developing a VirtualFinancialAdvisor (VFA) microservice for a bank to allow an online chat with a virtual financial advisor. The initial implementation of the microservice allows only one customer to chat with a financial advisor at a time. As you progress through the guide, you will see how the number of available chat sessions impacts the service and the system."
             ],
             "content": [],
             "sections": [
@@ -41,11 +41,11 @@
                     "name": "FinancialAdvisor",
                     "title": "Request financial advsior",
                     "description": [
-                        "Begin by requesting an online chat with a financial advisor in the bank."
+                        "Begin by requesting an online chat with a virtual financial advisor."
                     ],
                     "instruction": [
-                        "Click <action title='Customer 1 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'FinancialAdvisor')\"><b>Customer 1 request chat/b></action> to open a chat session with an available advisor.<br>",
-                        "Since the microservice allows only one active chat session, the next chat session request will fail while customer 1 chat is still active.<br>Click <action title='Customer 2 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'FinancialAdvisor')\"><b>Customer 2 request chat/b></action> to see the failure to open a chat session.<br>"
+                        "Click <action title='Customer 1 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'FinancialAdvisor')\"><b>Customer 1 request chat</b></action> to open a chat session with a virtual financial advisor.<br>",
+                        "Currently, the microservice allows only one active chat session. The next chat session request fails while the Customer 1 chat is still active.<br>Click <action title='Customer 2 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'FinancialAdvisor')\"><b>Customer 2 request chat</b></action> to see the failure to open a chat session.<br>"
                     ],
                     "content":[
                         {
@@ -60,14 +60,14 @@
             "name": "AsyncWithoutBulkhead",
             "title": "Adding Java Concurrency with Future and Executors",
             "description": [
-                "The initial implementation of VirtualFinancialAdvisor microservices allows only a single virtual financial advisor chat session at a time. Implementing Java concurrency using <a href='#background-concepts'>Future and Executors</a> removes the single chat limitation and allows multiple chat sessions available at the same times.",
-                "<br>Let us start by adding Future and Executors to the codes."
+                "The initial implementation of the VirtualFinancialAdvisor microservice allows only a single virtual financial advisor chat session at a time. Implementing Java concurrency using <a href='#background-concepts'>Future and Executors</a> removes the single chat limitation and allows multiple chat sessions to be available at the same time.",
+                "<br>Let us start by adding Future and Executors to the code."
             ],
             "instruction": [
-                "Change the <code>return serviceforVFA(counterForVFA);</code> on line 10 to the following block of codes, or click <br><action title='Adding Java Concurrency' onclick=\"bulkheadCallBack.addJavaConcurrencyButton(event, 'AsyncWithoutBulkhead')\"><b>ExecutorService executor = Executors.newFixedThreadPool(1);\nFuture serviceRequest = executor.submit(() -> {\n  try{\n    return serviceForVFA(counterForVFA);\n  } catch {Exception ex} {\n    handleBulkheadException();\n  }\n  return null;\n});</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncWithoutBulkhead')\"><b>Run</b></action> on the editor menu pane.",
-                "Click <action title='Customer 1 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Customer 1 request chat</b></action> to open a chat session with an available financial advisor.<br>",
-                "While customer 1 is still chating with a financial advisor, click <action title='Customer 2 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Customer 2 request chat</b></action> to open a separate chat session with an available financial advisor.<br>",
-                "Since then 97 more customers have requested chat sessions with an available advisor and all the chats are still active.<br>As the new codes do not implement a limit to the number of available advisor sessions, the system runs out of CPU or memory resources causing it to overload.<br>Click <action title='Customer 100 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Customer 100 request chat</b></action> to get the failure to open a chat session.<br>"
+                "Change the <code>return serviceforVFA(counterForVFA);</code> on line 12 to the following block of code, or click <br><action title='Adding Java Concurrency' onclick=\"bulkheadCallBack.addJavaConcurrencyButton(event, 'AsyncWithoutBulkhead')\"><b>ExecutorService executor = Executors.newFixedThreadPool(1);\nFuture serviceRequest = executor.submit(() -> {\n  try{\n    return serviceForVFA(counterForVFA);\n  } catch {Exception ex} {\n    handleBulkheadException();\n  }\n  return null;\n});</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncWithoutBulkhead')\"><b>Run</b></action> on the editor menu pane.",
+                "Click <action title='Customer 1 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Customer 1 request chat</b></action> to open a chat session with a virtual financial advisor.<br>",
+                "While Customer 1 is still chatting with a financial advisor, click <action title='Customer 2 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Customer 2 request chat</b></action> to open a separate chat session with a virtual financial advisor.<br>",
+                "Assume 97 more customers request chat sessions with a virtual financial advisor and all the sessions are still active.  Currently the code does not implement a limit to the number of available advisor sessions. The system slowly runs out of CPU or memory resources causing it to overload.<br>Click <action title='Customer 100 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Customer 100 request chat</b></action> to see the failure to open an additional chat session.<br>"
             ],
             "content":[
                 {
@@ -81,6 +81,8 @@
                                 "import java.util.concurrent.Future;",
                                 "import java.util.concurrent.Executors;",
                                 "import java.util.concurrent.ExecutorService;",
+                                "",
+                                "private int counterForVFA = 0;",
                                 "",
                                 "public class BankService {",
                                 "",
@@ -98,11 +100,11 @@
                             "readonly": [
                                 {
                                     "from": "1",
-                                    "to": "9"
+                                    "to": "11"
                                 },
                                 {
-                                    "from": "11",
-                                    "to": "17"
+                                    "from": "13",
+                                    "to": "19"
                                 }
                             ],
                             "save": false,
@@ -119,7 +121,7 @@
             "name": "AddLibertyMPFaultTolerance",
             "title": "Enabling MicroProfile Fault Tolerance",
             "description": [
-                "Microprofile fault tolerance is a way for microservices to handle the unavailability of a service by using different policies to guide the execution and result of some logic.  The MicroProfile Fault Tolerance 1.0 feature provides an environment to support resilient microservices through patterns that include bulkheads.  Enable the MicroProfile Fault Tolerance 1.0 feature in the <code>server.xml</code> of the Liberty server where the Virtual Financial Advisor microservice runs."
+                "Microprofile fault tolerance is a way for microservices to handle the unavailability of a service by using different policies to guide the execution and result of some logic.  The MicroProfile Fault Tolerance 1.0 feature provides an environment to support resilient microservices through patterns that include bulkheads.  Enable the MicroProfile Fault Tolerance 1.0 feature in the <code>server.xml</code> of the Liberty server where the VirtualFinancialAdvisor microservice runs."
             ],
             "instruction": [
               "Add the following element declaration inside the featureManager element to the <code>server.xml</code> file, or click <action title='Enable MicroProfile Fault Tolerance' onclick=\"bulkheadCallBack.addMicroProfileFaultToleranceFeatureButton(event)\"><b>&lt;feature>mpFaultTolerance-1.0&lt;/feature&gt;</b></action>. Then, click <action title='Save' onclick=\"bulkheadCallBack.saveServerXMLButton(event)\"><b>Save</b></action> on the editor menu pane."
@@ -156,15 +158,16 @@
             "name": "BulkheadAnnotation",
             "title": "Adding the @Bulkhead annotation",
             "description": [ 
-                "Now that you've seen how our application can easily fail when overloaded, let's fix that by applying the Bulkhead policy. Add the <code>@Bulkhead</code> annotation to the <code>serviceForVFA</code> microservice to limit the maximum number of concurrent chat requests.<br>",
-                "When the <code>@Bulkhead</code> annotation is used by itself, the microservice executes on the current thread. When the maximum number of concurrent chat requests is reached, any subsequent concurrent request fails with <code>BulkheadException</code>.<br>", 
-                "Configure the <code>@Bulkhead</code> annotation using the following parameter:",
-                "<br><ul><li><b>value</b>: The maximum number of concurrent requests. This parameter is optional. If the parameter is not specified, the default is 10 requests."
+                "Now that you have seen how our application can easily fail when overloaded, let's fix that by applying a Bulkhead policy to limit the number of concurrent chat requests to the service.  This will limit the amount of system resources that service invocations can use and prevent the rest of the system from failing.",
+                "",
+                "With a Bulkhead policy, the microservice runs on the current thread.  The number of concurrent threads that invoke the service is limited and managed by a semaphore. When this maximum number of concurrent chat requests is reached, any subsequent requests immediately fail with a <code>BulkheadException</code>.<br>", 
+                "The <code>@Bulkhead</code> annotation uses the following parameter:",
+                "<br><ul><li><b>value</b>: The maximum number of concurrent requests to the service. This parameter is optional. If the parameter is not specified, the default is <code>10</code> requests."
             ],
             "instruction": [
-                "Add <code>@Bulkhead</code> with a value of 50 on line 20, before the <code>serviceForVFA</code> method, or click <action title='Add @Bulkhead' onclick=\"bulkheadCallBack.addBulkheadButton(event, 'BulkheadAnnotation')\">@Bulkhead(50)</action>. This limits the number of concurrent chat requests to 50. Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'BulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane.",
-                "Click <action title='Customer 1 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation')\"><b>Customer 1 request chat</b></action> to open a chat session with an available advisor.<br>",
-                "Since then 49 more customers have requested chat sessions with an available advisor and all 50 chats are still active. Once the maximum number of concurrent chat requests is reached, the next concurrent chat request is rejected.<br>Click <action title='Customer 51 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation')\"><b>Customer 51 request chat</b></action> to get the failure to open a chat session.<br>"
+                "Add <code>@Bulkhead</code> with a value of <code>50</code> on line 22, before the <code>serviceForVFA</code> method, or click <action title='Add @Bulkhead' onclick=\"bulkheadCallBack.addBulkheadButton(event, 'BulkheadAnnotation')\">@Bulkhead(50)</action>. This limits the number of concurrent chat requests to 50. Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'BulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane.",
+                "Click <action title='Customer 1 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation')\"><b>Customer 1 request chat</b></action> to open a chat session with a virtual financial advisor.<br>",
+                "Assume 49 more customers request chat sessions with a virtual financial advisor and all 50 sessions are still active. Once the maximum number of concurrent chat requests is reached, the next chat request is rejected.<br>Click <action title='Customer 51 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation')\"><b>Customer 51 request chat</b></action> to see the failure to open an additional chat session.<br>"
             ],
             "content": [
                 {
@@ -178,6 +181,8 @@
                                 "import java.util.concurrent.Future;",
                                 "import java.util.concurrent.Executors;",
                                 "import java.util.concurrent.ExecutorService;",
+                                "",
+                                "private int counterForVFA = 0;",
                                 "",
                                 "public class BankService {",
                                 "",
@@ -203,11 +208,11 @@
                             "readonly": [
                                 {
                                     "from": "1",
-                                    "to": "19"
+                                    "to": "21"
                                 },
                                 {
-                                    "from": "21",
-                                    "to": "24"
+                                    "from": "23",
+                                    "to": "27"
                                 }
                             ],
                             "save": false,
@@ -224,16 +229,16 @@
             "name": "AsyncBulkheadAnnotation",
             "title": "Adding the @Asynchronous annotation with @Bulkhead",
             "description": [ 
-                "Using <code>@Bulkhead</code> limits the number of concurrent financial advisor chat requests. After the maximum limit of concurrent requests for a financial advisor is reached, the next concurrent chat request fails. Adding <code>@Asynchronous</code> fixes this problem by allowing additional chat requests to be placed in a waiting queue.<br>",
-                "When <code>@Bulkhead</code> is used with <code>@Asynchronous</code>, the microservice is executed on a separate thread. This allows to configure the maximum concurrent requests along with the waiting queue size. When a request for a financial advisor cannot be added to the waiting queue, a <code>BulkheadException</code> is thrown.<br>",
-                "Configure the waiting queue using the following parameter:<br>",
-                "<ul><li><b>waitingTaskQueue</b>: The number of requests on the waiting queue. This parameter is optional. If the parameter is not specified, the default is 10 requests. This value only takes effect when <code>@Asynchronous</code> is used.</il></ul><br>"         
+                "Using the <code>@Bulkhead</code> annotation limits the number of concurrent financial advisor chat requests. After the maximum limit of concurrent chat requests to the VirtualFinancialAdvisor microservice is reached, the next chat request fails. Adding the <code>@Asynchronous</code> annotation eases this problem by allowing additional chat requests to be placed in a waiting queue.<br>",
+                "When the <code>@Bulkhead</code> annotation is used with the <code>@Asynchronous</code> annotation, access to the microservice is managed by a thread pool. This allows you to configure the maximum concurrent requests along with a waiting queue size. When a request for a financial advisor cannot be added to the waiting queue, a <code>BulkheadException</code> is thrown.<br>",
+                "Configure the waiting queue size using the following parameter:<br>",
+                "<ul><li><b>waitingTaskQueue</b>: The size of the waiting queue which holds requests that will execute at a different time. This parameter is optional. If the parameter is not specified, the default is <code>10</code> requests. This parameter for the @Bulkhead annotation only takes effect when <code>@Asynchronous</code> annotation is used.</il></ul><br>"         
             ],
             "instruction": [
                 "Change the <code>@Bulkhead(50)</code> annotation on line 9 to the following code, or click <br><action title='Bulkhead annotation with Asynchronous' onclick=\"bulkheadCallBack.addAsyncBulkheadButton(event, 'AsyncBulkheadAnnotation')\"><b>@Asynchronous\n@Bulkhead(value = 50, waitingTaskQueue = 50)</b></action>.<br>The method annotated with <code>@Asynchronous</code> must return a Future. Change the method return type on line 12 to the following code, or click <br><action title='Bulkhead return type method' onclick=\"bulkheadCallBack.addMethodFutureReturnTypeButton(event, 'AsyncBulkheadAnnotation')\"><b>public Future&ltService&gt serviceForVFA(int counterForVFA) {</b></action>.<br>Change the return type on line 14 to the following code, or click<br><action title='Bulkhead return type' onclick=\"bulkheadCallBack.addReturnTypeButton(event, 'AsyncBulkheadAnnotation')\"><b>return CompletableFuture.completedFuture(chatService;</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncBulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane.",
-                "Click <action title='Customer 1 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation')\"><b>Customer 1 request chat</b></action> to open a chat session with an available financial advisor.<br>",
-                "Since then 49 more customers have requested chat sessions with an available advisor and all 50 chats are still active. Once the maximum number of concurrent chat requests is reached, the next concurrent chat request is place in the waiting queue.<br>Click <action title='Customer 51 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation')\"><b>Customer 51 request chat</b></action> to be place in the waiting queue.<br>",
-                "Another 49 customers request chat sessions and are placed in the waiting queue. The codes limit the maximum number of requests in the waiting queue to 50, additional chat request canot be added to the waiting queue since it is now full. Click <action title='Customer 101 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation')\"><b>Customer 101 request chat</b></action> to get the failure to open a chat session.<br>"
+                "Click <action title='Customer 1 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation')\"><b>Customer 1 request chat</b></action> to open a chat session with a virtual financial advisor.<br>",
+                "Assume 49 more customers request chat sessions with a virtual financial advisor and all 50 sessions are still active. Once the maximum number of concurrent chat requests is reached, the next chat request is placed in the waiting queue.<br>Click <action title='Customer 51 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation')\"><b>Customer 51 request chat</b></action> to see Customer 51 is placed in the waiting queue.<br>",
+                "Assume another 49 customers request chat sessions and now the waiting queue is full. Our Bulkhead policy limits the maximum number of requests in the waiting queue to 50. The next chat request cannot be started and cannot be added to the waiting queue. Click <action title='Customer 101 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation')\"><b>Customer 101 request chat</b></action> to see the failure to open an additional chat session.<br>"
             ],
             "content":[
                 {
@@ -298,14 +303,14 @@
             "name": "Fallback",
             "title": "Adding the @Fallback annotation",
             "description": [  
-                "Using the <code>@Asynchronous</code> and <code>@Bulkhead</code> annotations together allows requests for a financial advisor to be placed in the waiting queue after the number of requests exceeds the specified maximum number of concurrent requests. If the waiting queue fills, a <code>BulkheadException</code> is thrown. Let's add a fallback to handle the exception.<br>", 
-                "Use the <code>@Fallback</code> annotation to identify a class that automatically runs when a <code>BulkheadException</code> occurs. In our scenario, we add the <code>ServiceFallbackHandler.class</code> which implements the <code>FallbackHandler.class</code> to allow scheduling of an appointment. When the microservice fails, the <code>ServiceFallbackHandler.handle</code> method is called. The return type of both methods, <code>ServiceFallbackHandler.handle</code> and <code>BankService.serviceForVFA</code>, must be of type <code>Service</code>. Otherwise <code>FaultToleranceDefinitionException</code> is thrown."
+                "Using the <code>@Asynchronous</code> and <code>@Bulkhead</code> annotations together places requests for a financial advisor in a waiting queue after the number of requests exceeds the specified maximum number of concurrent requests. If the waiting queue fills, a <code>BulkheadException</code> is thrown. Let's add a fallback service to handle the exception. A fallback service runs when the main service fails. It can provide graceful failure or continued or partial operation of the original service.<br>", 
+                "The <code>@Fallback</code> annotation identifies a class that automatically runs when a <code>BulkheadException</code> occurs. In our scenario, we add the <code>ServiceFallbackHandler.class</code> which implements the <code>FallbackHandler.class</code> to allow scheduling of an appointment. When a customer makes a request for a chat session that cannot be handled because the maximum limit of concurrent requests has been reached and the wait queue is full, the <code>ServiceFallbackHandler.handle</code> method is called. The return type of both methods, <code>ServiceFallbackHandler.handle</code> and <code>BankService.serviceForVFA</code>, must be of type <code>Service</code>. Otherwise a <code>FaultToleranceDefinitionException</code> is thrown."
             ],
             "instruction": [
-                "In <code>BankService.java</code> add the <code>@Fallback(ServiceFallbackHandler.class)</code> annotation on line 9, or click <br><action title='Async Bulkhead annotation with Fallback' onclick=\"bulkheadCallBack.addFallbackAsyncBulkheadButton(event, 'Fallback')\"><b>@Fallback(ServiceFallbackHandler.class)</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'Fallback')\"><b>Run</b></action> on the editor menu pane.",
-                "Click <action title='Customer 1 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'Fallback')\"><b>Customer 1 request chat</b></action> to open a chat session with an available financial advisor.<br>",
-                "Since then 49 more customers have requested chat sessions with an available advisor and all 50 chats are still active. Once the maximum number of concurrent chat requests is reached, the next concurrent chat request is place in the waiting queue.<br>Click <action title='Customer 51 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'Fallback')\"><b>Customer 51 request chat</b></action> to be place in the waiting queue.<br>",
-                "Another 49 customers request chat sessions and are placed in the waiting queue. The waiting queue is full with 50 pending chat requests. The next chat request is handled by the fallback. Click <action title='Customer 101 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'Fallback')\"><b>Customer 101 request chat</b></action> to use the fallback to schedule an appointment.<br>"
+                "In <code>BankService.java</code> add the <code>@Fallback(ServiceFallbackHandler.class)</code> annotation on line 9, or click <action title='Async Bulkhead annotation with Fallback' onclick=\"bulkheadCallBack.addFallbackAsyncBulkheadButton(event, 'Fallback')\"><b>@Fallback(ServiceFallbackHandler.class)</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'Fallback')\"><b>Run</b></action> on the editor menu pane.",
+                "Click <action title='Customer 1 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'Fallback')\"><b>Customer 1 request chat</b></action> to open a chat session with a virtual financial advisor.<br>",
+                "Assume 49 more customers request chat sessions with a virtual financial advisor and all 50 sessions are still active. Once the maximum number of concurrent chat requests is reached, the next chat request is placed in the waiting queue.<br>Click <action title='Customer 51 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'Fallback')\"><b>Customer 51 request chat</b></action> to see Customer 51 is placed in the waiting queue.<br>",
+                "Assume another 49 customers request chat sessions and now the waiting queue is full. Our Bulkhead policy limits the maximum number of requests in the waiting queue to 50. The next chat request cannot be started and cannot be added to the waiting queue. The fallback service will run to handle the next request. Click <action title='Customer 101 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'Fallback')\"><b>Customer 101 request chat</b></action> to see the fallback service offer the customer to schedule an appointment.<br>"
             ],
             "content":[
                 {

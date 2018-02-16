@@ -254,7 +254,7 @@ var bulkheadCallBack = (function() {
             "      }\n" +
             "      return null;\n" +
             "    });";
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 10, 10, newContent, 9);
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 12, 12, newContent, 9);
     };
 
     var listenToEditorForBulkheadAnnotation = function(editor) {
@@ -265,7 +265,7 @@ var bulkheadCallBack = (function() {
         contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
         var newContent = "  @Bulkhead(50)";
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 20, 20, newContent, 1);
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 22, 22, newContent, 1);
     }
 
     var addJavaConcurrencyButton = function(event, stepName) {
@@ -494,7 +494,7 @@ var bulkheadCallBack = (function() {
                 browser.getIframeDOM().find(".chatAdvisorCount").text(chatAdvisorCount);
                 browser.getIframeDOM().find(".advisor").css("background-color", advisorBackgroundColor);
                 browser.getIframeDOM().find(".advisor").text(chatIntro);
-            }, 100);
+            }, 200);
         }
     };
 
