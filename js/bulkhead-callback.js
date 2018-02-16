@@ -519,6 +519,74 @@ var bulkheadCallBack = (function() {
             }, 200);
         }
     };
+    var __listenToPlaygroundEditorAnnotationChanges = function(editor){
+        var __listenToContentChanges = function(editorInstance, changes) {
+            // Get pod from contentManager
+            var cb = contentManager.getPlayground(editor.getStepName());            
+            // Get the parameters from the editor and send to the circuitBreaker
+            var content = editor.getEditorContent();
+            try{
+                var matchPattern = "public class BankService\\s*{\\s*@CircuitBreaker\\s*\\((([^\\(\\)])*?)\\)\\s*public Service checkBalance";
+                var regexToMatch = new RegExp(matchPattern, "g");
+                var groups = regexToMatch.exec(content);
+                var annotation = groups[1];
+
+                var params = annotation.replace(/[{\s()}]/g, ''); // Remove whitespace and parenthesis
+                params = params.split(',');
+
+                var requestVolumeThreshold;
+                var failureThreshold;
+                var delay;
+                var successThreshold;       
+
+                // Parse their annotation for values
+                params.forEach(function(param, index){
+                if (param.indexOf('requestVolumeThreshold=') > -1){
+                    requestVolumeThreshold = param.substring(param.indexOf('requestVolumeThreshold=') + 23);
+                }                    
+                if (param.indexOf('failureRatio=') > -1){
+                    failureThreshold = param.substring(param.indexOf('failureRatio=') + 13);
+                }                    
+                if (param.indexOf('delay=') > -1){
+                    delay = param.substring(param.indexOf('delay=') + 6);
+                }                    
+                if (param.indexOf('successThreshold=') > -1){
+                    successThreshold = param.substring(param.indexOf('successThreshold=') + 17);
+                }  
+                });              
+                // Apply the annotation values to the circuit breaker. If one is not specified, the value will be undefined and circuit breaker will use its default value
+                cb.updateParameters.apply(cb, [requestVolumeThreshold, failureThreshold, delay, successThreshold]);
+            }
+            catch(e){
+
+            }
+        }
+        editor.addSaveListener(__listenToContentChanges);
+        editor.addContentChangeListener(__listenToContentChanges);
+    };
+
+    var __createAsyncBulkhead = function(root, stepName) {
+        // If root is not a jQuery element, get the jQuery element from the root object passed in
+        if(!root.selector){
+            root = root.contentRootElement;
+        }
+
+        //  TODO: change 10, 5 to actual values from the code!
+        var ab = asyncBulkhead.create(root, stepName, 10, 5); 
+        root.asyncBulkhead = ab;
+
+        root.find(".bulkheadThreadRequestButton").on("click", function(){
+            ab.sendStartChatRequest();
+        });
+        root.find(".bulkheadThreadReleaseButton").on("click", function(){
+            ab.sendEndChatRequest();
+        });
+        root.find(".bulkheadResetButton").on("click", function(){
+            ab.resetQueues();
+        });
+        contentManager.setPlayground(stepName, ab, 0);
+    };
+
 
     return {
         listenToEditorForFeatureInServerXML: __listenToEditorForFeatureInServerXML,
@@ -537,6 +605,8 @@ var bulkheadCallBack = (function() {
         listenToEditorForAsyncBulkheadFallback: listenToEditorForAsyncBulkheadFallback,
         handleNewChatRequestInBrowser: handleNewChatRequestInBrowser,
         updateAsyncBulkheadMethodButton: updateAsyncBulkheadMethodButton,
+        listenToPlaygroundEditorAnnotationChanges: __listenToPlaygroundEditorAnnotationChanges,
+        createAsyncBulkhead: __createAsyncBulkhead
     };
 
 })();
