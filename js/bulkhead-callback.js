@@ -313,13 +313,14 @@ var bulkheadCallBack = (function() {
         //    "    @Bulkhead(value = 2, waitingTaskQueue = 1)";
         //contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 9, 9, newContent, 2);
 
-        var newContent = 
-            "  @Asynchronous"; +
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 9, 9, newContent, 1);
+        //var newContent = 
+        //    "  @Asynchronous";
+        //contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 9, 9, newContent, 1);
 
         var params = [];
         var constructAnnotation = function(params) {
-            var bulkheadAnnotation = "  @Bulkhead(";
+            var bulkheadAnnotation = "  @Asynchronous\n" +
+                                     "  @Bulkhead(";
             if ($.isArray(params) && params.length > 0) {
                 bulkheadAnnotation += params.join(",\n            ");
             }
@@ -329,7 +330,7 @@ var bulkheadCallBack = (function() {
 
         params[0] = "value=50";
         params[1] = "waitingTaskQueue=50";
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 10, 10, constructAnnotation(params), 2);
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 9, 9, constructAnnotation(params), 3);
         //var readOnlyLines = [];
         //readOnlyLines.push({from: 1, to: 8}, {from: 12, to: 16});
         //contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
