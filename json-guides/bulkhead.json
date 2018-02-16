@@ -19,14 +19,14 @@
                     "name": "backgroundConcepts",
                     "title": "Background concepts",
                     "description": [
-                        "We will use some concepts from Java Concurrency and the MicroProfile <b>Bulkhead</b> and <b>Asynchronous</b> policies.<br>",
+                        "We will use some concepts from Java Concurrency along with MicroProfile <b>Bulkhead</b> and <b>Asynchronous</b> policies.<br>",
                         "<h4>Futures and Executors</h4>",
                         "A <code>Future</code> is a special return type used in Java Concurrency that is used to fetch the result of a task when it is available.<br>",
                         "The <code>Executors</code> class provides convenient factory methods for creating executor services, which handle running tasks asynchronously.",
                         "<h4>Bulkhead</h4>",
                         "The term <b>bulkhead</b> comes from the structure used in ships to create partitions. In the event of a hull breach, these partitions can be sealed off to prevent the rest of the ship from getting damaged.<br>",
-                        "The bulkhead pattern in software systems work similarly by isolating failures to prevent the rest of the system from failing. There are two approaches to bulkhead: sempahore isolation and thread pool isolation.<br>",
-                        "In semaphore isolation, requests will fail upon exceeding the maximum concurrent requests. In thread pool isolation, extra requests are added to a waiting queue until currently running requests finish and free up space in the thread pool.",
+                        "The bulkhead pattern in software systems works similarly by isolating failures to prevent the rest of the system from failing. There are two approaches to bulkhead: sempahore isolation and thread pool isolation.<br>",
+                        "With semaphore isolation, requests will fail upon exceeding the maximum concurrent requests. In thread pool isolation, extra requests are added to a waiting queue until currently running requests finish and free up space in the thread pool.",
                         "<h4>Asynchronous</h4>",
                         "Asynchronous programming allows multiple tasks to run simultaneously, rather than waiting for a task to finish before executing the next. This is usually achieved by running tasks on separate threads."
                     ]
