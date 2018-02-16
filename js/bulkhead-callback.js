@@ -353,7 +353,7 @@ var bulkheadCallBack = (function() {
             contentManager.resetEditorContents(stepName); 
         }*/
         var returnMethodType = 
-            "  public Future<Service> serviceForVFA() {";
+            "  public Future<Service> serviceForVFA(int counterForVFA) {";
         var readOnlyLines = [];
         //readOnlyLines.push({from: 13, to: 16});
         //contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
@@ -373,7 +373,7 @@ var bulkheadCallBack = (function() {
     var __addReturnTypeInEditor = function(stepName, performReset) {
         //var content = contentManager.getEditorContents(stepName);
         var newReturnType = 
-            "    return CompletableFuture.completedFuture(chatService());";
+            "    return CompletableFuture.completedFuture(chatService);";
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 14, 14, newReturnType, 1);
         var readOnlyLines = [];
         readOnlyLines.push({from: 14, to: 14});
