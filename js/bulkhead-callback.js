@@ -331,9 +331,10 @@ var bulkheadCallBack = (function() {
         params[0] = "value=50";
         params[1] = "waitingTaskQueue=50";
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 9, 9, constructAnnotation(params), 3);
-        //var readOnlyLines = [];
+        var readOnlyLines = [];
+        readOnlyLines.push({from: 9, to: 9});
         //readOnlyLines.push({from: 1, to: 8}, {from: 12, to: 16});
-        //contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
+        contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
     };
 
     var addMethodFutureReturnTypeButton = function(event, stepName) {
@@ -416,6 +417,27 @@ var bulkheadCallBack = (function() {
     var listenToEditorForAsyncBulkheadFallback = function(editor) {
         editor.addSaveListener(__showPodWithRequestButtonAndBrowser);
     }
+
+    var updateAsyncBulkheadMethodButton = function(event, stepName) {
+        if (event.type === "click" ||
+           (event.type === "keypress" && (event.which === 13 || event.which === 32))) {
+            // Click or 'Enter' or 'Space' key event...
+            __updateAsyncBulkheadMethodButtonInEditor(stepName);
+        }
+    };
+
+    var __updateAsyncBulkheadMethodButtonInEditor = function(stepName) {
+        //contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
+        var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
+        var newContent = "  public Future<Service> requestForVFA() {\n" +
+                         "    counterForVFA++;\n" + 
+                         "    return serviceForVFA(counterForVFA);\n" +
+                         "  }";
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 16, 27, newContent, 4);
+        var readOnlyLines = [];
+        readOnlyLines.push({from: 17, to: 27});
+        contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
+    };
 
     var __browserVirtualAdvisorBaseURL = "https://global-ebank.openliberty.io/virtualFinancialAdvisor/";
     var __advisors = ["Bob", "Jenny", "John", "Mary", "Lee", "Mike", "Sam", "Sandy", "Joann", "Frank" ];
@@ -513,7 +535,8 @@ var bulkheadCallBack = (function() {
         addMethodFutureReturnTypeButton: addMethodFutureReturnTypeButton,
         addFallbackAsyncBulkheadButton: addFallbackAsyncBulkheadButton,
         listenToEditorForAsyncBulkheadFallback: listenToEditorForAsyncBulkheadFallback,
-        handleNewChatRequestInBrowser: handleNewChatRequestInBrowser
+        handleNewChatRequestInBrowser: handleNewChatRequestInBrowser,
+        updateAsyncBulkheadMethodButton: updateAsyncBulkheadMethodButton,
     };
 
 })();
