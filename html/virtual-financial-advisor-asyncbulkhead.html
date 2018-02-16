@@ -30,7 +30,10 @@
     });
     $requestButtonElement.on("click", function (event) {
         event.stopPropagation();
+        __handleRequest();
+    });
+    var __handleRequest = function() {
         numOfRequests++;
         bulkheadCallBack.handleNewChatRequestInBrowser(stepName, browser, stepElementId, numOfRequests);
-    });
+    }
 </script>
