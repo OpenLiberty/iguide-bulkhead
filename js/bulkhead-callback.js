@@ -330,9 +330,9 @@ var bulkheadCallBack = (function() {
 
         params[0] = "value=50";
         params[1] = "waitingTaskQueue=50";
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 21, 21, constructAnnotation(params), 3);
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 23, 23, constructAnnotation(params), 3);
         var readOnlyLines = [];
-        readOnlyLines.push({from: 21, to: 21});
+        readOnlyLines.push({from: 23, to: 23});
         //readOnlyLines.push({from: 1, to: 8}, {from: 12, to: 16});
         contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
     };
@@ -359,8 +359,8 @@ var bulkheadCallBack = (function() {
         var readOnlyLines = [];
         //readOnlyLines.push({from: 13, to: 16});
         //contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 24, 24, returnMethodType, 1);      
-        readOnlyLines.push({from: 24, to: 24});
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 26, 26, returnMethodType, 1);      
+        readOnlyLines.push({from: 26, to: 26});
         //readOnlyLines.push({from: 1, to: 8}, {from: 12, to: 16});
         contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
         /*
@@ -376,9 +376,9 @@ var bulkheadCallBack = (function() {
         //var content = contentManager.getEditorContents(stepName);
         var newReturnType = 
             "    return CompletableFuture.completedFuture(chatService);";
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 26, 26, newReturnType, 1);
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 28, 28, newReturnType, 1);
         var readOnlyLines = [];
-        readOnlyLines.push({from: 26, to: 26});
+        readOnlyLines.push({from: 28, to: 28});
         contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
     };
 
@@ -407,7 +407,7 @@ var bulkheadCallBack = (function() {
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
         var newContent =
             "  @Fallback(ServiceFallbackHandler.class)"; + 
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 9, 9, newContent, 1);
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 16, 16, newContent, 1);
 
         //var readOnlyLines = [];
         //readOnlyLines.push({from: 1, to: 10}, {from: 13, to: 16});
@@ -433,9 +433,9 @@ var bulkheadCallBack = (function() {
                          "    counterForVFA++;\n" + 
                          "    return serviceForVFA(counterForVFA);\n" +
                          "  }";
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 8, 19, newContent, 10);
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 11, 21, newContent, 10);
         var readOnlyLines = [];
-        readOnlyLines.push({from: 9, to: 12});
+        readOnlyLines.push({from: 11, to: 14});
         contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
     };
 
