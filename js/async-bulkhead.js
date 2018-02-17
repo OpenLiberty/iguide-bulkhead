@@ -11,7 +11,7 @@
 var asyncBulkhead = function(){
 
     var _asyncBulkhead = function(root, stepName, value, waitingTaskQueue){
-        this.root = root; // Root element that this asyncBulkhead is in
+        this.root = root;     // Root element that this asyncBulkhead is in
         this.stepName = stepName;
         this.updateParameters(value, waitingTaskQueue);
     };    
@@ -23,12 +23,10 @@ var asyncBulkhead = function(){
         this.value = value ? value : 10;
         this.waitingTaskQueue = waitingTaskQueue ? waitingTaskQueue : 10;
 
-        // Additional counters needed
+        // Initialize chat request processed count
         this.requestChatCount = 0;
-//        this.requestQueue = [];
-//        this.waitingQueue = [];
 
-        this.updateCounters();
+        this.updateQueues();
       },
 
       addRequestSquares: function(requestContainer, waitQueueContainer) {
@@ -41,9 +39,7 @@ var asyncBulkhead = function(){
         var requestCount = 0; // Tracks number of requests displayed on queues
         for (requestCount = 0; requestCount < this.requestChatCount && requestCount < this.value; requestCount++) {
           // Reminder: this.value is the size of the request queue
-          var div = $("<div>");
-          div.addClass('box threadpoolBoxInUse');
-          requestContainer.append(div);
+          $("<div>").attr({'class': "box threadpoolBoxInUse"}).appendTo(requestContainer);
         }
 
         if (requestCount === this.requestChatCount && requestCount < this.value) {
@@ -51,46 +47,40 @@ var asyncBulkhead = function(){
           // Reminder:  this.value === size of the request queue
           var emptyRequestSquares;
           for (emptyRequestSquares = requestCount; emptyRequestSquares < this.value; emptyRequestSquares++) {
-            var div = $("<div>");
-            div.addClass('box threadpoolBox');
-            requestContainer.append(div);
+            $("<div>").attr({'class': "box threadpoolBox"}).appendTo(requestContainer);
           }
           // No requests for the wait queue.  Fill with empty boxes.
           for (emptyRequestSquares = 0; emptyRequestSquares < this.waitingTaskQueue; emptyRequestSquares++) {
-            var div = $("<div>");
-            div.addClass('box waitingTaskBox');
-            waitQueueContainer.append(div);
+            $("<div>").attr({'class': "box waitingTaskBox"}).appendTo(waitQueueContainer);
           }
-        } else if (requestCount < this.requestChatCount) {
+        } else if (requestCount <= this.requestChatCount) {
           // There are more requests to display.  Spill them over to the wait queue.
           var waitRequestCount;
           for (waitRequestCount = 0; 
                requestCount < this.requestChatCount && waitRequestCount < this.waitingTaskQueue;
                requestCount++, waitRequestCount++) {
-            var divEmpty = $("div");
-            div.addClass('box waitingTaskBoxInUse');
-            waitQueueContainer.append(div);  
+            $("<div>").attr({'class': "box waitingTaskBoxInUse"}).appendTo(waitQueueContainer);  
           }
           if (requestCount !== this.requestChatCount) {
-            // Still requests that haven't been processed.  Issue exception.
-            // ********************************** //
-            console.error("issue bulkhead exception");
+            // Still requests that haven't been processed.  Issue BulkheadException.
+            this.requestChatCount = this.value + this.waitingTaskQueue;  // Reset the requestChatCount to maximum
+                                                                         // so end request won't process requests
+                                                                         // that were rejected.
+            this.root.find(".bulkheadDescriptionDiv").show();
           } else {
+            this.root.find(".bulkheadDescriptionDiv").hide();
             // The wait queue is not full.  Add empty boxes to the wait queue.
             for ( ; waitRequestCount < this.waitingTaskQueue; waitRequestCount++) {
-              var divEmpty = $("div");
-              div.addClass('box waitingTaskBox');
-              waitQueueContainer.append(div);                  
+              $("<div>").attr({'class': "box waitingTaskBox"}).appendTo(waitQueueContainer);          
             }
           }
         } 
       },
 
       /*
-        Update the counters in the Async Bulkhead pod
+        Update the queues displayed in the Async Bulkhead pod
       */
-      updateCounters: function() {
-          // Display request queue
+      updateQueues: function() {
           var requestQueue = this.root.find(".bulkheadThreadpoolQueue");
           var waitingTasksQueue = this.root.find(".bulkheadWaitQueue");
 
@@ -107,17 +97,17 @@ var asyncBulkhead = function(){
           var waitQueueSize = 0;
           if (requestQueueSize === this.value) {
             // Filled the request queue.  Look for wait queue values.
-            if ((requestQueueSize + this.waitingTaskQueue) <= this.requestChatCount) {
+            if ((requestQueueSize + this.waitingTaskQueue) >= this.requestChatCount) {
               waitQueueSize = this.requestChatCount - requestQueueSize;
             } else {
               waitQueueSize = this.requestChatCount;
             }
           }
 
-          // Update request queue aria-label with the number of requests
+          // Update request queue aria-label with the number of requests on the queue.
           requestQueue.attr('aria-label', 'Number of requested threads: ' + requestQueueSize + '. Size of threadpool: ' + this.value);
 
-          // Update waiting task queue aria-label with the number of requests
+          // Update waiting task queue aria-label with the number of requests on the waiting queue.
           waitingTasksQueue.attr('aria-label', 'Number of waiting threads: ' + waitQueueSize + '. Size of waiting task queue: ' + this.waitingTaskQueue);        
       },
 
@@ -126,20 +116,32 @@ var asyncBulkhead = function(){
         if (startChat) {
           this.requestChatCount++;
         } else {
-          this.requestChatCount = this.requestChatCount > 0 ? this.requestChatCount-- : 0;
+          // end chat selected
+          if (this.requestChatCount > 0) {
+            this.requestChatCount--;
+          } else {
+            this.requestChatCount = 0;
+          }
         }
       },
 
-      // Handles a successful request to the microservice
+      // Handles a successful chat request to the microservice
       sendStartChatRequest: function() {
         this.handleRequest(true);            
-        this.updateCounters();
+        this.updateQueues();
       },      
 
-      // Handles a failed request to the microservice
+      // Handles a request to end a chat session
       sendEndChatRequest: function() {
         this.handleRequest(false);            
-        this.updateCounters();
+        this.updateQueues();
+      },
+
+      // Reset the request and waiting queues so they are empty.
+      resetQueues: function() {
+        this.requestChatCount = 0;
+        this.updateQueues();
+        this.root.find(".bulkheadDescriptionDiv").hide();
       }
     };
 
