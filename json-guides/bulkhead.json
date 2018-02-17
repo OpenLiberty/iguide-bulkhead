@@ -86,9 +86,9 @@
                                 "import java.util.concurrent.Executors;",
                                 "import java.util.concurrent.ExecutorService;",
                                 "",
-                                "private int counterForVFA = 0;",
-                                "",
                                 "public class BankService {",
+                                "",
+                                "  private int counterForVFA = 0;",
                                 "",
                                 "  public Service requestForVFA() {",
                                 "    counterForVFA++;",
@@ -186,9 +186,9 @@
                                 "import java.util.concurrent.Executors;",
                                 "import java.util.concurrent.ExecutorService;",
                                 "",
-                                "private int counterForVFA = 0;",
-                                "",
                                 "public class BankService {",
+                                "",
+                                "  private int counterForVFA = 0;",
                                 "",
                                 "  public Service requestForVFA() {",
                                 "    counterForVFA++;",
@@ -301,14 +301,68 @@
             ]
         },
         {   "name": "playground",
-            "title": "Interactive bulkhead playground",
+            "title": "Interactive bulkhead and asynchronous playground",
             "description": [
-                "Now that you learned about MicroProfile Bulkhead and Asynchronous, you can explore the parameters in the <code>@Bulkhead</code> annotation and see the bulkhead in action.",
-                "<br>You learned about the following parameters:",
-                "<ul>",
-                "<li><b>value</b>: ",
-                "<li><b>waitingTaskQueue</b>: ",
-                "</ul>"
+              "Now that you learned about bulkheads and asynchronous threads, you can explore the parameters in the <code>@Bulkhead</code> annotation and see the asynchronous bulkhead in action.",
+              "<br>You learned about the following parameters:",
+              "<ul>",
+              "<li><b>value</b>:  The maximum number of concurrent requests to the service. The default is <code>10</code> requests.",
+              "<li><b>waitingTaskQueue</b>: The size of the waiting queue which holds requests that will execute at a different time. The default is <code>10</code> requests.",
+              "</ul>",
+              "<instruction style='display:inline-block' tabindex='0'><b>Modify</b> the parameters for the <code>@Bulkhead</code> annotation in the following file. For simulation purposes, the maximum value for <b>value</b> and <b>waitingTaskQueue</b> that we can accept is 10.  Repeat the process as many times as you want. <br><br>Click <b>Chat request</b> to initiate a request with a financial advisor or <b>End chat</b> to end an arbitrary chat and observe the simulation.</instruction>"
+            ],
+            "content":[
+              {
+                "displayType": "tabbedEditor",
+                "editorList": [
+                    {
+                        "displayType":"fileEditor",
+                        "fileName": "BankService.java",
+                        "preload": [
+                            "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
+                            "import java.util.concurrent.Future;",
+                            "import org.eclipse.microprofile.faulttolerance.Asynchronous;",
+                            "import org.eclipse.microprofile.faulttolerance.Bulkhead;",
+                            "import java.util.concurrent.CompletableFuture;",
+                            "",
+                            "public class BankService {",
+                            "",
+                            "  private int counterForVFA = 0;",
+                            "",
+                            "  public Future<Service> requestForVFA() {",
+                            "    counterForVFA++;",
+                            "    return serviceForVFA(counterForVFA);",
+                            "  }",
+                            "",
+                            "  @Asynchronous",
+                            "  @Bulkhead(value=10,",
+                            "            waitingTaskQueue=5)",
+                            "  public Future<Service> serviceForVFA(int counterForVFA) {",
+                            "    Service chatService = new ChatSession(counterForVFA);",
+                            "    return CompletableFuture.completedFuture(chatService);",
+                            "  }",
+                            "}"
+                        ],
+                        "readonly": [
+                            {
+                                "from": "1",
+                                "to": "16"
+                            },
+                            {
+                                "from": "19",
+                                "to": "23"
+                            }
+                        ],
+                        "save": false,
+                        "callback": "(function test(editor) {bulkheadCallBack.listenToPlaygroundEditorAnnotationChanges(editor); })"
+                    }
+                ]
+              },                      
+              {
+                  "displayType":"pod",
+                  "content": "/guides/draft-iguide-bulkhead/html/async-bulkhead-playground.html",
+                  "callback": "(function(pod) {bulkheadCallBack.createAsyncBulkhead(pod, 'playground');})"
+              }
             ]
         },
         {
