@@ -239,7 +239,7 @@
                 "<ul><li><b>waitingTaskQueue</b>: The size of the waiting queue which holds requests that will execute at a different time. This parameter is optional. If the parameter is not specified, the default is <code>10</code> requests. This parameter for the <code>@Bulkhead</code> annotation only takes effect when the <code>@Asynchronous</code> annotation is used.</il></ul><br>"         
             ],
             "instruction": [
-                "Change the <code>@Bulkhead(50)</code> annotation on line 23 to the following code, or click <br><action title='Bulkhead annotation with Asynchronous' onclick=\"bulkheadCallBack.addAsyncBulkheadButton(event, 'AsyncBulkheadAnnotation')\"><b>@Asynchronous\n@Bulkhead(value = 50, waitingTaskQueue = 50)</b></action>.<br>The method annotated with <code>@Asynchronous</code> must return a Future. Change the method return type on line 26 to the following code, or click <br><action title='Bulkhead return type method' onclick=\"bulkheadCallBack.addMethodFutureReturnTypeButton(event, 'AsyncBulkheadAnnotation')\"><b>public Future&ltService&gt serviceForVFA(int counterForVFA) {</b></action>.<br>Change the return type on line 28 to the following code, or click<br><action title='Bulkhead return type' onclick=\"bulkheadCallBack.addReturnTypeButton(event, 'AsyncBulkheadAnnotation')\"><b>return CompletableFuture.completedFuture(chatService);</b></action>.<br>Because <code>@Asynchronous</code> manages thread pools for us, we no longer need to use Executors. Replace the method <code>requestForVFA</code> on line 11 to the following block of code, or click <br><action title='update requestForVFA method' onclick=\"bulkheadCallBack.updateAsyncBulkheadMethodButton(event, 'AsyncBulkheadAnnotation')\"><b>public Future&ltService&gt requestForVFA() {\n  counterForVFA++;\n  return serviceForVFA(counterForVFA);\n}</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncBulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane.",
+                "Change the <code>@Bulkhead(50)</code> annotation on line 24 to the following code, or click <br><action title='Bulkhead annotation with Asynchronous' onclick=\"bulkheadCallBack.addAsyncBulkheadButton(event, 'AsyncBulkheadAnnotation')\"><b>@Asynchronous\n@Bulkhead(value = 50, waitingTaskQueue = 50)</b></action>.<br>The method annotated with <code>@Asynchronous</code> must return a Future. Change the method return type on line 27 to the following code, or click <br><action title='Bulkhead return type method' onclick=\"bulkheadCallBack.addMethodFutureReturnTypeButton(event, 'AsyncBulkheadAnnotation')\"><b>public Future&ltService&gt serviceForVFA(int counterForVFA) {</b></action>.<br>Change the return type on line 29 to the following code, or click<br><action title='Bulkhead return type' onclick=\"bulkheadCallBack.addReturnTypeButton(event, 'AsyncBulkheadAnnotation')\"><b>return CompletableFuture.completedFuture(chatService);</b></action>.<br>Because <code>@Asynchronous</code> manages thread pools for us, we no longer need to use Executors. Replace the method <code>requestForVFA</code> on line 11 to the following block of code, or click <br><action title='update requestForVFA method' onclick=\"bulkheadCallBack.updateAsyncBulkheadMethodButton(event, 'AsyncBulkheadAnnotation')\"><b>public Future&ltService&gt requestForVFA() {\n  counterForVFA++;\n  return serviceForVFA(counterForVFA);\n}</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncBulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane.",
                 "Click <action title='Customer 1 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation')\"><b>Customer 1 request chat</b></action> to open a chat session with a virtual financial advisor.<br>",
                 "Assume 49 more customers request chat sessions with a virtual financial advisor and all 50 sessions are still active. Once the maximum number of concurrent chat requests is reached, the next chat request is placed in the waiting queue.<br>Click <action title='Customer 51 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation')\"><b>Customer 51 request chat</b></action> to see Customer 51 is placed in the waiting queue.<br>",
                 "Assume another 49 customers request chat sessions and now the waiting queue is full. Our Bulkhead policy limits the maximum number of requests in the waiting queue to 50. The next chat request cannot be started and cannot be added to the waiting queue. Click <action title='Customer 101 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation')\"><b>Customer 101 request chat</b></action> to see the failure to open an additional chat session.<br>"                
@@ -273,7 +273,8 @@
                                 "        handleBulkheadException();",
                                 "      }",
                                 "      return null;",
-                                "  });",
+                                "    });",
+                                "  }",
                                 "",
                                 "  @Bulkhead(50)",
                                 "  public Service serviceForVFA(int counterForVFA) {",
@@ -288,12 +289,12 @@
                                     "to": "10"
                                 },
                                 {
-                                    "from": "25",
-                                    "to": "25"
+                                    "from": "26",
+                                    "to": "26"
                                 },
                                 {
-                                    "from": "27",
-                                    "to": "28"
+                                    "from": "28",
+                                    "to": "29"
                                 }
                             ],
                             "save": false,
