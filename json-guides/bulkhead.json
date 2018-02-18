@@ -420,9 +420,9 @@
                                 "import org.eclipse.microprofile.faulttolerance.Fallback;",
                                 "import java.util.concurrent.CompletableFuture;",
                                 "",
-                                "private int counterForVFA = 0;",
-                                "",
                                 "public class BankService {",
+                                "",
+                                "  private int counterForVFA = 0;",                                
                                 "",
                                 "  public Future<Service> requestForVFA() {",
                                 "    counterForVFA++;", 
@@ -462,7 +462,7 @@
             "name": "WhatNext",
             "title": "Great work!  You're done!",
             "description": [
-
+               "You learned how to use bulkhead together with asynchronous policies and provide a fallback to make your microservice fault tolerant."
             ]
         }
 
