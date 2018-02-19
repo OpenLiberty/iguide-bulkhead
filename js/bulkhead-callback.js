@@ -450,9 +450,9 @@ var bulkheadCallBack = (function() {
         if (stepName === "AsyncWithoutBulkhead") { 
             requestLimits = 3;     
             if (requestNum === 1) {
-                $("#" + stepElementId).find(".chatText").text('Customer 2 request chat');
+                $("#" + stepElementId).find(".chatText").text('Customer 2 requests chat');
             } else if (requestNum === 2) {
-                $("#" + stepElementId).find(".chatText").text('Customer 100 request chat');
+                $("#" + stepElementId).find(".chatText").text('Customer 100 requests chat');
             }
             else if (requestNum >= requestLimits) {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-error-500.html";
@@ -462,7 +462,7 @@ var bulkheadCallBack = (function() {
         } else if (stepName === "FinancialAdvisor") {
             requestLimits = 2;
             if (requestNum === 1) {
-                $("#" + stepElementId).find(".chatText").text('Customer 2 request chat');
+                $("#" + stepElementId).find(".chatText").text('Customer 2 requests chat');
             } else if (requestNum >= requestLimits) {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-no-available.html";
                 browserUrl = browserErrorUrl;
@@ -470,7 +470,7 @@ var bulkheadCallBack = (function() {
         } else if (stepName == "BulkheadAnnotation") {
             requestLimits = 2;
             if (requestNum === 1) {
-                $("#" + stepElementId).find(".chatText").text('Customer 51 request chat');
+                $("#" + stepElementId).find(".chatText").text('Customer 51 requests chat');
             } else if (requestNum >= requestLimits) {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html";
                 browserUrl = browserErrorUrl;
@@ -478,9 +478,9 @@ var bulkheadCallBack = (function() {
         } else if (stepName === "AsyncBulkheadAnnotation") {
             requestLimits = 2;
             if (requestNum === 1) {
-                $("#" + stepElementId).find(".chatText").text('Customer 51 request chat');
+                $("#" + stepElementId).find(".chatText").text('Customer 51 requests chat');
             } else if (requestNum === 2) { 
-                $("#" + stepElementId).find(".chatText").text('Customer 101 request chat');
+                $("#" + stepElementId).find(".chatText").text('Customer 101 requests chat');
                 browserUrl = __browserVirtualAdvisorBaseURL + "waitingqueue";        
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-waitingqueue.html";
             } else if (requestNum >= 3) {
@@ -490,9 +490,9 @@ var bulkheadCallBack = (function() {
         } else if (stepName === "Fallback") {
             requestLimits = 2;
             if (requestNum === 1) {
-                $("#" + stepElementId).find(".chatText").text('Customer 51 request chat');
+                $("#" + stepElementId).find(".chatText").text('Customer 51 requests chat');
             } else if (requestNum === 2) { 
-                $("#" + stepElementId).find(".chatText").text('Customer 101 request chat');
+                $("#" + stepElementId).find(".chatText").text('Customer 101 requests chat');
                 browserUrl =  __browserVirtualAdvisorBaseURL + "waitingqueue";        
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-waitingqueue.html";
             } else if (requestNum >= 3) {
