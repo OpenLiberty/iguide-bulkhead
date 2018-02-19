@@ -450,12 +450,12 @@ var bulkheadCallBack = (function() {
         if (stepName === "AsyncWithoutBulkhead") { 
             requestLimits = 3;     
             if (requestNum === 1) {
-                $("#" + stepElementId).find(".chatText").text('Customer 2 requests chat');
+                $("#" + stepElementId).find(".chatText").text('Customer2 requests chat');
             } else if (requestNum === 2) {
-                $("#" + stepElementId).find(".chatText").text('Customer 100 requests chat');
+                $("#" + stepElementId).find(".chatText").text('Customer100 requests chat');
             }
             else if (requestNum >= requestLimits) {
-                browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-error-500.html";
+                browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-error-503.html";
                 browserUrl = browserErrorUrl;
                 //statusBarMessage = "Error";
             }             
