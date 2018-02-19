@@ -250,7 +250,7 @@ var bulkheadCallBack = (function() {
             "      try {\n" +
             "        return serviceForVFA(counterForVFA);\n" +
             "      } catch {Exception ex} {\n" + 
-            "        handleBulkheadException();\n" +
+            "        handleException();\n" +
             "      }\n" +
             "      return null;\n" +
             "    });";
