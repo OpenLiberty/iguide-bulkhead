@@ -339,7 +339,7 @@
                             "  }",
                             "",
                             "  @Asynchronous",
-                            "  @Bulkhead(value=10,",
+                            "  @Bulkhead(value=5,",
                             "            waitingTaskQueue=5)",
                             "  public Future<Service> serviceForVFA(int counterForVFA) {",
                             "    Service chatService = new ChatSession(counterForVFA);",

@@ -519,11 +519,11 @@ var bulkheadCallBack = (function() {
     var __listenToPlaygroundEditorAnnotationChanges = function(editor){
         var __listenToContentChanges = function(editorInstance, changes) {
             // Get pod from contentManager
-            var cb = contentManager.getPlayground(editor.getStepName());            
-            // Get the parameters from the editor and send to the circuitBreaker
+            var bulkhead = contentManager.getPlayground(editor.getStepName());            
+            // Get the parameters from the editor and send to the bulkhead
             var content = editor.getEditorContent();
             try{
-                var matchPattern = "public class BankService\\s*{\\s*@CircuitBreaker\\s*\\((([^\\(\\)])*?)\\)\\s*public Service checkBalance";
+                var matchPattern = "@Asynchronous\\s*@Bulkhead\\s*\\((([^\\(\\)])*?)\\)\\s*public Future<Service> serviceForVFA";
                 var regexToMatch = new RegExp(matchPattern, "g");
                 var groups = regexToMatch.exec(content);
                 var annotation = groups[1];
@@ -531,35 +531,46 @@ var bulkheadCallBack = (function() {
                 var params = annotation.replace(/[{\s()}]/g, ''); // Remove whitespace and parenthesis
                 params = params.split(',');
 
-                var requestVolumeThreshold;
-                var failureThreshold;
-                var delay;
-                var successThreshold;       
+                var value;
+                var waitingTaskQueue;
 
                 // Parse their annotation for values
                 params.forEach(function(param, index){
-                if (param.indexOf('requestVolumeThreshold=') > -1){
-                    requestVolumeThreshold = param.substring(param.indexOf('requestVolumeThreshold=') + 23);
-                }                    
-                if (param.indexOf('failureRatio=') > -1){
-                    failureThreshold = param.substring(param.indexOf('failureRatio=') + 13);
-                }                    
-                if (param.indexOf('delay=') > -1){
-                    delay = param.substring(param.indexOf('delay=') + 6);
-                }                    
-                if (param.indexOf('successThreshold=') > -1){
-                    successThreshold = param.substring(param.indexOf('successThreshold=') + 17);
-                }  
-                });              
-                // Apply the annotation values to the circuit breaker. If one is not specified, the value will be undefined and circuit breaker will use its default value
-                cb.updateParameters.apply(cb, [requestVolumeThreshold, failureThreshold, delay, successThreshold]);
+                    if (param.indexOf('value=') > -1){
+                        value = param.substring(param.indexOf('value=') + 6);
+                    }                    
+                    if (param.indexOf('waitingTaskQueue=') > -1){
+                        waitingTaskQueue = param.substring(param.indexOf('waitingTaskQueue=') + 17);
+                    }                    
+                });
+                
+                var warningMessage = "";
+                if ((value !== undefined && !utils.isInteger(value)) || 
+                    (waitingTaskQueue !== undefined && !utils.isInteger(waitingTaskQueue))) {
+                    editor.createCustomErrorMessage("Parameter values must be postive integers.");
+                    return;
+                } else if (value > 10) {
+                    warningMessage = "For simulation purposes, the maximum value we can accept is 10.";
+                    editor.createCustomAlertMessage(warningMessage);
+                    return;
+                } else if (waitingTaskQueue > 10) {
+                    warningMessage = "For simulation purposes, the maximum waitingTaskQueue we can accept is 10.";
+                    editor.createCustomAlertMessage(warningMessage);
+                    return;
+                } else if (waitingTaskQueue < value) {
+                    warningMessage = "It is best practice to have a waitingTaskQueue equal to or larger than the value."
+                    editor.createCustomAlertMessage(warningMessage);
+                }
+                
+                // Apply the annotation values to the bulkhead. 
+                // If not specified, the bulkhead will use its default value.
+                bulkhead.updateParameters.apply(bulkhead, [value, waitingTaskQueue]);
             }
             catch(e){
 
             }
         }
         editor.addSaveListener(__listenToContentChanges);
-        editor.addContentChangeListener(__listenToContentChanges);
     };
 
     var __createAsyncBulkhead = function(root, stepName) {
@@ -569,7 +580,7 @@ var bulkheadCallBack = (function() {
         }
 
         //  TODO: change 10, 5 to actual values from the code!
-        var ab = asyncBulkhead.create(root, stepName, 10, 5); 
+        var ab = asyncBulkhead.create(root, stepName, 5, 5); 
         root.asyncBulkhead = ab;
 
         root.find(".bulkheadThreadRequestButton").on("click", function(){
