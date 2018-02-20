@@ -220,7 +220,7 @@ var bulkheadCallBack = (function() {
     var __checkEditorContent = function(stepName, content) {
         var contentIsCorrect = true;
         if (stepName === "AsyncWithoutBulkhead") {
-            // to be implemented
+            contentIsCorrect = __validateEditorContentInJavaConcurrencyStep(content);
         } else if (stepName === "AsyncBulkheadAnnotation") {
 
         }
@@ -255,6 +255,28 @@ var bulkheadCallBack = (function() {
             "      return null;\n" +
             "    });";
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 12, 12, newContent, 9);
+    };
+
+    var __validateEditorContentInJavaConcurrencyStep = function(content) {
+        var match = false;
+        try {
+            var codesToMatch = "([\\s\\S]*)counterForVFA\\+\\+;\\s*" +
+                "ExecutorService\\s+executor\\s*=\\s*Executors\\.newFixedThreadPool\\s*\\(\\s*1\\s*\\)\\s*;\\s*" +
+                "Future\\s+serviceRequest\\s*=\\s*executor\\.submit\\s*\\(\\s*\\(\\s*\\)\\s*->\\s*{\\s*" +
+                "try\\s*{\\s*" +
+                "return\\s+serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\)\\s*;\\s*" +
+                "}\\s*catch\\s*{\\s*Exception\\s+ex\\s*}\\s*{\\s*" +
+                "handleException\\s*\\(\\s*\\)\\s*;\\s*" +
+                "}\\s*" +
+                "return\\s+null\\s*;\\s*" +
+                "}\\s*\\)\\s*;\\s*}";
+            var regExpToMatch = new RegExp(codesToMatch, "g");
+            content.match(regExpToMatch)[0];
+            match = true;
+        } catch (ex) {
+            // do nothing as match is already set to false
+        }
+        return match;
     };
 
     var listenToEditorForBulkheadAnnotation = function(editor) {
