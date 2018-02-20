@@ -19,10 +19,7 @@
                     "name": "backgroundConcepts",
                     "title": "Background concepts",
                     "description": [
-                        "We will use some concepts from Java Concurrency along with MicroProfile <b>Bulkhead</b> and <b>Asynchronous</b> policies.<br>",
-                        "<h4>Futures and Executors</h4>",
-                        "A <code>Future</code> is a special return type used in Java Concurrency that is used to fetch the result of a task when it is available.<br>",
-                        "The <code>Executors</code> class provides convenient factory methods for creating executor services, which handle running tasks asynchronously.",
+                        "We are using MicroProfile <b>Bulkhead</b>, <b>Asynchronous</b>, and <b>Fallback</b> policies for our implementation.<br>",
                         "<h4>Bulkhead</h4>",
                         "The term <b>bulkhead</b> comes from the structure used in ships to create partitions. In the event of a hull breach, these partitions can be sealed off to prevent the rest of the ship from getting damaged.<br>",
                         "The bulkhead pattern in software systems works similarly by isolating failures to prevent the rest of the system from failing. There are two approaches to bulkhead: sempahore isolation and thread pool isolation.<br>",
@@ -48,8 +45,8 @@
                         "Begin by requesting an online chat with a virtual financial advisor."
                     ],
                     "instruction": [
-                        "Click <action title='Customer 1 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'FinancialAdvisor')\"><b>Customer 1 requests chat</b></action> to open a chat session with a virtual financial advisor.<br>",
-                        "Currently, the microservice allows only one active chat session. The next chat session request fails while the Customer 1 chat is still active.<br>Click <action title='Customer 2 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'FinancialAdvisor')\"><b>Customer 2 requests chat</b></action> to see the failure to open a chat session.<br>"
+                        "Click <action title='Customer1 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'FinancialAdvisor')\"><b>Customer1 requests chat</b></action> to open a chat session with a virtual financial advisor.<br>",
+                        "Currently, the microservice allows only one active chat session. The next chat session request fails while the Customer1 chat is still active.<br>Click <action title='Customer2 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'FinancialAdvisor')\"><b>Customer2 requests chat</b></action> to see the failure to open a chat session.<br>"
                     ],
                     "content":[
                         {
@@ -64,14 +61,15 @@
             "name": "AsyncWithoutBulkhead",
             "title": "Adding Java Concurrency with Future and Executors",
             "description": [
-                "The initial implementation of the VirtualFinancialAdvisor microservice allows only a single virtual financial advisor chat session at a time. Implementing Java concurrency using <a href='#background-concepts'>Future and Executors</a> removes the single chat limitation and allows multiple chat sessions to be available at the same time.",
+                "The initial implementation of the VirtualFinancialAdvisor microservice allows only a single virtual financial advisor chat session at a time. Implementing Java concurrency using Future and Executors removes the single chat limitation and allows multiple chat sessions to be available at the same time.<br>",
+                "A <code>Future</code> is a special return type used in Java Concurrency to fetch the result of a task when it is available. The <code>Executors</code> class provides convenient factory methods for creating executor services, which handle running tasks asynchronously.",
                 "<br>Let us start by adding Future and Executors to the code."
             ],
             "instruction": [
                 "Replace the <code>return serviceforVFA(counterForVFA);</code> on line 12 to the following block of code, or click <br><action title='Adding Java Concurrency' onclick=\"bulkheadCallBack.addJavaConcurrencyButton(event, 'AsyncWithoutBulkhead')\"><b>ExecutorService executor = Executors.newFixedThreadPool(1);\nFuture serviceRequest = executor.submit(() -> {\n  try{\n    return serviceForVFA(counterForVFA);\n  } catch {Exception ex} {\n    handleException();\n  }\n  return null;\n});</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncWithoutBulkhead')\"><b>Run</b></action> on the editor menu pane.",
-                "Click <action title='Customer 1 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Customer 1 requests chat</b></action> to open a chat session with a virtual financial advisor.<br>",
-                "While Customer 1 is still chatting with a financial advisor, click <action title='Customer 2 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Customer 2 requests chat</b></action> to open a separate chat session with a virtual financial advisor.<br>",
-                "Assume 97 more customers request chat sessions with a virtual financial advisor and all the sessions are still active.  Currently, the code does not implement a limit to the number of available advisor sessions. The system slowly runs out of CPU or memory resources causing it to overload.<br>Click <action title='Customer 100 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Customer 100 requests chat</b></action> to see the failure to open an additional chat session.<br>"
+                "Click <action title='Customer1 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Customer1 requests chat</b></action> to open a chat session with a virtual financial advisor.<br>",
+                "While Customer1 is still chatting with a financial advisor, click <action title='Customer2 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Customer2 requests chat</b></action> to open a separate chat session with a virtual financial advisor.<br>",
+                "Assume 97 more customers request chat sessions with a virtual financial advisor and all the sessions are still busy.  Currently, the code does not implement a limit to the number of available advisor sessions. The system slowly runs out of CPU or memory resources causing it to overload and affect other microservices. <br>Click <action title='Customer100 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead')\"><b>Customer100 requests chat</b></action> to see the cascading failure.<br>"
             ],
             "content":[
                 {
