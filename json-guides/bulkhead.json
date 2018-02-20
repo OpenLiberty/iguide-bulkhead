@@ -45,8 +45,8 @@
                         "Begin by requesting an online chat with a virtual financial advisor."
                     ],
                     "instruction": [
-                        "Click <action title='Customer 1 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'FinancialAdvisor')\"><b>Customer 1 requests chat</b></action> to open a chat session with a virtual financial advisor.<br>",
-                        "Currently, the microservice allows only one active chat session. The next chat session request fails while the Customer 1 chat is still active.<br>Click <action title='Customer 2 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'FinancialAdvisor')\"><b>Customer 2 requests chat</b></action> to see the failure to open a chat session.<br>"
+                        "Click <action title='Customer1 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'FinancialAdvisor')\"><b>Customer1 requests chat</b></action> to open a chat session with a virtual financial advisor.<br>",
+                        "Currently, the microservice allows only one active chat session. The next chat session request fails while the Customer1 chat is still active.<br>Click <action title='Customer2 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'FinancialAdvisor')\"><b>Customer2 requests chat</b></action> to see the failure to open a chat session.<br>"
                     ],
                     "content":[
                         {

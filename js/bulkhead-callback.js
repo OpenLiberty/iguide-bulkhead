@@ -462,7 +462,7 @@ var bulkheadCallBack = (function() {
         } else if (stepName === "FinancialAdvisor") {
             requestLimits = 2;
             if (requestNum === 1) {
-                $("#" + stepElementId).find(".chatText").text('Customer 2 requests chat');
+                $("#" + stepElementId).find(".chatText").text('Customer2 requests chat');
             } else if (requestNum >= requestLimits) {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-no-available.html";
                 browserUrl = browserErrorUrl;
