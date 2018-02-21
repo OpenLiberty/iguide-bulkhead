@@ -544,27 +544,41 @@ var bulkheadCallBack = (function() {
                     }                    
                 });
                 
-                var warningMessage = "";
+                var errorPosted = false;
                 if ((value !== undefined && !utils.isInteger(value)) || 
                     (waitingTaskQueue !== undefined && !utils.isInteger(waitingTaskQueue))) {
-                    editor.createCustomErrorMessage("Parameter values must be postive integers.");
-                    return;
-                } else if (value > 10) {
-                    warningMessage = "For simulation purposes, the maximum value we can accept is 10.";
-                    editor.createCustomAlertMessage(warningMessage);
-                    return;
-                } else if (waitingTaskQueue > 10) {
-                    warningMessage = "For simulation purposes, the maximum waitingTaskQueue we can accept is 10.";
-                    editor.createCustomAlertMessage(warningMessage);
-                    return;
-                } else if (waitingTaskQueue < value) {
-                    warningMessage = "It is best practice to have a waitingTaskQueue equal to or larger than the value."
-                    editor.createCustomAlertMessage(warningMessage);
+                    editor.createCustomErrorMessage(bulkheadMessages.parmsPositive);
+                    errorPosted = true;
+                } else {
+                    value = parseInt(value);
+                    waitingTaskQueue = parseInt(waitingTaskQueue);
+                    if (value > 10) {
+                        editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsMaxValue,["value"]));
+                        errorPosted = true;
+                    } else if (waitingTaskQueue > 10) {
+                        editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsMaxValue,["waitingTaskQueue"]));
+                        errorPosted = true;
+                    } else if (waitingTaskQueue < value) {
+                        editor.createCustomAlertMessage(bulkheadMessages.waitBestPractice);
+                        // Do not return here.  Post warning and allow user to continue with their simulation.
+                    } else {
+                        // Clear out any previous error boxes displayed.
+                        editor.closeEditorErrorBox();
+                    }
+                }                    
+
+                if (!errorPosted) {
+                    // Apply the annotation values to the bulkhead. 
+                    // If not specified, the bulkhead will use its default value.
+                    bulkhead.updateParameters.apply(bulkhead, [value, waitingTaskQueue]);
+                    // Enable the playground buttons.
+                    bulkhead.enableActions(true);
+                } else {
+                    // Error message was posted which must be fixed.  Don't allow processing
+                    // of the playground until it is resolved.
+                    bulkhead.enableActions(false);
                 }
                 
-                // Apply the annotation values to the bulkhead. 
-                // If not specified, the bulkhead will use its default value.
-                bulkhead.updateParameters.apply(bulkhead, [value, waitingTaskQueue]);
             }
             catch(e){
 
