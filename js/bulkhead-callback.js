@@ -305,10 +305,17 @@ var bulkheadCallBack = (function() {
         }
     };
 
-    var clickChat = function(event, stepName, requestNum) {
-        if (event.type === "click" ||
-           (event.type === "keypress" && (event.which === 13 || event.which === 32))) {
-            handleNewChatRequestInBrowser(stepName, requestNum);
+    var clickChat = function(event, stepName) {
+        if (stepName === "AsyncWithoutBulkhead") {
+            $('#asyncWithoutBulkheadStep').find('.newSessionButton').trigger('click');
+        } else if (stepName === 'BulkheadAnnotation') {
+            $('#bulkheadStep').find('.newSessionButton').trigger('click');
+        } else if (stepName === "AsyncBulkheadAnnotation") {
+            $('#asyncBulkheadStep').find('.newSessionButton').trigger('click');  
+        } else if (stepName === 'Fallback') {
+            $('#asyncBulkheadFallbackStep').find('.newSessionButton').trigger('click'); 
+        } else if (stepName = "FinancialAdvisor") {
+            $('#financialAdvisorStep').find('.newSessionButton').trigger('click');
         }
     };
 
@@ -317,13 +324,20 @@ var bulkheadCallBack = (function() {
            (event.type === "keypress" && (event.which === 13 || event.which === 32))) {
             // Click or 'Enter' or 'Space' key event...
             __addAsyncBulkheadInEditor(stepName);
-        }
+           }
     };
 
     var __addAsyncBulkheadInEditor = function(stepName) {
         contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
- 
+        //var newContent =
+        //    "    @Asynchronous\n"; + 
+        //    "    @Bulkhead(value = 2, waitingTaskQueue = 1)";
+        //contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 9, 9, newContent, 2);
+
+        //var newContent = 
+        //    "  @Asynchronous";
+        //contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 9, 9, newContent, 1);
         var params = [];
         var constructAnnotation = function(params) {
             var bulkheadAnnotation = "  @Asynchronous\n" +
@@ -365,6 +379,7 @@ var bulkheadCallBack = (function() {
         var readOnlyLines = [];
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 27, 27, returnMethodType, 1);      
         readOnlyLines.push({from: 27, to: 27});
+        //readOnlyLines.push({from: 1, to: 8}, {from: 12, to: 16});
         contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
         /*
         if (hasAsyncAnnotation) {
@@ -411,6 +426,10 @@ var bulkheadCallBack = (function() {
         var newContent =
             "  @Fallback(ServiceFallbackHandler.class)"; + 
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 16, 16, newContent, 1);
+
+        //var readOnlyLines = [];
+        //readOnlyLines.push({from: 1, to: 10}, {from: 13, to: 16});
+        //contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
     };
 
     var listenToEditorForAsyncBulkheadFallback = function(editor) {
@@ -441,37 +460,48 @@ var bulkheadCallBack = (function() {
     var __browserVirtualAdvisorBaseURL = "https://global-ebank.openliberty.io/virtualFinancialAdvisor/";
     var __advisors = ["Bob", "Jenny", "John", "Mary", "Lee", "Mike", "Sam", "Sandy", "Joann", "Frank" ];
     var __advisorColors = ['royalblue', 'gray', 'seagreen'];
-    
-    var handleNewChatRequestInBrowser = function(stepName, requestNum) {
+    var handleNewChatRequestInBrowser = function(stepName, browser, stepElementId, requestNum) {
         var browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-chat.html";  
         var browserUrl = __browserVirtualAdvisorBaseURL + "Advisor" + requestNum;
         var browserErrorUrl = __browserVirtualAdvisorBaseURL + "error";
         var requestLimits = 1;
-        var browser = contentManager.getBrowser(stepName);
-        
+
         contentManager.markCurrentInstructionComplete(stepName);
         contentManager.updateWithNewInstructionNoMarkComplete(stepName);
         if (stepName === "AsyncWithoutBulkhead") { 
             requestLimits = 3;     
-            if (requestNum >= requestLimits) {
+            if (requestNum === 1) {
+                $("#" + stepElementId).find(".chatText").text('Customer2 requests chat');
+            } else if (requestNum === 2) {
+                $("#" + stepElementId).find(".chatText").text('Customer100 requests chat');
+            }
+            else if (requestNum >= requestLimits) {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-error-503.html";
                 browserUrl = browserErrorUrl;
+                //statusBarMessage = "Error";
             }             
         } else if (stepName === "FinancialAdvisor") {
             requestLimits = 2;
-            if (requestNum >= requestLimits) {               
+            if (requestNum === 1) {
+                $("#" + stepElementId).find(".chatText").text('Customer2 requests chat');
+            } else if (requestNum >= requestLimits) {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-no-available.html";
                 browserUrl = browserErrorUrl;
             }
         } else if (stepName == "BulkheadAnnotation") {
             requestLimits = 2;
-            if (requestNum >= requestLimits) {
+            if (requestNum === 1) {
+                $("#" + stepElementId).find(".chatText").text('Customer51 requests chat');
+            } else if (requestNum >= requestLimits) {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html";
                 browserUrl = browserErrorUrl;
             }
         } else if (stepName === "AsyncBulkheadAnnotation") {
             requestLimits = 2;
-            if (requestNum === 2) {
+            if (requestNum === 1) {
+                $("#" + stepElementId).find(".chatText").text('Customer51 requests chat');
+            } else if (requestNum === 2) { 
+                $("#" + stepElementId).find(".chatText").text('Customer101 requests chat');
                 browserUrl = __browserVirtualAdvisorBaseURL + "waitingqueue";        
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-waitingqueue.html";
             } else if (requestNum >= 3) {
@@ -480,7 +510,10 @@ var bulkheadCallBack = (function() {
             }
         } else if (stepName === "Fallback") {
             requestLimits = 2;
-            if (requestNum === 2) {
+            if (requestNum === 1) {
+                $("#" + stepElementId).find(".chatText").text('Customer51 requests chat');
+            } else if (requestNum === 2) { 
+                $("#" + stepElementId).find(".chatText").text('Customer101 requests chat');
                 browserUrl =  __browserVirtualAdvisorBaseURL + "waitingqueue";        
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-waitingqueue.html";
             } else if (requestNum >= 3) {
@@ -494,10 +527,9 @@ var bulkheadCallBack = (function() {
         if (requestNum < requestLimits) {
             // timeout is needed to make sure the content is rendered before accessing the elements
             setTimeout(function (numOfRequest) {
-                console.log("requestNum ", requestNum);
                 var advisor = __advisors[requestNum - 1];
                 var advisorBackgroundColor = __advisorColors[requestNum - 1];
-                var chatAdvisorCount  = "You are talking to advisor #" + requestNum;
+                var chatAdvisorCount  = "You are talking to advisor #" + numOfRequests;
                 var chatIntro = "Hi, I am " + advisor + ", a financial advisor from Global eBank. Let me review your account. I'll be with you shortly."
                 browser.getIframeDOM().find(".chatAdvisorCount").text(chatAdvisorCount);
                 browser.getIframeDOM().find(".advisor").css("background-color", advisorBackgroundColor);
