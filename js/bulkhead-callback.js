@@ -498,8 +498,7 @@ var bulkheadCallBack = (function() {
         browser.setBrowserContent(browserContentHTML);       
         if (requestNum < requestLimits) {
             // timeout is needed to make sure the content is rendered before accessing the elements
-            setTimeout(function (numOfRequest) {
-                console.log("requestNum ", requestNum);
+            setTimeout(function () {
                 var advisor = __advisors[requestNum - 1];
                 var advisorBackgroundColor = __advisorColors[requestNum - 1];
                 var chatAdvisorCount  = "You are talking to advisor #" + requestNum;
