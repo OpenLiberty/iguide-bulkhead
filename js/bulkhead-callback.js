@@ -221,11 +221,10 @@ var bulkheadCallBack = (function() {
         var contentIsCorrect = true;
         if (stepName === "AsyncWithoutBulkhead") {
             contentIsCorrect = __validateEditorContentInJavaConcurrencyStep(content);
-        } else if (stepName = "BulkheadAnnotation") {
+        } else if (stepName === "BulkheadAnnotation") {
             contentIsCorrect = __validateEditorContent_BulkheadStep(content);
-        }
-        else if (stepName === "AsyncBulkheadAnnotation") {
-
+        } else if (stepName === "AsyncBulkheadAnnotation") {
+            contentIsCorrect = __validateEditorContent_AsyncBulkheadStep(content);
         }
         return contentIsCorrect;
     };
@@ -288,6 +287,34 @@ var bulkheadCallBack = (function() {
             var pattern = "@Bulkhead\\(50\\)\\s*public Service serviceForVFA";
             var regExpToMatch = new RegExp(pattern, "g");
             content.match(regExpToMatch)[0];
+            match = true;
+        } catch (ex) {
+
+        }
+        return match;
+    };
+
+    var __validateEditorContent_AsyncBulkheadStep = function(content) {
+        var match = false;
+        try {
+            var pattern1 = "@Asynchronous\\s*@Bulkhead\\(value\\s?=\\s?50,\\s*" + 
+                "waitingTaskQueue\\s?=\\s?50\\)\\s*" +
+                "public Future<Service> serviceForVFA";
+            var regExp1 = new RegExp(pattern1, "g");
+
+            var pattern2 = "Service chatService = new ChatSession\\(counterForVFA\\);\\s*" + 
+                "return CompletableFuture\\.completedFuture\\(chatService\\);";
+            var regExp2 = new RegExp(pattern2, "g");
+
+            var pattern3 = "counterForVFA\\s*=\\s*0;\\s*" +
+                "public Future<Service> requestForVFA\\(\\)\\s*{\\s*" +
+                "counterForVFA\\+\\+;\\s*" +
+                "return serviceForVFA\\(counterForVFA\\);";
+            var regExp3 = new RegExp(pattern3, "g");
+
+            content.match(regExp1)[0];
+            content.match(regExp2)[0];
+            content.match(regExp3)[0];
             match = true;
         } catch (ex) {
 
