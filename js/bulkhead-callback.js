@@ -225,6 +225,8 @@ var bulkheadCallBack = (function() {
             contentIsCorrect = __validateEditorContent_BulkheadStep(content);
         } else if (stepName === "AsyncBulkheadAnnotation") {
             contentIsCorrect = __validateEditorContent_AsyncBulkheadStep(content);
+        } else if (stepName === "Fallback") {
+            contentIsCorrect = __validateEditorContent_FallbackStep(content);
         }
         return contentIsCorrect;
     };
@@ -315,6 +317,22 @@ var bulkheadCallBack = (function() {
             content.match(regExp1)[0];
             content.match(regExp2)[0];
             content.match(regExp3)[0];
+            match = true;
+        } catch (ex) {
+
+        }
+        return match;
+    };
+
+    var __validateEditorContent_FallbackStep = function(content) {
+        var match = false;
+        try { 
+            var pattern = "return serviceForVFA\\(counterForVFA\\);\\s*" +
+            "}\\s" + 
+            "(?:\\s*.*){0,5}" + //0-5 instances of repeating group of any chars and whitespace including new lines
+            "@Fallback\\(ServiceFallbackHandler\\.class\\).*";
+            var regExp = new RegExp(pattern, "g");
+            content.match(regExp)[0];
             match = true;
         } catch (ex) {
 
