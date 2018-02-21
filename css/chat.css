@@ -22,7 +22,7 @@ body {
     color: #6f7878;
     letter-spacing: 0;
     text-align: left;
-    padding: 21px 0px 0px 16px;
+    padding: 17px 0px 0px 17px;
 }
 
 .chatIntro { 
@@ -51,8 +51,11 @@ body {
 .advisorChatBlock {
     background: #92e6a5;
     border-radius: 13px;
-    margin: 11px 20px 0px 16px;
+    margin: 11px 20px 0px 17px;
     width: 70%;
+}
+
+.flexContainer {
     display: flex;
     flex-wrap: nowrap;
 }
@@ -60,23 +63,22 @@ body {
 .advisorInitialBlock { 
     opacity: 0.76;
     border:1px solid #34bc6e;
-    width: 98.1px; /* with flex display, not able to use 30px as is. 98.1px will map to 30px. Need to investigate more. */
+    width: 30px; 
     height: 30px;
     border-radius: 100%;
     margin: 12px 0 0 15px;
-    display: inline-block;
-    text-align: center;
     background-color: #ffffff;
+    flex: 0 0 30px;  /* make sure the width is honored and fixed in size */
 }
 
 .advisorInitial {
     color: #34bc6e;
-    float:left;
-    width:100%;
-    padding-top:50%;
-    line-height:1em;
-    margin-top:-0.5em;
-    text-align:center;
+    float: left;  /* The rest of the css here are there to position the text in the middle of the circle */
+    width: 100%;
+    padding-top: 50%;
+    line-height: 1em;
+    margin-top: -0.5em;
+    text-align: center;
 }
 
 .advisorChat {
@@ -95,36 +97,5 @@ body {
     font-weight: bold; /* adding bold to highlight more on the advisor name */
 }
 
-/*
-ul li{
-    display: inline-block;
-    clear: both;
-    padding: 12px;
-    border-radius: 30px;
-    margin-bottom: 2px;
+@media only screen and (max-width : 425px){
 }
-  
-.customer {
-    background: #eee;
-    float: left;
-}
-  
-.advisor {
-    float: right;
-    background: #0084ff;
-    color: #fff;
-}
-  
-.customer + .advisor {
-    border-bottom-right-radius: 5px;
-}
-  
-.advisor + .advisor {
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-}
-  
-.advisor:last-of-type {
-    border-bottom-right-radius: 30px;
-}
-*/
