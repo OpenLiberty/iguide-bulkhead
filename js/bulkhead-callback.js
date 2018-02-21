@@ -221,7 +221,10 @@ var bulkheadCallBack = (function() {
         var contentIsCorrect = true;
         if (stepName === "AsyncWithoutBulkhead") {
             contentIsCorrect = __validateEditorContentInJavaConcurrencyStep(content);
-        } else if (stepName === "AsyncBulkheadAnnotation") {
+        } else if (stepName = "BulkheadAnnotation") {
+            contentIsCorrect = __validateEditorContent_BulkheadStep(content);
+        }
+        else if (stepName === "AsyncBulkheadAnnotation") {
 
         }
         return contentIsCorrect;
@@ -279,16 +282,29 @@ var bulkheadCallBack = (function() {
         return match;
     };
 
+    var __validateEditorContent_BulkheadStep = function(content) {
+        var match = false;
+        try {
+            var pattern = "@Bulkhead\\(50\\)\\s*public Service serviceForVFA";
+            var regExpToMatch = new RegExp(pattern, "g");
+            content.match(regExpToMatch)[0];
+            match = true;
+        } catch (ex) {
+
+        }
+        return match;
+    };
+
     var listenToEditorForBulkheadAnnotation = function(editor) {
         editor.addSaveListener(__showPodWithRequestButtonAndBrowser);
-    }
+    };
 
     var __addBulkheadInEditor = function(stepName) {
         contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
         var newContent = "  @Bulkhead(50)";
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 22, 22, newContent, 1);
-    }
+    };
 
     var addJavaConcurrencyButton = function(event, stepName) {
         if (event.type === "click" ||
