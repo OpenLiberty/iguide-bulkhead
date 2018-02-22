@@ -375,7 +375,7 @@
             "title": "Adding the @Fallback annotation",
             "description": [  
                 "Using the <code>@Asynchronous</code> and <code>@Bulkhead</code> annotations together places requests for a financial advisor in a waiting queue after the number of requests exceeds the specified maximum number of concurrent requests. If the waiting queue is full, a <code>BulkheadException</code> is thrown. Let's add a fallback service to handle the exception. A fallback service runs when the main service fails. It can provide graceful failure or continued or partial operation of the original service.<br>", 
-                "The <code>@Fallback</code> annotation identifies a class or <a href='https://openliberty.io/guides/circuit-breaker.html#adding-the-fallback-annotation'>a method</a> that automatically runs when a <code>BulkheadException</code> occurs. To use the <code>@Fallback</code> annotation you must modify your <code>server.xml</code> file to <a href='#enabling-microprofile-fault-tolerance'>include the fault tolerance feature</a>. In our scenario, we add the <code>ServiceFallbackHandler.class</code> which implements the <code>FallbackHandler.class</code> to allow scheduling of an appointment. When a customer makes a request for a chat session that cannot be handled because the maximum limit of concurrent requests has been reached and the wait queue is full, the <code>ServiceFallbackHandler.handle</code> method is called. The return type of both methods, <code>ServiceFallbackHandler.handle</code> and <code>BankService.serviceForVFA</code>, must be of type <code>Service</code>. Otherwise a <code>FaultToleranceDefinitionException</code> is thrown.<br>"
+                "The <code>@Fallback</code> annotation identifies a class or <a href='https://openliberty.io/guides/circuit-breaker.html#adding-the-fallback-annotation'>a method</a> that automatically runs when a <code>BulkheadException</code> occurs. To use the <code>@Fallback</code> annotation you must modify your <code>server.xml</code> file to <a href='#enabling-microprofile-fault-tolerance'>include the fault tolerance feature</a>. In our scenario, we add the <code>ServiceFallbackHandler.class</code> which implements the <code>FallbackHandler.class</code> to allow scheduling of an appointment. When a customer makes a request for a chat session that cannot be handled because the maximum limit of concurrent requests has been reached and the wait queue is full, the <code>ServiceFallbackHandler.handle</code> method is called. The return type of both methods, <code>ServiceFallbackHandler.handle</code> and <code>BankService.serviceForVFA</code>, must be of type <code>Future&ltService&gt</code>. Otherwise a <code>FaultToleranceDefinitionException</code> is thrown.<br>"
             ],
             "instruction": [
                 "In <code>BankService.java</code> add the <code>@Fallback(ServiceFallbackHandler.class)</code> annotation on line 16, or click <action title='Async Bulkhead annotation with Fallback' onclick=\"bulkheadCallBack.addFallbackAsyncBulkheadButton(event, 'Fallback')\"><b>@Fallback(ServiceFallbackHandler.class)</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'Fallback')\"><b>Run</b></action> on the editor menu pane.",
@@ -395,11 +395,12 @@
                                 "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
                                 "import org.eclipse.microprofile.faulttolerance.ExecutionContext;",
                                 "import org.eclipse.microprofile.faulttolerance.FallbackHandler;",
+                                "import java.util.concurrent.Future;",
                                 "",
-                                "public class ServiceFallbackHandler implements FallbackHandler<Service> {",
+                                "public class ServiceFallbackHandler implements FallbackHandler<Future<Service>> {",
                                 "",
                                 "  @Override",
-                                "  public Service handle(ExecutionContext context) {",
+                                "  public Future<Service> handle(ExecutionContext context) {",
                                 "    return handleFallback(context);",
                                 "  }",
                                 "}"
