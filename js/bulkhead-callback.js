@@ -441,13 +441,8 @@ var bulkheadCallBack = (function() {
     var __browserVirtualAdvisorBaseURL = "https://global-ebank.openliberty.io/virtualFinancialAdvisor/";
     var __advisors = ["Bob", "Jenny", "Lee", "Mary", "John", "Mike", "Sam", "Sandy", "Joann", "Frank" ];
     var __advisorColors = ['royalblue', 'gray', 'seagreen'];
-<<<<<<< HEAD
-    
-    var handleNewChatRequestInBrowser = function(stepName, requestNum) {
-=======
     var __advisorInitials = ["B", "J", "L"];
-    var handleNewChatRequestInBrowser = function(stepName, browser, stepElementId, requestNum) {
->>>>>>> initial css changes
+    var handleNewChatRequestInBrowser = function(stepName, requestNum) {
         var browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-chat.html";  
         var browserUrl = __browserVirtualAdvisorBaseURL + "Advisor" + requestNum;
         var browserErrorUrl = __browserVirtualAdvisorBaseURL + "error";
