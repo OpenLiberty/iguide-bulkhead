@@ -109,6 +109,7 @@ body {
     margin: 15px 10px 13px 11px;
     height: 32px;
     background: #ffffff;
+    color: #696969;
     border-radius: 4px;
     padding: 0;
     border: 0;
@@ -117,7 +118,8 @@ body {
 
 .customerChatSubmitButton {
     margin: 15px 13px 13px 0;
-    background: #009bef;
+    background: #919191;
+    color: #ffffff;
     border-radius: 2px;
     width: 83px;
     height: 32px;
