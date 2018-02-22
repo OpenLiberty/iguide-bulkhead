@@ -439,9 +439,9 @@ var bulkheadCallBack = (function() {
     };
 
     var __browserVirtualAdvisorBaseURL = "https://global-ebank.openliberty.io/virtualFinancialAdvisor/";
-    var __advisors = ["Bob", "Jenny", "John", "Mary", "Lee", "Mike", "Sam", "Sandy", "Joann", "Frank" ];
+    var __advisors = ["Bob", "Jenny", "Lee", "Mary", "John", "Mike", "Sam", "Sandy", "Joann", "Frank" ];
     var __advisorColors = ['royalblue', 'gray', 'seagreen'];
-    
+    var __advisorInitials = ["B", "J", "L"];
     var handleNewChatRequestInBrowser = function(stepName, requestNum) {
         var browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-chat.html";  
         var browserUrl = __browserVirtualAdvisorBaseURL + "Advisor" + requestNum;
@@ -493,18 +493,18 @@ var bulkheadCallBack = (function() {
         browser.setBrowserContent(browserContentHTML);       
         if (requestNum < requestLimits) {
             // timeout is needed to make sure the content is rendered before accessing the elements
-            setTimeout(function (numOfRequest) {
-                console.log("requestNum ", requestNum);
+            setTimeout(function () {
                 var advisor = __advisors[requestNum - 1];
                 var advisorBackgroundColor = __advisorColors[requestNum - 1];
                 var chatAdvisorCount  = "You are talking to advisor #" + requestNum;
-                var chatIntro = "Hi, I am " + advisor + ", a financial advisor from Global eBank. Let me review your account. I'll be with you shortly."
+                var chatIntro = "Hi, I am " + advisor + ",";
                 browser.getIframeDOM().find(".chatAdvisorCount").text(chatAdvisorCount);
-                browser.getIframeDOM().find(".advisor").css("background-color", advisorBackgroundColor);
-                browser.getIframeDOM().find(".advisor").text(chatIntro);
+                browser.getIframeDOM().find(".advisorName").text(chatIntro);
+                browser.getIframeDOM().find(".advisorInitial").text(__advisorInitials[requestNum-1]);
             }, 200);
         }
     };
+
     var __listenToPlaygroundEditorAnnotationChanges = function(editor){
         var __listenToContentChanges = function(editorInstance, changes) {
             // Get pod from contentManager

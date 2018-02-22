@@ -8,7 +8,8 @@
     var browser;
 
     var content = {
-        url: "https://global-ebank.openliberty.io/"
+        url: "https://global-ebank.openliberty.io/",
+        browserContent: "/guides/draft-iguide-bulkhead/html/global-eBank.html"
     };
     webBrowser.create($('#' + stepElementId).find('.browserHolder'), stepName,  content).done(function(newWebBrowser){
         contentManager.setWebBrowser(stepName, newWebBrowser, 0);
