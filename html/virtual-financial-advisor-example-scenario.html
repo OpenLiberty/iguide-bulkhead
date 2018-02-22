@@ -1,16 +1,10 @@
 <div id="financialAdvisorStep" tabindex="0">
-        <div class="virtualFinancialAdvisorNewSession">
-            <button class="newSessionButton" aria-label="New virtual financial advisor session request">
-                <img src="/guides/draft-iguide-bulkhead/html/images/chat-message_32.svg" class="chatMessageImg" alt="chat"/>
-                <spam class="chatText">Customer1 requests chat</spam>
-            </button>
-        </div>
+        <div class="dashboard"></div>
         <div class='browserHolder'></div>
     </div>
     <script>
         var stepName = "FinancialAdvisor";
         var stepElementId = "financialAdvisorStep";
-        var numOfRequests = 0;
         var browser;
     
         var content = {
@@ -20,21 +14,4 @@
             contentManager.setWebBrowser(stepName, newWebBrowser, 0);
             browser = newWebBrowser;
         });
-    
-        var $requestButtonElement = $('#' + stepElementId).find('.newSessionButton');
-        $requestButtonElement.on("keydown", function (event) {
-            event.stopPropagation();
-            if (event.which === 13 || event.which === 32) { // Enter key, Space key
-                __handleRequest();
-            }
-        });
-        $requestButtonElement.on("click", function (event) {
-            event.stopPropagation();
-            __handleRequest();
-        });
-
-        var __handleRequest = function() {
-            numOfRequests++;
-            bulkheadCallBack.handleNewChatRequestInBrowser(stepName, browser, stepElementId, numOfRequests);
-        }
     </script>
