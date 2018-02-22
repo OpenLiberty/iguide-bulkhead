@@ -286,7 +286,8 @@ var bulkheadCallBack = (function() {
     var __validateEditorContent_BulkheadStep = function(content) {
         var match = false;
         try {
-            var pattern = "@Bulkhead\\(50\\)\\s*public Service serviceForVFA";
+            var pattern = "return null;\\s*}\\s*\\)\\s*;\\s*}\\s*" +
+            "@Bulkhead\\(50\\)\\s*public\\s*Service\\s*serviceForVFA";
             var regExpToMatch = new RegExp(pattern, "g");
             content.match(regExpToMatch)[0];
             match = true;
@@ -299,19 +300,22 @@ var bulkheadCallBack = (function() {
     var __validateEditorContent_AsyncBulkheadStep = function(content) {
         var match = false;
         try {
-            var pattern1 = "@Asynchronous\\s*@Bulkhead\\(value\\s?=\\s?50,\\s*" + 
-                "waitingTaskQueue\\s?=\\s?50\\)\\s*" +
-                "public Future<Service> serviceForVFA";
+            var pattern1 = ";\\s*}\\s*" +
+                "@Asynchronous\\s*@Bulkhead\\s*\\(\\s*value\\s*=\\s*50\\s*,\\s*" + 
+                "waitingTaskQueue\\s*=\\s*50\\s*\\)\\s*" +
+                "public\\s*Future<Service>\\s*serviceForVFA";
             var regExp1 = new RegExp(pattern1, "g");
 
-            var pattern2 = "Service chatService = new ChatSession\\(counterForVFA\\);\\s*" + 
-                "return CompletableFuture\\.completedFuture\\(chatService\\);";
+            var pattern2 = "Service\\s*chatService\\s*=\\s*new\\s*ChatSession\\s*\\(\\s*counterForVFA\\s*\\);\\s*" + 
+                "return\\s*CompletableFuture\\.completedFuture\\s*\\(\\s*chatService\\s*\\);\\s*" +
+                "}\\s*}";
             var regExp2 = new RegExp(pattern2, "g");
 
             var pattern3 = "counterForVFA\\s*=\\s*0;\\s*" +
-                "public Future<Service> requestForVFA\\(\\)\\s*{\\s*" +
+                "public\\s*Future<Service>\\s*requestForVFA\\(\\)\\s*{\\s*" +
                 "counterForVFA\\+\\+;\\s*" +
-                "return serviceForVFA\\(counterForVFA\\);";
+                "return\\s*serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\);\\s*" +
+                "}\\s*@";
             var regExp3 = new RegExp(pattern3, "g");
 
             content.match(regExp1)[0];
@@ -327,10 +331,10 @@ var bulkheadCallBack = (function() {
     var __validateEditorContent_FallbackStep = function(content) {
         var match = false;
         try { 
-            var pattern = "return serviceForVFA\\(counterForVFA\\);\\s*" +
-            "}\\s" + 
-            "(?:\\s*.*){0,5}" + //0-5 instances of repeating group of any chars and whitespace including new lines
-            "@Fallback\\(ServiceFallbackHandler\\.class\\).*";
+            var pattern = "return\\s*serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\);\\s*" +
+            "}\\s*" + 
+            "@Fallback\\s*\\(\\s*ServiceFallbackHandler\\.class\\s*\\)\\s*" +
+            "@Asynchronous";
             var regExp = new RegExp(pattern, "g");
             content.match(regExp)[0];
             match = true;
