@@ -1,5 +1,6 @@
 body {
-    margin: 0;
+    margin: 0 0 0 1px;  /* mark sure the layout does not cover the left border of the broswer */
+    overflow: hidden;  /* to hide the scrollbar as scrollbar is not needed */
 }
 
 .bankHeadingBlock {
@@ -28,7 +29,6 @@ body {
 .chatIntro { 
     /* background: #F2FAFF; */
     background-color: rgba(222,237,247,0.44); 
-    width: 100%;
     height: 50px;
 }
 
@@ -73,7 +73,7 @@ body {
 
 .advisorInitial {
     color: #34bc6e;
-    float: left;  /* The rest of the css here are there to position the text in the middle of the circle */
+    float: left;  /* The rest of the css here is to position the text in the middle of the circle */
     width: 100%;
     padding-top: 50%;
     line-height: 1em;
@@ -95,6 +95,32 @@ body {
 .advisorName {
     font-family: Asap-SemiBold; /* This is not showing up as bold as Murphy's mockup cuz I believe the font is not picking up*/
     font-weight: bold; /* adding bold to highlight more on the advisor name */
+}
+
+.customerChatBlock {
+    background: #eaeaea;
+    width: 99.8%;
+    height: 60px;
+    bottom: 0px;
+    position: absolute;
+}
+
+.customerChatInput {
+    margin: 15px 10px 13px 11px;
+    height: 32px;
+    background: #ffffff;
+    border-radius: 4px;
+    padding: 0;
+    border: 0;
+    flex: 1;
+}
+
+.customerChatSubmitButton {
+    margin: 15px 13px 13px 0;
+    background: #009bef;
+    border-radius: 2px;
+    width: 83px;
+    height: 32px;
 }
 
 @media only screen and (max-width : 425px){
