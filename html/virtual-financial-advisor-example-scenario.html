@@ -19,7 +19,7 @@
     
         var content = {
             url: "https://global-ebank.openliberty.io/",
-            rowserContent: "/guides/draft-iguide-bulkhead/html/global-eBank.html"
+            browserContent: "/guides/draft-iguide-bulkhead/html/global-eBank.html"
         };
         webBrowser.create($('#' + stepElementId).find('.browserHolder'), stepName,  content).done(function(newWebBrowser){
             contentManager.setWebBrowser(stepName, newWebBrowser, 0);
