@@ -491,7 +491,6 @@ var bulkheadCallBack = (function() {
 
         contentManager.setBrowserURL(stepName, browserUrl, 0); 
         browser.setBrowserContent(browserContentHTML); 
-        browser.contentRootElement.find('.wbStatusBar').hide(); /* hide the status bar */
         if (requestNum < requestLimits) {
             // timeout is needed to make sure the content is rendered before accessing the elements
             setTimeout(function () {
