@@ -133,8 +133,8 @@ body {
     color :#272727;
     letter-spacing: 0;
     line-height: 26px;
+    margin: 0px 42px 0px 40px;
     text-align: center;
-    margin: 0px 42px 0px 40px;  
 }
 
 @keyframes blink {
