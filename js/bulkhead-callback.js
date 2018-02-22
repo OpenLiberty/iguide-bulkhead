@@ -338,9 +338,6 @@ var bulkheadCallBack = (function() {
         params[0] = "value=50";
         params[1] = "waitingTaskQueue=50";
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 24, 24, constructAnnotation(params), 3);
-        var readOnlyLines = [];
-        readOnlyLines.push({from: 24, to: 24});
-        contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
     };
 
     var addMethodFutureReturnTypeButton = function(event, stepName) {
@@ -362,10 +359,7 @@ var bulkheadCallBack = (function() {
         }*/
         var returnMethodType = 
             "  public Future<Service> serviceForVFA(int counterForVFA) {";
-        var readOnlyLines = [];
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 27, 27, returnMethodType, 1);      
-        readOnlyLines.push({from: 27, to: 27});
-        contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 27, 27, returnMethodType, 1);
         /*
         if (hasAsyncAnnotation) {
             __addAsyncBulkheadInEditor(stepName);
@@ -376,13 +370,9 @@ var bulkheadCallBack = (function() {
     };
 
     var __addReturnTypeInEditor = function(stepName, performReset) {
-        //var content = contentManager.getEditorContents(stepName);
         var newReturnType = 
             "    return CompletableFuture.completedFuture(chatService);";
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 29, 29, newReturnType, 1);
-        var readOnlyLines = [];
-        readOnlyLines.push({from: 29, to: 29});
-        contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
     };
 
     var addReturnTypeButton = function(event, stepName) {
@@ -433,9 +423,6 @@ var bulkheadCallBack = (function() {
                          "    return serviceForVFA(counterForVFA);\n" +
                          "  }";
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 11, 22, newContent, 10);
-        var readOnlyLines = [];
-        readOnlyLines.push({from: 11, to: 14});
-        contentManager.markTabbedEditorReadOnlyLines(stepName, bankServiceFileName, readOnlyLines);
     };
 
     var __browserVirtualAdvisorBaseURL = "https://global-ebank.openliberty.io/virtualFinancialAdvisor/";
