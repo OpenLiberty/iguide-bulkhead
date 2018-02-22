@@ -508,11 +508,11 @@ var bulkheadCallBack = (function() {
     var __listenToPlaygroundEditorAnnotationChanges = function(editor){
         var __listenToContentChanges = function(editorInstance, changes) {
             // Get pod from contentManager
-            var cb = contentManager.getPlayground(editor.getStepName());            
-            // Get the parameters from the editor and send to the circuitBreaker
+            var bulkhead = contentManager.getPlayground(editor.getStepName());            
+            // Get the parameters from the editor and send to the bulkhead
             var content = editor.getEditorContent();
             try{
-                var matchPattern = "public class BankService\\s*{\\s*@CircuitBreaker\\s*\\((([^\\(\\)])*?)\\)\\s*public Service checkBalance";
+                var matchPattern = "@Asynchronous\\s*@Bulkhead\\s*\\((([^\\(\\)])*?)\\)\\s*public Future<Service> serviceForVFA";
                 var regexToMatch = new RegExp(matchPattern, "g");
                 var groups = regexToMatch.exec(content);
                 var annotation = groups[1];
@@ -520,35 +520,60 @@ var bulkheadCallBack = (function() {
                 var params = annotation.replace(/[{\s()}]/g, ''); // Remove whitespace and parenthesis
                 params = params.split(',');
 
-                var requestVolumeThreshold;
-                var failureThreshold;
-                var delay;
-                var successThreshold;       
+                var value;
+                var waitingTaskQueue;
 
                 // Parse their annotation for values
                 params.forEach(function(param, index){
-                if (param.indexOf('requestVolumeThreshold=') > -1){
-                    requestVolumeThreshold = param.substring(param.indexOf('requestVolumeThreshold=') + 23);
+                    if (param.indexOf('value=') > -1){
+                        value = param.substring(param.indexOf('value=') + 6);
+                    }                    
+                    if (param.indexOf('waitingTaskQueue=') > -1){
+                        waitingTaskQueue = param.substring(param.indexOf('waitingTaskQueue=') + 17);
+                    }                    
+                });
+                
+                var errorPosted = false;
+                if ((value !== undefined && !utils.isInteger(value)) || 
+                    (waitingTaskQueue !== undefined && !utils.isInteger(waitingTaskQueue))) {
+                    editor.createCustomErrorMessage(bulkheadMessages.parmsPositive);
+                    errorPosted = true;
+                } else {
+                    value = parseInt(value);
+                    waitingTaskQueue = parseInt(waitingTaskQueue);
+                    if (value > 10) {
+                        editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsMaxValue,["value"]));
+                        errorPosted = true;
+                    } else if (waitingTaskQueue > 10) {
+                        editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsMaxValue,["waitingTaskQueue"]));
+                        errorPosted = true;
+                    } else if (waitingTaskQueue < value) {
+                        editor.createCustomAlertMessage(bulkheadMessages.waitBestPractice);
+                        // Do not return here.  Post warning and allow user to continue with their simulation.
+                    } else {
+                        // Clear out any previous error boxes displayed.
+                        editor.closeEditorErrorBox();
+                    }
                 }                    
-                if (param.indexOf('failureRatio=') > -1){
-                    failureThreshold = param.substring(param.indexOf('failureRatio=') + 13);
-                }                    
-                if (param.indexOf('delay=') > -1){
-                    delay = param.substring(param.indexOf('delay=') + 6);
-                }                    
-                if (param.indexOf('successThreshold=') > -1){
-                    successThreshold = param.substring(param.indexOf('successThreshold=') + 17);
-                }  
-                });              
-                // Apply the annotation values to the circuit breaker. If one is not specified, the value will be undefined and circuit breaker will use its default value
-                cb.updateParameters.apply(cb, [requestVolumeThreshold, failureThreshold, delay, successThreshold]);
+
+                if (!errorPosted) {
+                    // Apply the annotation values to the bulkhead. 
+                    // If not specified, the bulkhead will use its default value.
+                    bulkhead.updateParameters.apply(bulkhead, [value, waitingTaskQueue]);
+                    // Enable the playground buttons.
+                    bulkhead.enableActions(true);
+                } else {
+                    // Error message was posted which must be fixed.  Don't allow processing
+                    // of the playground until it is resolved.
+                    bulkhead.enableActions(false);
+                }
+                
             }
             catch(e){
 
             }
         }
         editor.addSaveListener(__listenToContentChanges);
-        editor.addContentChangeListener(__listenToContentChanges);
     };
 
     var __createAsyncBulkhead = function(root, stepName) {
@@ -558,7 +583,7 @@ var bulkheadCallBack = (function() {
         }
 
         //  TODO: change 10, 5 to actual values from the code!
-        var ab = asyncBulkhead.create(root, stepName, 10, 5); 
+        var ab = asyncBulkhead.create(root, stepName, 5, 5); 
         root.asyncBulkhead = ab;
 
         root.find(".bulkheadThreadRequestButton").on("click", function(){

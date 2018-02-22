@@ -142,7 +142,17 @@ var asyncBulkhead = function(){
         this.requestChatCount = 0;
         this.updateQueues();
         this.root.find(".bulkheadDescriptionDiv").hide();
+      },
+
+      // Enables/disables the Chat Request, End Chat, and Reset buttons.
+      //
+      // enableAction: boolean   True to enable buttons, False to disable buttons
+      enableActions: function(enableAction) {
+        this.root.find('.bulkheadThreadRequestButton').prop("disabled", !enableAction);
+        this.root.find('.bulkheadThreadReleaseButton').prop("disabled", !enableAction);
+        this.root.find('.bulkheadResetButton').prop("disabled", !enableAction);
       }
+      
     };
 
     var _create = function(root, stepName, value, waitingTaskQueue){
