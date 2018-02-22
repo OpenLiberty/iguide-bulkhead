@@ -303,7 +303,8 @@ var bulkheadCallBack = (function() {
             var pattern1 = ";\\s*}\\s*" +
                 "@Asynchronous\\s*@Bulkhead\\s*\\(\\s*value\\s*=\\s*50\\s*,\\s*" + 
                 "waitingTaskQueue\\s*=\\s*50\\s*\\)\\s*" +
-                "public\\s*Future<Service>\\s*serviceForVFA";
+                "public\\s*Future<Service>\\s*serviceForVFA\\s*\\(\\s*int counterForVFA\\s*\\)\\s*{\\s*" +
+                "Service\\s*chatService\\s*=";
             var regExp1 = new RegExp(pattern1, "g");
 
             var pattern2 = "Service\\s*chatService\\s*=\\s*new\\s*ChatSession\\s*\\(\\s*counterForVFA\\s*\\);\\s*" + 
