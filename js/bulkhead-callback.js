@@ -234,9 +234,19 @@ var bulkheadCallBack = (function() {
     var __correctEditorError = function(stepName) {
         if (stepName === "AsyncWithoutBulkhead") {
             __addJavaConcurrencyInEditor(stepName);
-        }else if (stepName === "AddLibertyMPFaultTolerance") {
+        } else if (stepName === "BulkheadAnnotation") { 
+            __addBulkheadInEditor(stepName);
+        } else if (stepName === "AsyncBulkheadAnnotation") { 
+            __addAsyncBulkheadInEditor(stepName);
+            __addMethodFutureReturnTypeInEditor(stepName);
+            __addReturnTypeInEditor(stepName);
+            __updateAsyncBulkheadMethodButtonInEditor(stepName);
+        } else if (stepName === "Fallback") { 
+            __addFallbackAsyncBulkheadInEditor(stepName);
+        } else if (stepName === "AddLibertyMPFaultTolerance") {
             __addMicroProfileFaultToleranceFeature();        
         }
+        
     };
 
     var listenToEditorForJavaConcurrency = function(editor) {       
