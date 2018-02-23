@@ -521,6 +521,7 @@ var bulkheadCallBack = (function() {
             if (requestNum === 1) {
                 $("#" + stepElementId).find(".busyCount").text('1');
             } else if (requestNum === requestLimits) {
+                browser.setBrowserContent("/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-processing.html"); 
                 __incrementCounts(stepName, 2, 51, ".busyCount", browserErrorUrl, 
                                  "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html");
                 return;
@@ -533,6 +534,7 @@ var bulkheadCallBack = (function() {
             if (requestNum === 1) {
                 $("#" + stepElementId).find(".busyCount").text('1');
             } else if (requestNum === 2) {
+                browser.setBrowserContent("/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-processing.html"); 
                 __incrementCounts(stepName, 2, 51, ".busyCount", __browserVirtualAdvisorBaseURL + "waitingqueue", 
                                  "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-waitingqueue.html", true);
                 return;
@@ -550,6 +552,7 @@ var bulkheadCallBack = (function() {
             if (requestNum === 1) {
                 $("#" + stepElementId).find(".busyCount").text('1');
             } else if (requestNum === 2) {
+                browser.setBrowserContent("/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-processing.html"); 
                 __incrementCounts(stepName, 2, 51, ".busyCount", __browserVirtualAdvisorBaseURL + "waitingqueue", 
                                  "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-waitingqueue.html", true);
                 return;
