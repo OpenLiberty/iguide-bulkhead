@@ -516,27 +516,52 @@ var bulkheadCallBack = (function() {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-no-available.html";
                 browserUrl = browserErrorUrl;
             }
-        } else if (stepName == "BulkheadAnnotation") {
+        } else if (stepName === "BulkheadAnnotation") {
             requestLimits = 2;
-            if (requestNum >= requestLimits) {
+            if (requestNum === 1) {
+                $("#" + stepElementId).find(".busyCount").text('1');
+            } else if (requestNum === requestLimits) {
+                browser.setBrowserContent("/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-processing.html"); 
+                __incrementCounts(stepName, 2, 51, ".busyCount", browserErrorUrl, 
+                                 "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html");
+                return;
+            } else if (requestNum > requestLimits) {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html";
                 browserUrl = browserErrorUrl;
             }
         } else if (stepName === "AsyncBulkheadAnnotation") {
             requestLimits = 2;
-            if (requestNum === 2) {
-                browserUrl = __browserVirtualAdvisorBaseURL + "waitingqueue";        
-                browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-waitingqueue.html";
-            } else if (requestNum >= 3) {
+            if (requestNum === 1) {
+                $("#" + stepElementId).find(".busyCount").text('1');
+            } else if (requestNum === 2) {
+                browser.setBrowserContent("/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-processing.html"); 
+                __incrementCounts(stepName, 2, 51, ".busyCount", __browserVirtualAdvisorBaseURL + "waitingqueue", 
+                                 "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-waitingqueue.html", true);
+                return;
+            } else if (requestNum === 3) {
+                browser.getIframeDOM().find(".errorTextBox").hide();
+                __incrementCounts(stepName, 2, 51, ".waitCount", browserErrorUrl, 
+                                 "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html");
+                return;
+            } else if (requestNum > 3) {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html";
                 browserUrl = browserErrorUrl;
             }
         } else if (stepName === "Fallback") {
             requestLimits = 2;
-            if (requestNum === 2) {
-                browserUrl =  __browserVirtualAdvisorBaseURL + "waitingqueue";        
-                browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-waitingqueue.html";
-            } else if (requestNum >= 3) {
+            if (requestNum === 1) {
+                $("#" + stepElementId).find(".busyCount").text('1');
+            } else if (requestNum === 2) {
+                browser.setBrowserContent("/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-processing.html"); 
+                __incrementCounts(stepName, 2, 51, ".busyCount", __browserVirtualAdvisorBaseURL + "waitingqueue", 
+                                 "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-waitingqueue.html", true);
+                return;
+            } else if (requestNum === 3) {
+                browser.getIframeDOM().find(".errorTextBox").hide();
+                __incrementCounts(stepName, 2, 51, ".waitCount", browserErrorUrl, 
+                                 "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-fallback.html");
+                return;
+            } else if (requestNum > 3) {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-fallback.html";
                 browserUrl = __browserVirtualAdvisorBaseURL + "fallback";
             }  
@@ -556,6 +581,21 @@ var bulkheadCallBack = (function() {
                 browser.getIframeDOM().find(".advisorInitial").text(__advisorInitials[requestNum-1]);
             }, 200);
         }
+    };
+
+    var __incrementCounts = function(stepName, startingCount, endingCount, elementToBeCounted, urlForAfterCount, htmlForAfterCount, startingWaitingQueue) {
+        var timeInterval = setInterval(function () {
+            $("#" + stepElementId).find(elementToBeCounted).text(startingCount);
+            startingCount++
+            if (startingCount === endingCount) {
+                clearInterval(timeInterval);
+                contentManager.setBrowserURL(stepName, urlForAfterCount, 0);
+                browser.setBrowserContent(htmlForAfterCount);
+                if (startingWaitingQueue) {
+                    $("#" + stepElementId).find(".waitCount").text(1);
+                }
+            }
+        }, 20);
     };
 
     var __listenToPlaygroundEditorAnnotationChanges = function(editor){
