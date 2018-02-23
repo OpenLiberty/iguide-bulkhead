@@ -1,4 +1,5 @@
 body {
+    font-family: Asap-Regular;
     margin: 0 0 0 1px;  /* mark sure the layout does not cover the left border of the broswer */
     overflow: hidden;  /* to hide the scrollbar as scrollbar is not needed */
 }
@@ -18,7 +19,6 @@ body {
 }
 
 .chatAdvisorCount {
-    font-family: Asap-Regular;
     font-size: 16px;
     color: #6f7878;
     letter-spacing: 0;
@@ -40,7 +40,6 @@ body {
 }
 
 .chatIntroText {
-    font-family: Asap-Regular;
     font-size: 16px;
     color: #272727;
     letter-spacing: 0;
@@ -82,7 +81,6 @@ body {
 }
 
 .advisorChat {
-    font-family: Asap-Regular;
     font-size: 14px;
     color: #272727;
     letter-spacing: 0;
@@ -130,7 +128,6 @@ body {
 }
 
 .errorTextBox {
-    font-family: Asap-Regular;
     font-size: 16px;
     color :#272727;
     letter-spacing: 0;
