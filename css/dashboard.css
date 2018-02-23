@@ -1,0 +1,51 @@
+.dashboardContainer {
+    background: #ffffff !important;
+    border:1px solid  #cbcbcb !important;
+    border-radius: 1px;
+    height: 42px !important;
+    margin-bottom: 2px !important;
+}
+
+.chatSummary {
+    display: table;
+    width: 100%;    
+    table-layout: fixed;
+    border-collapse: collapse;
+}               
+
+.oneCount {
+    text-align: center;
+}
+
+.chatLabel {
+    font-family: Asap-SemiBold;
+    font-size: 13px;
+    color: #24253a;
+    letter-spacing: 0.5px;
+    line-height: 26px;
+    text-align: left;
+}
+
+.chatCount {
+    font-family: Asap-Regular;
+    font-size: 20px;
+    color: #24253a;
+    letter-spacing: 0;
+    line-height: 26px;
+    text-align: left;
+    margin: 8px 0 10px 10px;
+}
+
+.countTableCellLine {
+    border: 1px solid #cbcbcb;
+    width: 1px;
+    height: 41px;
+}
+
+.busyCount {
+    color: #649e70;
+}
+
+.waitCount {
+    color: #d04b02;
+}
