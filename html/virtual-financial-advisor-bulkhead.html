@@ -22,7 +22,8 @@
     content = {
         url: "https://global-ebank.openliberty.io/",
         browserContent: "/guides/draft-iguide-bulkhead/html/global-eBank.html",
-        enableStatusBar: false
+        enableStatusBar: false,
+        enableRefreshButton: false
     };
     webBrowser.create($('#' + stepElementId).find('.browserHolder'), stepName,  content).done(function(newWebBrowser){
         contentManager.setWebBrowser(stepName, newWebBrowser, 0);
