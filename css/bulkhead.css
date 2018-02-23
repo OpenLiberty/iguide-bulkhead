@@ -26,6 +26,10 @@
     height: 468px;
 }
 
+#guide_content .wbContent {
+    height: 430px;
+}
+
 .codeeditor {
     height: 100%;
     overflow: auto;
