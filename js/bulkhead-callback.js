@@ -580,16 +580,20 @@ var bulkheadCallBack = (function() {
         contentManager.setBrowserURL(stepName, browserUrl, 0); 
         browser.setBrowserContent(browserContentHTML); 
         if (requestNum < requestLimits) {
-            // timeout is needed to make sure the content is rendered before accessing the elements
-            setTimeout(function () {
-                var advisor = __advisors[requestNum - 1];
-                var advisorBackgroundColor = __advisorColors[requestNum - 1];
-                var chatAdvisorCount  = "You are talking to advisor #" + requestNum;
-                var chatIntro = "Hi, I am " + advisor + ",";
-                browser.getIframeDOM().find(".chatAdvisorCount").text(chatAdvisorCount);
-                browser.getIframeDOM().find(".advisorName").text(chatIntro);
-                browser.getIframeDOM().find(".advisorInitial").text(__advisorInitials[requestNum-1]);
-            }, 200);
+            // use a interval timer to make sure the browser content is rendered before accessing the elements
+            var waitingForBrowserContentTimeInterval = setInterval(function () {
+                console.log(browser.getIframeDOM().find(".advisorName").length);
+                if (browser.getIframeDOM().find(".advisorName").length === 1) {
+                    clearInterval(waitingForBrowserContentTimeInterval);
+                    var advisor = __advisors[requestNum - 1];
+                    var advisorBackgroundColor = __advisorColors[requestNum - 1];
+                    var chatAdvisorCount  = "You are talking to advisor #" + requestNum;
+                    var chatIntro = "Hi, I am " + advisor + ",";
+                    browser.getIframeDOM().find(".chatAdvisorCount").text(chatAdvisorCount);
+                    browser.getIframeDOM().find(".advisorName").text(chatIntro);
+                    browser.getIframeDOM().find(".advisorInitial").text(__advisorInitials[requestNum-1]);
+                }
+            }, 10)
         }
     };
 
