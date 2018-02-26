@@ -1,4 +1,5 @@
 .dashboardContainer {
+    font-family: Asap;
     background: #ffffff !important;
     border:1px solid  #cbcbcb !important;
     border-radius: 1px;
@@ -18,7 +19,7 @@
 }
 
 .chatLabel {
-    font-family: Asap-SemiBold;
+    font-weight: 500;
     font-size: 13px;
     color: #24253a;
     letter-spacing: 0.5px;
@@ -27,7 +28,7 @@
 }
 
 .chatCount {
-    font-family: Asap-Regular;
+    font-weight: 400;
     font-size: 20px;
     color: #24253a;
     letter-spacing: 0;
