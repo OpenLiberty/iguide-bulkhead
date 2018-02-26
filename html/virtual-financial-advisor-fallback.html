@@ -11,8 +11,20 @@
 -->
  <html>
 <head>
+    <link href="https://fonts.googleapis.com/css?family=Asap" rel="stylesheet">
     <link rel="stylesheet" href="/guides/draft-iguide-bulkhead/css/chat.css">
 </head>
+<script>
+    function timeCheck(value) {
+        document.getElementById("scheduleSubmitButton").disabled = false;
+    }
+
+    function submitSchedule() {
+        document.getElementById("formContent").style.display = "none";
+        document.getElementById("formResponse").style.display = "block";
+    }
+</script>
+</script>
 <body>    
     <div class="bankHeadingBlock">
         <div class="bankHeading">Global eBank</div>
@@ -21,18 +33,21 @@
         <img class="chatIcon" src="/guides/draft-iguide-bulkhead/html/images/chat-icon.svg" alt="chat icon"/>
         <span class="chatIntroText">Chat with a financial advisor</span>
     </div>
-    <div class="chatIntroText fallbackForm">
+    <div id="formContent" class="chatIntroText fallbackForm">
         <p>All financial advisors are busy with customers. Please schedule an appointment to chat with a financial advisor.</p>
         <hr>
         <p>Select from available times tomorrow:</p>
             <div class="timeChoices">
-                <input type = "radio" name = "aptTime" value = "nine" />9:00am<br>
-                <input type = "radio" name = "aptTime" value = "one" />1:00pm<br>
-                <input type = "radio" name = "aptTime"  value = "twoThirty" />2:30pm
+                <input type = "radio" name = "aptTime" value = "nine" onclick="timeCheck(this.value)" />9:00am<br>
+                <input type = "radio" name = "aptTime" value = "one" onclick="timeCheck(this.value)" />1:00pm<br>
+                <input type = "radio" name = "aptTime"  value = "twoThirty" onclick="timeCheck(this.value)" />2:30pm
             </div>
         <div>
             <button id="scheduleSubmitButton" class="scheduleButton" onclick="submitSchedule()" disabled> Submit </button>
         </div>
+    </div>
+    <div id="formResponse" class="timeResponse">
+        <p class="errorTextBox">Thank you!</p>
     </div>
 </body>
 </html>
