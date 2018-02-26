@@ -582,7 +582,7 @@ var bulkheadCallBack = (function() {
         if (requestNum < requestLimits) {
             // use a interval timer to make sure the browser content is rendered before accessing the elements
             var waitingForBrowserContentTimeInterval = setInterval(function () {
-                console.log(browser.getIframeDOM().find(".advisorName").length);
+                //console.log(browser.getIframeDOM().find(".advisorName").length);
                 if (browser.getIframeDOM().find(".advisorName").length === 1) {
                     clearInterval(waitingForBrowserContentTimeInterval);
                     var advisor = __advisors[requestNum - 1];
