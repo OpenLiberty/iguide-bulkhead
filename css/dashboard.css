@@ -4,6 +4,7 @@
     border-radius: 1px;
     height: 42px !important;
     margin-bottom: 2px !important;
+    width: 100%;
 }
 
 .chatSummary {
