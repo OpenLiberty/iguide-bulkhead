@@ -232,17 +232,25 @@ body {
 .scheduleButton {
     margin: 10px 16px;
     padding: 0px 16px 0px 17px;
-    background: #919191;
+    background-color: #919191;
     border-radius: 2px;
     width: 83px;
     height: 32px;
-    font-family: Asap-Regular;
     font-size: 16px;
     color: #ffffff;
     letter-spacing: 0;
     line-height: 26px;
     text-align: left;
     border: none;
+}
+
+.scheduleButton:disabled {
+    background-color: #b6b6b6;
+}
+
+.timeResponse {
+    margin-top: 40px;
+    display: none;
 }
 
 @media only screen and (max-width : 425px){
