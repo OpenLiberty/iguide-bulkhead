@@ -207,5 +207,42 @@ body {
     animation-delay: .4s;
 }
 
+.fallbackForm {
+    margin: 15px 16px;
+    line-height: 26px;
+    padding: 0px;
+}
+
+.fallbackForm  p {
+    margin-bottom: 8px;
+}
+
+.timeChoices input {
+    margin-bottom: 9px;
+}
+
+.timeChoices input[type="radio"] {
+    border: 1px solid #95C4F3;
+    width: 15px;
+    height: 15px;
+    border-radius: 100%;
+}
+
+.scheduleButton {
+    margin: 10px 16px;
+    padding: 0px 16px 0px 17px;
+    background: #919191;
+    border-radius: 2px;
+    width: 83px;
+    height: 32px;
+    font-family: Asap-Regular;
+    font-size: 16px;
+    color: #ffffff;
+    letter-spacing: 0;
+    line-height: 26px;
+    text-align: left;
+    border: none;
+}
+
 @media only screen and (max-width : 425px){
 }

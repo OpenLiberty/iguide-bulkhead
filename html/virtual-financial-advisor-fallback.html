@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  Copyright (c) 2017 IBM Corporation and others.
+  Copyright (c) 2018 IBM Corporation and others.
   All rights reserved. This program and the accompanying materials
   are made available under the terms of the Eclipse Public License v1.0
   which accompanies this distribution, and is available at
@@ -10,45 +10,29 @@
       IBM Corporation - initial API and implementation
 -->
  <html>
-
 <head>
-    <style>
-            .scheduleButton {
-                /*color: blue;*/
-                background-color: #ABD155;
-                border-radius: 20px;
-                /*border: none;*/
-                /*padding: 15px 32px;*/
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                font-size: 14px;
-            }
-    </style>
-    <script>
-        function submitSchedule() {
-            document.getElementById("textHolder").innerHTML  = "Thank you!";
-        }
-    </script>
+    <link rel="stylesheet" href="/guides/draft-iguide-bulkhead/css/chat.css">
 </head>
 <body>    
-    <p>All financial advisors are busy with customers. <br><br>Please schedule an appointment to chat with a financial advisor.</p>
-    <form>
-      <fieldset>
-       <legend>Select from available times tomorrow</legend>
-       <p>      
-         <input type = "radio" name = "radSize" id = "sizeSmall" value = "small" />
-         <label for = "sizeSmall">9:00am</label>
-         <input type = "radio" name = "radSize" id = "sizeMed" value = "medium" />
-         <label for = "sizeMed">1:00pm</label>
-         <input type = "radio" name = "radSize" id = "sizeLarge" value = "large" />
-         <label for = "sizeLarge">2:30pm</label>
-        </p>       
-      </fieldset>     
-    </form>
-    <br>
-    <div><button id="scheduleSubmitButton" class="scheduleButton" onclick="submitSchedule()"> Submit </button></div>
-    <div><p id="textHolder"></p></div>
+    <div class="bankHeadingBlock">
+        <div class="bankHeading">Global eBank</div>
+    </div>
+    <div class="chatIntro">
+        <img class="chatIcon" src="/guides/draft-iguide-bulkhead/html/images/chat-icon.svg" alt="chat icon"/>
+        <span class="chatIntroText">Chat with a financial advisor</span>
+    </div>
+    <div class="chatIntroText fallbackForm">
+        <p>All financial advisors are busy with customers. Please schedule an appointment to chat with a financial advisor.</p>
+        <hr>
+        <p>Select from available times tomorrow:</p>
+            <div class="timeChoices">
+                <input type = "radio" name = "aptTime" value = "nine" />9:00am<br>
+                <input type = "radio" name = "aptTime" value = "one" />1:00pm<br>
+                <input type = "radio" name = "aptTime"  value = "twoThirty" />2:30pm
+            </div>
+        <div>
+            <button id="scheduleSubmitButton" class="scheduleButton" onclick="submitSchedule()" disabled> Submit </button>
+        </div>
+    </div>
 </body>
-
 </html>
