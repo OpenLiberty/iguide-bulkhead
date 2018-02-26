@@ -1,5 +1,7 @@
+@import url("https://fonts.googleapis.com/css?family=Asap:300,400,500");
+
 body {
-    font-family: Asap-Regular;
+    font-family: Asap;
     margin: 0 0 0 1px;  /* mark sure the layout does not cover the left border of the broswer */
     overflow: hidden;  /* to hide the scrollbar as scrollbar is not needed */
 }
@@ -9,8 +11,8 @@ body {
     background-color: #deedf7;
 }
 
-.bankHeading {
-    font-family: Asap-SemiBold;
+.bankHeading {   
+    font-weight: 500;
     font-size: 16px;
     color: #343334;
     letter-spacing: 0;
@@ -91,8 +93,7 @@ body {
 }
 
 .advisorName {
-    font-family: Asap-SemiBold; /* This is not showing up as bold as Murphy's mockup cuz I believe the font is not picking up*/
-    font-weight: bold; /* adding bold to highlight more on the advisor name */
+    font-weight: 500; 
 }
 
 .customerChatBlock {
