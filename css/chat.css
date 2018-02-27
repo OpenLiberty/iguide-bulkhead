@@ -113,6 +113,8 @@ body {
     padding: 0;
     border: 0;
     flex: 1;
+    font-size: 12px;
+    padding-left: 15px;
 }
 
 .customerChatSubmitButton {
@@ -122,6 +124,7 @@ body {
     border-radius: 2px;
     width: 83px;
     height: 32px;
+    font-size: 12px;
 }
 
 .spacing {
