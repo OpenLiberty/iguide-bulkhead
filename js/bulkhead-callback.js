@@ -210,6 +210,8 @@ var bulkheadCallBack = (function() {
                 // display the pod with chat button and web browser in it
                 contentManager.setPodContent(stepName, htmlFile);
                     //"/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-new-session.html");
+                // resize the height of the tabbed editor
+                contentManager.resizeTabbedEditor(stepName);
             }
         } else {
             // display error and provide link to fix it
