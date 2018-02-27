@@ -316,6 +316,7 @@
               "<li><b>value</b>:  The maximum number of concurrent requests to the service. The default is <code>10</code> requests.",
               "<li><b>waitingTaskQueue</b>: The size of the waiting queue which holds requests that will execute at a different time. The default is <code>10</code> requests.",
               "</ul>",
+              "It is best practice to have a <b>waitingTaskQueue</b> equal to or larger than the <b>value</b>.<br>",
               "<instruction style='display:inline-block' tabindex='0'><b>Modify</b> the parameters for the <code>@Bulkhead</code> annotation in the following file. For simulation purposes, the maximum value for <b>value</b> and <b>waitingTaskQueue</b> that we can accept is 10.  Repeat the process as many times as you want. <br><br>Click <b>Chat request</b> to initiate a request with a virtual financial advisor or <b>End chat</b> to end an arbitrary chat and observe the simulation.</instruction>"
             ],
             "content":[
