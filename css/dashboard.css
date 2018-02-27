@@ -43,6 +43,7 @@
     border: 1px solid #cbcbcb;
     width: 1px;
     height: 41px;
+    text-align: center;
 }
 
 .busyCount {
