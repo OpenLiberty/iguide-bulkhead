@@ -511,11 +511,18 @@ var bulkheadCallBack = (function() {
         var browserErrorUrl = __browserVirtualAdvisorBaseURL + "error";
         var requestLimits = 1;
         var browser = contentManager.getBrowser(stepName);
+        var refreshBrowserContent = true;
         
         contentManager.markCurrentInstructionComplete(stepName);
         contentManager.updateWithNewInstructionNoMarkComplete(stepName);
         if (stepName === "AsyncWithoutBulkhead") { 
-            requestLimits = 3;     
+            requestLimits = 3;
+            if (requestNum === 2) {
+                // we don't want to refresh the browser content as we could simply replace the financial advisor 
+                // initial and name with the existing content. By not refreshing the browser content, we eliminate
+                // the timing problem of setting the advisor initial and name before the content is refreshed.
+                refreshBrowserContent = false;
+            }
             if (requestNum >= requestLimits) {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-error-503.html";
                 browserUrl = browserErrorUrl;
@@ -578,7 +585,9 @@ var bulkheadCallBack = (function() {
         }
 
         contentManager.setBrowserURL(stepName, browserUrl, 0); 
-        browser.setBrowserContent(browserContentHTML); 
+        if (refreshBrowserContent) {
+            browser.setBrowserContent(browserContentHTML);
+        }
         if (requestNum < requestLimits) {
             // use a interval timer to make sure the browser content is rendered before accessing the elements
             var waitingForBrowserContentTimeInterval = setInterval(function () {
