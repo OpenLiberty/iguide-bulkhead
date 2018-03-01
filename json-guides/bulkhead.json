@@ -21,7 +21,7 @@
                     "description": [
                         "We are using MicroProfile <b>Bulkhead</b>, <b>Asynchronous</b>, and <b>Fallback</b> policies for our implementation.<br>",
                         "<h4>Bulkhead</h4>",
-                        "The term <b>bulkhead</b> comes from the structure used in ships to create partitions in the hull. In the event of a hull breach, these isolated partitions can prevent water from filling up the entire hull and sinking the ship.<br>",
+                        "The term <b>bulkhead</b> comes from the structure used in ships to create partitions in the hull. In the event of a hull breach, these isolated partitions prevent water from filling up the entire hull and sinking the ship.<br>",
                         "The bulkhead pattern in software systems works similarly by isolating services to prevent them from starving the system of resources. There are two approaches to bulkhead: <b>semaphore</b> isolation and <b>thread pool</b> isolation.<br>",
                         "The <b>thread pool</b> isolation approach utilizes thread pools to separate the services from the caller and contain it to a subset of system resources. Thread pools also provide a waiting queue, rejecting requests only when both the pool and queue are full.",
                         "The <b>semaphore</b> approach limits the number of concurrent requests to the service, instead of limiting the resources available to the service. It rejects requests immediately once the limit is hit. This approach has a slight performance boost by dropping the overhead needed for thread management, but does not allow for hanging threads to timeout.",
