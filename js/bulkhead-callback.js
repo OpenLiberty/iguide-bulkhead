@@ -202,7 +202,7 @@ var bulkheadCallBack = (function() {
         } 
 
         if (__checkEditorContent(stepName, content)) {
-            //editor.closeEditorErrorBox(stepName);
+            editor.closeEditorErrorBox(stepName);
             var index = contentManager.getCurrentInstructionIndex();
             if(index === 0){
                 contentManager.markCurrentInstructionComplete(stepName);
@@ -539,6 +539,7 @@ var bulkheadCallBack = (function() {
             requestLimits = 2;
             if (requestNum === 1) {
                 $("#" + stepElementId).find(".busyCount").text('1');
+                $("#" + stepElementId).find(".busyChatCount").attr("aria-label", "1 chat is currently in progress");
             } else if (requestNum === requestLimits) {
                 browser.setBrowserContent("/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-processing.html"); 
                 __incrementCounts(stepName, 2, 51, ".busyCount", browserErrorUrl, 
@@ -552,6 +553,7 @@ var bulkheadCallBack = (function() {
             requestLimits = 2;
             if (requestNum === 1) {
                 $("#" + stepElementId).find(".busyCount").text('1');
+                $("#" + stepElementId).find(".busyChatCount").attr("aria-label", "1 chat is currently in progress");
             } else if (requestNum === 2) {
                 browser.setBrowserContent("/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-processing.html"); 
                 __incrementCounts(stepName, 2, 51, ".busyCount", __browserVirtualAdvisorBaseURL + "waitingqueue", 
@@ -570,6 +572,7 @@ var bulkheadCallBack = (function() {
             requestLimits = 2;
             if (requestNum === 1) {
                 $("#" + stepElementId).find(".busyCount").text('1');
+                $("#" + stepElementId).find(".busyChatCount").attr("aria-label", "1 chat is currently in progress");
             } else if (requestNum === 2) {
                 browser.setBrowserContent("/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-processing.html"); 
                 __incrementCounts(stepName, 2, 51, ".busyCount", __browserVirtualAdvisorBaseURL + "waitingqueue", 
@@ -577,12 +580,12 @@ var bulkheadCallBack = (function() {
                 return;
             } else if (requestNum === 3) {
                 browser.getIframeDOM().find(".errorTextBox").hide();
-                __incrementCounts(stepName, 2, 51, ".waitCount", browserErrorUrl, 
+                __incrementCounts(stepName, 2, 51, ".waitCount", __browserVirtualAdvisorBaseURL + "scheduleAppointment", 
                                  "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-fallback.html");
                 return;
             } else if (requestNum > 3) {
                 browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-fallback.html";
-                browserUrl = __browserVirtualAdvisorBaseURL + "fallback";
+                browserUrl = __browserVirtualAdvisorBaseURL + "scheduleAppointment";
             }  
         }
 
@@ -618,6 +621,14 @@ var bulkheadCallBack = (function() {
                 browser.setBrowserContent(htmlForAfterCount);
                 if (startingWaitingQueue) {
                     $("#" + stepElementId).find(".waitCount").text(1);
+                    $("#" + stepElementId).find(".waitChatCount").attr("aria-label", "1 chat request is waiting in the queue");
+                    $("#" + stepElementId).find(".busyChatCount").attr("aria-label", "50 chats are currently in progress");
+                } else {
+                    if (elementToBeCounted === ".busyCount") {
+                        $("#" + stepElementId).find(".busyChatCount").attr("aria-label", "50 chats are currently in progress");
+                    } else {
+                        $("#" + stepElementId).find(".waitChatCount").attr("aria-label", "50 chat requests are waiting in the queue");
+                    }
                 }
             }
         }, 20);
