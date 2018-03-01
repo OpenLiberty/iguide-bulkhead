@@ -15,34 +15,22 @@
         <div class="bulkheadRequestButtons">
           <button class="btn bulkheadButton bulkheadThreadRequestButton" title="Chat request">Chat Request</button>
           <button class="btn bulkheadButton bulkheadThreadReleaseButton" title="End chat">End Chat</button>          
-          <div>
-            <button class="btn bulkheadButton bulkheadResetButton" title="Reset">Reset</button>
-          </div>
         </div>
         <div class="bulkheadQueues">          
           <div class="bulkheadThreadpool bulkheadQueueDiv" tabindex='0'>
             <span class="bulkheadThreadpoolQueueDescription">Thread pool queue representing the number of concurrent threads: </span>
-            <div class="bulkheadQueue bulkheadThreadpoolQueue">[
-                    <div class="threadpoolBoxInUse box"></div>
-                    <div class="threadpoolBoxInUse box"></div>
-                    <div class="threadpoolBox box"></div>
-                    <div class="threadpoolBox box"></div>
-                    <div class="threadpoolBox box"></div>
-            ]</div>
+            <div class="bulkheadQueue bulkheadThreadpoolQueue"></div>
           </div>
           <div class="bulkheadWait bulkheadQueueDiv" tabindex='0'>
             <span class="bulkheadWaitQueueDescription">Waiting tasks queue: </span>
-            <div class="bulkheadQueue bulkheadWaitQueue">[
-                    <div class="waitingTaskBoxInUse box"></div>
-                    <div class="waitingTaskBox box"></div>
-                    <div class="waitingTaskBox box"></div>
-                    <div class="waitingTaskBox box"></div>
-                    <div class="waitingTaskBox box"></div>
-            ]</div>
+            <div class="bulkheadQueue bulkheadWaitQueue"></div>
           </div>
-          <div class="bulkheadDescriptionDiv bulkheadQueueDiv" style="display: none;" tabindex='0'>
+          <div class="bulkheadExceptionDiv" style="display: none;" tabindex='0'>
             <span class="bulkheadException">Exceeded wait queue size. Bulkhead Exception is thrown.</span>
           </div>
+          <div>
+              <button class="btn bulkheadButton bulkheadResetButton" title="Reset">Reset</button>
+          </div>  
         </div>
       </div>
 
