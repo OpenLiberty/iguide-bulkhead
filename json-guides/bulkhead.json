@@ -37,7 +37,7 @@
             "name": "ExampleScenario",
             "title": "Example: Bank Scenario",
             "description": [
-                "Imagine that you're developing a VirtualFinancialAdvisor (VFA) microservice for a bank to allow an online chat with a virtual financial advisor. The initial synchronous implementation of the microservice allows only one customer to chat with a financial advisor at a time. As you progress through the guide, you will see how the number of available chat sessions impacts the service and the system."
+                "Imagine that you're developing a VirtualFinancialAdvisor (VFA) microservice for a bank to allow an online chat with a virtual financial advisor. The initial naive synchronous implementation of the microservice allows only one customer to chat with a financial advisor at a time. As you progress through the guide, you will see how the number of available chat sessions impacts the service and the system."
             ],
             "content": [],
             "sections": [
@@ -72,7 +72,7 @@
                 "Replace the <code>return serviceforVFA(counterForVFA);</code> on line 12 to the following block of code, or click <br><action title='Adding Java Concurrency' onclick=\"bulkheadCallBack.addJavaConcurrencyButton(event, 'AsyncWithoutBulkhead')\"><b>ExecutorService executor = Executors.newFixedThreadPool(1);\nFuture serviceRequest = executor.submit(() -> {\n  try{\n    return serviceForVFA(counterForVFA);\n  } catch {Exception ex} {\n    handleException();\n  }\n  return null;\n});</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncWithoutBulkhead')\"><b>Run</b></action> on the editor menu pane.",
                 "Click <action title='Customer1 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead', 1)\"><b>Customer1 requests chat</b></action> to open a chat session with a virtual financial advisor.",
                 "While Customer1 is still chatting with a financial advisor, click <action title='Customer2 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead', 2)\"><b>Customer2 requests chat</b></action> to open a separate chat session with a virtual financial advisor.",
-                "As more customers request chat sessions with a virtual financial advisor, more sessions become busy.  Currently, the code does not implement a limit to the number of available advisor sessions. The system slowly runs out of CPU or memory resources causing it to overload and affect other microservices. <br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead', 3)\"><b>50 customer chat requests</b></action> to see the cascading failure."
+                "As more customers request chat sessions with a virtual financial advisor, more sessions become busy.  Currently, the code does not implement a limit to the number of available advisor sessions. The VirtualFinancialAdvisor system slowly runs out of CPU or memory resources causing it to overload and affect other microservices. <br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead', 3)\"><b>50 customer chat requests</b></action> to see the cascading failure."
             ],
             "content":[
                 {
@@ -238,10 +238,10 @@
                 "To use the <code>@Bulkhead</code> and <code>@Asynchronous</code> annotations together, you must modify your <code>server.xml</code> file to <a href='#enabling-microprofile-fault-tolerance'>include the fault tolerance feature</a>. Then, configure the <code>@Bulkhead</code> annotation with the following parameters:",
                 "<ul><li><b>value</b>: The maximum number of concurrent requests to the service. If the parameter is not specified, the default is <code>10</code> requests.</li><li><b>waitingTaskQueue</b>: The size of the waiting queue which holds requests that will execute at a different time. If the parameter is not specified, the default is <code>10</code> requests. This parameter for the <code>@Bulkhead</code> annotation only takes effect when the <code>@Asynchronous</code> annotation is used.</li></ul>It is best practice to have a <b>waitingTaskQueue</b> equal to or larger than the <b>value</b>."
             ],
-            "instruction": [
-                "Change the <code>@Bulkhead(50)</code> annotation on line 24 to the following code, or click <br><action title='Bulkhead annotation with Asynchronous' onclick=\"bulkheadCallBack.addAsyncBulkheadButton(event, 'AsyncBulkheadAnnotation')\"><b>@Asynchronous\n@Bulkhead(value = 50, waitingTaskQueue = 50)</b></action>.<br>The method annotated with <code>@Asynchronous</code> must return a <code>Future</code>. Change the method return type on line 27 to the following code, or click <br><action title='Bulkhead return type method' onclick=\"bulkheadCallBack.addMethodFutureReturnTypeButton(event, 'AsyncBulkheadAnnotation')\"><b>public Future&ltService&gt serviceForVFA(int counterForVFA) {</b></action>.<br>Change the return type on line 29 to the following code, or click<br><action title='Bulkhead return type' onclick=\"bulkheadCallBack.addReturnTypeButton(event, 'AsyncBulkheadAnnotation')\"><b>return CompletableFuture.completedFuture(chatService);</b></action>.<br>Because <code>@Asynchronous</code> manages thread pools for us, we no longer need to use <code>Executors</code>. Replace the method <code>requestForVFA</code> on line 11 to the following block of code, or click <br><action title='update requestForVFA method' onclick=\"bulkheadCallBack.updateAsyncBulkheadMethodButton(event, 'AsyncBulkheadAnnotation')\"><b>public Future&ltService&gt requestForVFA() {\n  counterForVFA++;\n  return serviceForVFA(counterForVFA);\n}</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncBulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane.",
+            "instruction": [               
+                "The method annotated with <code>@Asynchronous</code> must return a <code>Future</code>. To add the <code>@Asynchronous</code> annotation, update the <code>@Bulkhead</code> annotation's parameters and change the return type for <code>serviceForVFA</code>, replace the code from line 24 to 28 to the following block of code, or click <br><action title='Bulkhead annotation with Asynchronous' onclick=\"bulkheadCallBack.addAsyncBulkheadMethodButton(event, 'AsyncBulkheadAnnotation')\"><b>@Asynchronous\n@Bulkhead(value = 50, waitingTaskQueue = 50)\npublic Future&ltService&gt serviceForVFA(int counterForVFA) {\n  Service chatService = new ChatSession(counterForVFA);\n  return CompletableFuture.completedFuture(chatService);\n}</b></action>.<br>Because <code>@Asynchronous</code> manages thread pools for us, we no longer need to use <code>Executors</code>. Replace the method <code>requestForVFA</code> on line 11 to the following block of code, or click <br><action title='update requestForVFA method' onclick=\"bulkheadCallBack.updateAsyncBulkheadMethodButton(event, 'AsyncBulkheadAnnotation')\"><b>public Future&ltService&gt requestForVFA() {\n  counterForVFA++;\n  return serviceForVFA(counterForVFA);\n}</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncBulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane.",
                 "Click <action title='Customer1 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation', 1)\"><b>Customer1 requests chat</b></action> to open a chat session with a virtual financial advisor.",
-                "As more customers request chat sessions with a virtual financial advisor, all 50 sessions become busy. Once the maximum number of concurrent chat requests is reached, the next chat request is placed in the waiting queue.<br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation', 2)\"><b>50 customer chat requests</b></action> to fill the <b>IN PROGRESS</b> chats and to see that the last customer is placed in the waiting queue.<br>",
+                "As more customers request chat sessions with a virtual financial advisor, all 50 sessions become busy. Once the maximum number of concurrent chat requests is reached, the next chat request is placed in the waiting queue.<br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation', 2)\"><b>50 customer chat requests</b></action> to fill the <b>IN PROGRESS</b> chats and to see that the last customer is placed in the waiting queue.",
                 "As more customers request chat sessions with a virtual financial advisor, the waiting queue eventually fills up. Our Bulkhead policy limits the maximum number of requests in the waiting queue to 50. The next chat request cannot be started and cannot be added to the waiting queue.<br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation', 3)\"><b>50 customer chat requests</b></action> to fill the <b>WAITING</b> queue and see how an additional chat session fails to open for the last customer."
             ],
             "content":[
@@ -281,7 +281,8 @@
                                 "    Service chatService = new ChatSession(counterForVFA);",
                                 "    return chatService;",
                                 "  }",
-                                "}"
+                                "}",
+                                ""
                             ],
                             "readonly": [
                                 {
@@ -289,12 +290,8 @@
                                     "to": "10"
                                 },
                                 {
-                                    "from": "26",
-                                    "to": "26"
-                                },
-                                {
-                                    "from": "28",
-                                    "to": "29"
+                                    "from": "29",
+                                    "to": "30"
                                 }
                             ],
                             "save": false,
