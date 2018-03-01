@@ -238,12 +238,9 @@ var bulkheadCallBack = (function() {
             __addJavaConcurrencyInEditor(stepName);
         } else if (stepName === "BulkheadAnnotation") { 
             __addBulkheadInEditor(stepName);
-        } else if (stepName === "AsyncBulkheadAnnotation") { 
-            //__addAsyncBulkheadInEditor(stepName);
-            //__addMethodFutureReturnTypeInEditor(stepName);
-            //__addReturnTypeInEditor(stepName);        
-            __addAsyncBulkheadMethodInEditor(stepName);
-            __updateAsyncBulkheadMethodButtonInEditor(stepName, false);
+        } else if (stepName === "AsyncBulkheadAnnotation") {     
+            __addAsyncBulkheadInEditor(stepName);
+            __updateAsyncBulkheadMethodInEditor(stepName, false);
         } else if (stepName === "Fallback") { 
             __addFallbackAsyncBulkheadInEditor(stepName);
         } else if (stepName === "AddLibertyMPFaultTolerance") {
@@ -400,15 +397,15 @@ var bulkheadCallBack = (function() {
         }
     };
 
-    var addAsyncBulkheadMethodButton = function(event, stepName) {
+    var addAsyncBulkheadButton = function(event, stepName) {
         if (event.type === "click" ||
            (event.type === "keypress" && (event.which === 13 || event.which === 32))) {
             // Click or 'Enter' or 'Space' key event...
-            __addAsyncBulkheadMethodInEditor(stepName);
+            __addAsyncBulkheadInEditor(stepName);
         }
     };
 
-    var __addAsyncBulkheadMethodInEditor = function(stepName) {      
+    var __addAsyncBulkheadInEditor = function(stepName) {      
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
         var hasRequestForVFAMethod = __checkRequestForVFAMethod(content);   
         contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
@@ -433,26 +430,7 @@ var bulkheadCallBack = (function() {
         
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 24, 29, constructAnnotation(params), 7);
         if (hasRequestForVFAMethod === true) {
-            __updateAsyncBulkheadMethodButtonInEditor(stepName, false);
-        }
-    };
-
-    var __updateAsyncBulkheadMethodButtonInEditor = function(stepName, performReset) {
-        var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
-        var hasServiceForVFAMethod = __checkServiceForVFAMethod(content);
-      
-        var newContent = "  public Future<Service> requestForVFA() {\n" +
-                         "    counterForVFA++;\n" + 
-                         "    return serviceForVFA(counterForVFA);\n" +
-                         "  }";
-
-        if (performReset === undefined || performReset === true) {
-            contentManager.resetTabbedEditorContents(stepName, bankServiceFileName); 
-        } 
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 11, 22, newContent, 10);
-    
-        if (hasServiceForVFAMethod === true && (performReset === undefined || performReset === true)) {
-            __addAsyncBulkheadMethodInEditor(stepName);
+            __updateAsyncBulkheadMethodInEditor(stepName, false);
         }
     };
 
@@ -484,11 +462,28 @@ var bulkheadCallBack = (function() {
         if (event.type === "click" ||
            (event.type === "keypress" && (event.which === 13 || event.which === 32))) {
             // Click or 'Enter' or 'Space' key event...
-            __updateAsyncBulkheadMethodButtonInEditor(stepName);
+            __updateAsyncBulkheadMethodInEditor(stepName);
         }
     };
 
-    // add __updateAsyncBulkheadMethodButtonInEditor
+    var __updateAsyncBulkheadMethodInEditor = function(stepName, performReset) {
+        var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
+        var hasServiceForVFAMethod = __checkServiceForVFAMethod(content);
+      
+        var newContent = "  public Future<Service> requestForVFA() {\n" +
+                         "    counterForVFA++;\n" + 
+                         "    return serviceForVFA(counterForVFA);\n" +
+                         "  }";
+
+        if (performReset === undefined || performReset === true) {
+            contentManager.resetTabbedEditorContents(stepName, bankServiceFileName); 
+        } 
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 11, 22, newContent, 10);
+    
+        if (hasServiceForVFAMethod === true && (performReset === undefined || performReset === true)) {
+            __addAsyncBulkheadInEditor(stepName);
+        }
+    };
 
     var __browserVirtualAdvisorBaseURL = "https://global-ebank.openliberty.io/virtualFinancialAdvisor/";
     var __advisors = ["Bob", "Jenny", "Lee", "Mary", "John", "Mike", "Sam", "Sandy", "Joann", "Frank" ];
@@ -714,7 +709,6 @@ var bulkheadCallBack = (function() {
         contentManager.setPlayground(stepName, ab, 0);
     };
 
-
     return {
         listenToEditorForFeatureInServerXML: __listenToEditorForFeatureInServerXML,
         addMicroProfileFaultToleranceFeatureButton: addMicroProfileFaultToleranceFeatureButton,
@@ -728,7 +722,7 @@ var bulkheadCallBack = (function() {
         addFallbackAsyncBulkheadButton: addFallbackAsyncBulkheadButton,
         listenToEditorForAsyncBulkheadFallback: listenToEditorForAsyncBulkheadFallback,
         handleNewChatRequestInBrowser: handleNewChatRequestInBrowser,
-        addAsyncBulkheadMethodButton: addAsyncBulkheadMethodButton,
+        addAsyncBulkheadButton: addAsyncBulkheadButton,
         updateAsyncBulkheadMethodButton: updateAsyncBulkheadMethodButton,
         listenToPlaygroundEditorAnnotationChanges: __listenToPlaygroundEditorAnnotationChanges,
         createAsyncBulkhead: __createAsyncBulkhead
