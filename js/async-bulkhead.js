@@ -14,11 +14,11 @@ var asyncBulkhead = function(){
         this.root = root;     // Root element that this asyncBulkhead is in
         this.stepName = stepName;
         this.updateParameters(value, waitingTaskQueue);
-    };    
+    };
 
     _asyncBulkhead.prototype = {
-      
-      // Update the parameters
+
+      // Update the parameters - invoked whenever the parameter values are set.
       updateParameters: function(value, waitingTaskQueue) {
         this.value = value ? value : 10;
         this.waitingTaskQueue = waitingTaskQueue ? waitingTaskQueue : 10;
@@ -26,55 +26,80 @@ var asyncBulkhead = function(){
         // Initialize chat request processed count
         this.requestChatCount = 0;
 
-        this.updateQueues();
+        this.initializeQueues();
       },
 
-      addRequestSquares: function(requestContainer, waitQueueContainer) {
-        // this.requestChatCount = total number of unhandled requests made
+      initializeQueues: function() {
+        var requestQueue = this.root.find(".bulkheadThreadpoolQueue");
+        var waitingTasksQueue = this.root.find(".bulkheadWaitQueue");
+
+        requestQueue.empty();
+        waitingTasksQueue.empty();
+
+        var queueSpot;
+        // Thread pool queue - available chat spots
+        for (queueSpot = 0; queueSpot < this.value; queueSpot++) {
+           $("<img class='queuePerson' src='/guides/draft-iguide-bulkhead/html/images/user_outline-green.svg' alt='Available chat session' />").appendTo(requestQueue);
+        }
+        // Wait queue - chats waiting to be queued
+        for (queueSpot = 0; queueSpot < this.waitingTaskQueue; queueSpot++) {
+          $("<img class='queuePerson' src='/guides/draft-iguide-bulkhead/html/images/user_outline-orange.svg' alt='Available wait queue slot' />").appendTo(waitingTasksQueue);
+        }
+      },
+
+      updateRequestSquares: function(requestContainer, waitQueueContainer) {
+        // this.requestChatCount = total number of requests made
         // this.value = @Bulkhead parameter - number of concurrent threads
         //                                    to handle requests.
         // this.waitingTaskQueue = @Bulkhead parameter - size of the wait
         //                                    queue.
-        
-        var requestCount = 0; // Tracks number of requests displayed on queues
-        for (requestCount = 0; requestCount < this.requestChatCount && requestCount < this.value; requestCount++) {
-          // Reminder: this.value is the size of the request queue
-          $("<div>").attr({'class': "box threadpoolBoxInUse"}).appendTo(requestContainer);
+
+        var requestCount;          // Tracks number of requests processed on queues
+        var queueSpots = requestContainer.find('img');
+
+        for (requestCount = 0; requestCount < queueSpots.length && requestCount < this.requestChatCount; requestCount++) {
+          queueSpots[requestCount].setAttribute('src', '/guides/draft-iguide-bulkhead/html/images/user_green.svg');
+          queueSpots[requestCount].setAttribute('alt', 'Active chat session');
         }
 
-        if (requestCount === this.requestChatCount && requestCount < this.value) {
-          // The request queue is not full. Add empty squares to the request queue.
-          // Reminder:  this.value === size of the request queue
-          var emptyRequestSquares;
-          for (emptyRequestSquares = requestCount; emptyRequestSquares < this.value; emptyRequestSquares++) {
-            $("<div>").attr({'class': "box threadpoolBox"}).appendTo(requestContainer);
+        if (requestCount === this.requestChatCount && requestCount < queueSpots.length) {
+          // The request queue is not full. Add empty chats to the request queue.
+          var emptyRequestCount;
+          for (emptyRequestCount = requestCount; emptyRequestCount < queueSpots.length; emptyRequestCount++) {
+            queueSpots[emptyRequestCount].setAttribute('src', '/guides/draft-iguide-bulkhead/html/images/user_outline-green.svg');
+            queueSpots[emptyRequestCount].setAttribute('alt', 'Available chat session');
           }
-          // No requests for the wait queue.  Fill with empty boxes.
-          for (emptyRequestSquares = 0; emptyRequestSquares < this.waitingTaskQueue; emptyRequestSquares++) {
-            $("<div>").attr({'class': "box waitingTaskBox"}).appendTo(waitQueueContainer);
+          // No requests for the wait queue.  Fill with empty queue slots.
+          queueSpots = waitQueueContainer.find('img');
+          for (emptyRequestCount = 0; emptyRequestCount < queueSpots.length; emptyRequestCount++) {
+            queueSpots[emptyRequestCount].setAttribute('src', '/guides/draft-iguide-bulkhead/html/images/user_outline-orange.svg');
+            queueSpots[emptyRequestCount].setAttribute('alt', 'Available wait queue slot');
           }
         } else if (requestCount <= this.requestChatCount) {
           // There are more requests to display.  Spill them over to the wait queue.
+          queueSpots = waitQueueContainer.find('img');
           var waitRequestCount;
-          for (waitRequestCount = 0; 
-               requestCount < this.requestChatCount && waitRequestCount < this.waitingTaskQueue;
+          for (waitRequestCount = 0;
+               requestCount < this.requestChatCount && waitRequestCount < queueSpots.length;
                requestCount++, waitRequestCount++) {
-            $("<div>").attr({'class': "box waitingTaskBoxInUse"}).appendTo(waitQueueContainer);  
+                 queueSpots[waitRequestCount].setAttribute('src', '/guides/draft-iguide-bulkhead/html/images/user_orange.svg');
+                 queueSpots[waitRequestCount].setAttribute('alt', 'Taken wait queue slot');
           }
           if (requestCount !== this.requestChatCount) {
             // Still requests that haven't been processed.  Issue BulkheadException.
             this.requestChatCount = this.value + this.waitingTaskQueue;  // Reset the requestChatCount to maximum
-                                                                         // so end request won't process requests
-                                                                         // that were rejected.
-            this.root.find(".bulkheadDescriptionDiv").show();
+                                                                         // so 'End chat' request won't process
+                                                                         // requests that were rejected.
+            this.root.find(".bulkheadExceptionDiv").show();
           } else {
-            this.root.find(".bulkheadDescriptionDiv").hide();
+            this.root.find(".bulkheadExceptionDiv").hide();
             // The wait queue is not full.  Add empty boxes to the wait queue.
-            for ( ; waitRequestCount < this.waitingTaskQueue; waitRequestCount++) {
-              $("<div>").attr({'class': "box waitingTaskBox"}).appendTo(waitQueueContainer);          
+            for ( ; waitRequestCount < queueSpots.length; waitRequestCount++) {
+              queueSpots[waitRequestCount].setAttribute('src', '/guides/draft-iguide-bulkhead/html/images/user_outline-orange.svg');
+              queueSpots[waitRequestCount].setAttribute('alt', 'Available wait queue slot');
             }
           }
-        } 
+        }
       },
 
       /*
@@ -84,31 +109,25 @@ var asyncBulkhead = function(){
           var requestQueue = this.root.find(".bulkheadThreadpoolQueue");
           var waitingTasksQueue = this.root.find(".bulkheadWaitQueue");
 
-          requestQueue.empty();
-          waitingTasksQueue.empty();
+          this.updateRequestSquares(requestQueue, waitingTasksQueue);
 
-          requestQueue.append("[");
-          waitingTasksQueue.append("[");
-          this.addRequestSquares(requestQueue, waitingTasksQueue);
-          requestQueue.append("]");
-          waitingTasksQueue.append("]");
-
-          var requestQueueSize = (this.requestChatCount < this.value ? this.value-this.requestChatCount : this.value); 
+          var requestQueueSize = (this.requestChatCount < this.value ? this.requestChatCount : this.value);
           var waitQueueSize = 0;
           if (requestQueueSize === this.value) {
             // Filled the request queue.  Look for wait queue values.
             if ((requestQueueSize + this.waitingTaskQueue) >= this.requestChatCount) {
               waitQueueSize = this.requestChatCount - requestQueueSize;
             } else {
-              waitQueueSize = this.requestChatCount;
+              // Also filled wait queue size.
+              waitQueueSize = this.waitingTaskQueue;
             }
           }
 
           // Update request queue aria-label with the number of requests on the queue.
-          requestQueue.attr('aria-label', 'Number of requested threads: ' + requestQueueSize + '. Size of threadpool: ' + this.value);
+          requestQueue.attr('aria-label', 'Number of requested chats: ' + requestQueueSize + '. Size of threadpool: ' + this.value);
 
           // Update waiting task queue aria-label with the number of requests on the waiting queue.
-          waitingTasksQueue.attr('aria-label', 'Number of waiting threads: ' + waitQueueSize + '. Size of waiting task queue: ' + this.waitingTaskQueue);        
+          waitingTasksQueue.attr('aria-label', 'Number of waiting threads: ' + waitQueueSize + '. Size of waiting task queue: ' + this.waitingTaskQueue);
       },
 
       // Handle chat request and end chat requests
@@ -127,13 +146,13 @@ var asyncBulkhead = function(){
 
       // Handles a successful chat request to the microservice
       sendStartChatRequest: function() {
-        this.handleRequest(true);            
+        this.handleRequest(true);
         this.updateQueues();
-      },      
+      },
 
       // Handles a request to end a chat session
       sendEndChatRequest: function() {
-        this.handleRequest(false);            
+        this.handleRequest(false);
         this.updateQueues();
       },
 
@@ -141,7 +160,7 @@ var asyncBulkhead = function(){
       resetQueues: function() {
         this.requestChatCount = 0;
         this.updateQueues();
-        this.root.find(".bulkheadDescriptionDiv").hide();
+        this.root.find(".bulkheadExceptionDiv").hide();
       },
 
       // Enables/disables the Chat Request, End Chat, and Reset buttons.
@@ -152,7 +171,7 @@ var asyncBulkhead = function(){
         this.root.find('.bulkheadThreadReleaseButton').prop("disabled", !enableAction);
         this.root.find('.bulkheadResetButton').prop("disabled", !enableAction);
       }
-      
+
     };
 
     var _create = function(root, stepName, value, waitingTaskQueue){
