@@ -465,7 +465,8 @@
             "name": "WhatNext",
             "title": "Great work!  You're done!",
             "description": [
-               "You learned how to use bulkhead together with asynchronous policies and provide a fallback to make your microservice fault tolerant."
+               "You learned about the benefits of asynchronous processing.  But also how a faulty process could potentially build up a large number of requests which, if not limited, could consume all resources (CPU, threads, memory) in the host and lead to a cascading failure.  You learned that a bulkhead isolation policy could be used to limit the number of parallel executions so that the impact of a failing process is isolated from affecting the whole system.  You learned about the two approaches to bulkhead, semaphore isolation and thread pool isolation, and how to identify a fallback service to run when the number of concurrent processes as defined by the bulkhead policy has been reached.",
+               "<p> <a >Download the sample aynchronous bulkhead application on github</a>.</p>"
             ]
         }
 
