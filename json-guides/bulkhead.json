@@ -21,9 +21,10 @@
                     "description": [
                         "We are using MicroProfile <b>Bulkhead</b>, <b>Asynchronous</b>, and <b>Fallback</b> policies for our implementation.<br>",
                         "<h4>Bulkhead</h4>",
-                        "The term <b>bulkhead</b> comes from the structure used in ships to create partitions. In the event of a hull breach, these partitions can be used to hold off water to prevent the rest of the ship from getting damaged.<br>",
-                        "The bulkhead pattern in software systems works similarly by isolating failures to prevent the rest of the system from failing. There are two approaches to bulkhead: <b>sempahore</b> isolation and <b>thread pool</b> isolation.<br>",
-                        "With <b>semaphore</b> isolation, requests will fail upon exceeding the maximum concurrent requests. In <b>thread pool</b> isolation, extra requests are added to a waiting queue until currently running requests finish and free up space in the thread pool. Another advantage of the thread pool is allowing thread timeouts to free up resources from hanging threads.",
+                        "The term <b>bulkhead</b> comes from the structure used in ships to create partitions in the hull. In the event of a hull breach, these isolated partitions prevent water from filling up the entire hull and sinking the ship.<br>",
+                        "The bulkhead pattern in software systems works similarly by isolating services to prevent them from starving the system of resources. There are two approaches to bulkhead: semaphore isolation and thread pool isolation.<br>",
+                        "The <b>semaphore</b> isolation approach limits the number of concurrent requests to the service. It rejects requests immediately once the limit is hit.<br>",
+                        "The <b>thread pool</b> isolation approach utilizes a thread pool to separate the service from the caller and contain it to a subset of system resources. This approach also provides a waiting queue, rejecting requests only when both the pool and queue are full. Thread pool management adds some overhead which reduces performance slightly compared to using a semaphore, but allows hanging threads to timeout.",
                         "<h4>Asynchronous</h4>",
                         "Asynchronous programming allows multiple tasks to run simultaneously, rather than waiting for a task to finish before executing the next. This is usually achieved by running tasks on separate threads.",
                         "<h4>Fallback</h4>",
