@@ -127,10 +127,6 @@ body {
     font-size: 12px;
 }
 
-.spacing {
-    margin-top: 87px;
-}
-
 .errorTextBox {
     font-size: 16px;
     color :#272727;
@@ -138,6 +134,10 @@ body {
     line-height: 26px;
     margin: 0px 42px 0px 40px;
     text-align: center;
+}
+
+.spacing {
+    margin-top: 87px;
 }
 
 @keyframes blink {
@@ -254,7 +254,4 @@ body {
 .timeResponse {
     margin-top: 40px;
     display: none;
-}
-
-@media only screen and (max-width : 425px){
 }
