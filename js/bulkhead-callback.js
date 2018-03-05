@@ -441,6 +441,8 @@ var bulkheadCallBack = (function() {
 
     var listenToEditorForAsyncBulkhead = function(editor) {
         editor.addSaveListener(__showPodWithRequestButtonAndBrowser);
+        // Adjust the initial height of the editor to display the entire content
+        __adjustEditorHeight(editor.getStepName(), "510px");
     }
 
     var addFallbackAsyncBulkheadButton = function(event, stepName) {
@@ -487,7 +489,20 @@ var bulkheadCallBack = (function() {
     
         if (hasServiceForVFAMethod === true && (performReset === undefined || performReset === true)) {
             __addAsyncBulkheadInEditor(stepName);
+            // Adjust the height of the editor back to the original height
+            __adjustEditorHeight(stepName, "468px");
         }
+    };
+
+    var __adjustEditorHeight = function(stepName, heightToUse) {
+        var containers = $(".subContainerDiv[data-step='" + stepName + "']");
+        $.each( containers, function(index, container) {
+            var editorContainer = $(container).find(".editorContainer");
+            if (editorContainer.length === 1) {
+                editorContainer.css("height", heightToUse);
+                return false; // break out of the loop
+            }
+        })
     };
 
     var __browserVirtualAdvisorBaseURL = "https://global-ebank.openliberty.io/virtualFinancialAdvisor/";
@@ -583,7 +598,6 @@ var bulkheadCallBack = (function() {
         if (requestNum < requestLimits) {
             // use a interval timer to make sure the browser content is rendered before accessing the elements
             var waitingForBrowserContentTimeInterval = setInterval(function () {
-                //console.log(browser.getIframeDOM().find(".advisorName").length);
                 if (browser.getIframeDOM().find(".advisorName").length === 1) {
                     clearInterval(waitingForBrowserContentTimeInterval);
                     var advisor = __advisors[requestNum - 1];
