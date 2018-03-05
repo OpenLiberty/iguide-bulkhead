@@ -238,11 +238,13 @@ var bulkheadCallBack = (function() {
             __addJavaConcurrencyInEditor(stepName);
         } else if (stepName === "BulkheadAnnotation") { 
             __addBulkheadInEditor(stepName);
-        } else if (stepName === "AsyncBulkheadAnnotation") { 
+        } else if (stepName === "AsyncBulkheadAnnotation") {
+            var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
+            var hasRequestForVFAMethod = __checkRequestForVFAMethod(content);
             __addAsyncBulkheadInEditor(stepName);
-            __addMethodFutureReturnTypeInEditor(stepName);
-            __addReturnTypeInEditor(stepName);
-            __updateAsyncBulkheadMethodButtonInEditor(stepName);
+            if (hasRequestForVFAMethod === false) {
+                __updateAsyncBulkheadMethodInEditor(stepName, false);
+            }                
         } else if (stepName === "Fallback") { 
             __addFallbackAsyncBulkheadInEditor(stepName);
         } else if (stepName === "AddLibertyMPFaultTolerance") {
@@ -309,35 +311,44 @@ var bulkheadCallBack = (function() {
         return match;
     };
 
-    var __validateEditorContent_AsyncBulkheadStep = function(content) {
+    var __checkRequestForVFAMethod = function(content) {
         var match = false;
         try {
-            var pattern1 = ";\\s*}\\s*" +
+            var pattern = "counterForVFA\\s*=\\s*0;\\s*" +
+                    "public\\s*Future<Service>\\s*requestForVFA\\(\\)\\s*{\\s*" +
+                    "counterForVFA\\+\\+;\\s*" +
+                    "return\\s*serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\);\\s*" +
+                    "}\\s*@";
+            var regExp = new RegExp(pattern, "g");
+            content.match(regExp)[0];
+            match = true;
+        } catch (ex) {
+           
+        }
+        return match;
+    }
+
+    var __checkServiceForVFAMethod = function(content) {
+        var match = false;
+        try {
+            var pattern = ";\\s*}\\s*" +
                 "@Asynchronous\\s*@Bulkhead\\s*\\(\\s*value\\s*=\\s*50\\s*,\\s*" + 
                 "waitingTaskQueue\\s*=\\s*50\\s*\\)\\s*" +
                 "public\\s*Future<Service>\\s*serviceForVFA\\s*\\(\\s*int counterForVFA\\s*\\)\\s*{\\s*" +
-                "Service\\s*chatService\\s*=";
-            var regExp1 = new RegExp(pattern1, "g");
-
-            var pattern2 = "Service\\s*chatService\\s*=\\s*new\\s*ChatSession\\s*\\(\\s*counterForVFA\\s*\\);\\s*" + 
+                "Service\\s*chatService\\s*=\\s*new\\s*ChatSession\\s*\\(\\s*counterForVFA\\s*\\);\\s*" + 
                 "return\\s*CompletableFuture\\.completedFuture\\s*\\(\\s*chatService\\s*\\);\\s*" +
                 "}\\s*}";
-            var regExp2 = new RegExp(pattern2, "g");
-
-            var pattern3 = "counterForVFA\\s*=\\s*0;\\s*" +
-                "public\\s*Future<Service>\\s*requestForVFA\\(\\)\\s*{\\s*" +
-                "counterForVFA\\+\\+;\\s*" +
-                "return\\s*serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\);\\s*" +
-                "}\\s*@";
-            var regExp3 = new RegExp(pattern3, "g");
-
-            content.match(regExp1)[0];
-            content.match(regExp2)[0];
-            content.match(regExp3)[0];
+            var regExp = new RegExp(pattern, "g");
+            content.match(regExp)[0];
             match = true;
         } catch (ex) {
 
         }
+        return match;
+    }
+
+    var __validateEditorContent_AsyncBulkheadStep = function(content) {        
+        var match = __checkServiceForVFAMethod(content) && __checkRequestForVFAMethod(content);
         return match;
     };
 
@@ -398,10 +409,12 @@ var bulkheadCallBack = (function() {
         }
     };
 
-    var __addAsyncBulkheadInEditor = function(stepName) {
-        contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
+    var __addAsyncBulkheadInEditor = function(stepName) {      
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
- 
+        var hasRequestForVFAMethod = __checkRequestForVFAMethod(content);
+
+        contentManager.resetTabbedEditorContents(stepName, bankServiceFileName); 
+   
         var params = [];
         var constructAnnotation = function(params) {
             var bulkheadAnnotation = "  @Asynchronous\n" +
@@ -409,56 +422,21 @@ var bulkheadCallBack = (function() {
             if ($.isArray(params) && params.length > 0) {
                 bulkheadAnnotation += params.join(",\n            ");
             }
-            bulkheadAnnotation += ")";
+            bulkheadAnnotation += ")\n" +
+                                    "  public Future<Service> serviceForVFA(int counterForVFA) {\n" +
+                                    "    Service chatService = new ChatSession(counterForVFA);\n" +
+                                    "    return CompletableFuture.completedFuture(chatService);\n" +
+                                    "  }";
             return bulkheadAnnotation;
         };
 
         params[0] = "value=50";
         params[1] = "waitingTaskQueue=50";
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 24, 24, constructAnnotation(params), 3);
-    };
-
-    var addMethodFutureReturnTypeButton = function(event, stepName) {
-        if (event.type === "click" ||
-           (event.type === "keypress" && (event.which === 13 || event.which === 32))) {
-            // Click or 'Enter' or 'Space' key event...
-            __addMethodFutureReturnTypeInEditor(stepName);
-        }        
-    };
-
-    var __addMethodFutureReturnTypeInEditor = function(stepName, performReset) {
-        /*var hasAsyncAnnotation;
-        var hasReturnType;
-        if (performReset === undefined || performReset) {
-            var content = contentManager.getEditorContents(stepName);
-            hasAsyncAnnotation = __checkAsyncAnnotation(content);
-            hasReturnType = __checkReturnType(content); 
-            contentManager.resetEditorContents(stepName); 
-        }*/
-        var returnMethodType = 
-            "  public Future<Service> serviceForVFA(int counterForVFA) {";
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 27, 27, returnMethodType, 1);
-        /*
-        if (hasAsyncAnnotation) {
-            __addAsyncBulkheadInEditor(stepName);
+        
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 24, 29, constructAnnotation(params), 7);
+        if (hasRequestForVFAMethod === true) {
+            __updateAsyncBulkheadMethodInEditor(stepName, false);
         }
-        if (hasReturnType) {
-            __addReturnTypeInEditor(stepName);
-        }*/
-    };
-
-    var __addReturnTypeInEditor = function(stepName, performReset) {
-        var newReturnType = 
-            "    return CompletableFuture.completedFuture(chatService);";
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 29, 29, newReturnType, 1);
-    };
-
-    var addReturnTypeButton = function(event, stepName) {
-        if (event.type === "click" ||
-           (event.type === "keypress" && (event.which === 13 || event.which === 32))) {
-            // Click or 'Enter' or 'Space' key event...
-            __addReturnTypeInEditor(stepName);
-        }        
     };
 
     var listenToEditorForAsyncBulkhead = function(editor) {
@@ -489,18 +467,27 @@ var bulkheadCallBack = (function() {
         if (event.type === "click" ||
            (event.type === "keypress" && (event.which === 13 || event.which === 32))) {
             // Click or 'Enter' or 'Space' key event...
-            __updateAsyncBulkheadMethodButtonInEditor(stepName);
+            __updateAsyncBulkheadMethodInEditor(stepName);
         }
     };
 
-    var __updateAsyncBulkheadMethodButtonInEditor = function(stepName) {
-        //contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
+    var __updateAsyncBulkheadMethodInEditor = function(stepName, performReset) {
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
+        var hasServiceForVFAMethod = __checkServiceForVFAMethod(content);
+      
         var newContent = "  public Future<Service> requestForVFA() {\n" +
                          "    counterForVFA++;\n" + 
                          "    return serviceForVFA(counterForVFA);\n" +
                          "  }";
+
+        if (performReset === undefined || performReset === true) {
+            contentManager.resetTabbedEditorContents(stepName, bankServiceFileName); 
+        } 
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 11, 22, newContent, 10);
+    
+        if (hasServiceForVFAMethod === true && (performReset === undefined || performReset === true)) {
+            __addAsyncBulkheadInEditor(stepName);
+        }
     };
 
     var __browserVirtualAdvisorBaseURL = "https://global-ebank.openliberty.io/virtualFinancialAdvisor/";
@@ -727,7 +714,6 @@ var bulkheadCallBack = (function() {
         contentManager.setPlayground(stepName, ab, 0);
     };
 
-
     return {
         listenToEditorForFeatureInServerXML: __listenToEditorForFeatureInServerXML,
         addMicroProfileFaultToleranceFeatureButton: addMicroProfileFaultToleranceFeatureButton,
@@ -738,12 +724,10 @@ var bulkheadCallBack = (function() {
         listenToEditorForJavaConcurrency: listenToEditorForJavaConcurrency,
         clickChat: clickChat,
         listenToEditorForAsyncBulkhead: listenToEditorForAsyncBulkhead,
-        addAsyncBulkheadButton: addAsyncBulkheadButton,
-        addReturnTypeButton: addReturnTypeButton,
-        addMethodFutureReturnTypeButton: addMethodFutureReturnTypeButton,
         addFallbackAsyncBulkheadButton: addFallbackAsyncBulkheadButton,
         listenToEditorForAsyncBulkheadFallback: listenToEditorForAsyncBulkheadFallback,
         handleNewChatRequestInBrowser: handleNewChatRequestInBrowser,
+        addAsyncBulkheadButton: addAsyncBulkheadButton,
         updateAsyncBulkheadMethodButton: updateAsyncBulkheadMethodButton,
         listenToPlaygroundEditorAnnotationChanges: __listenToPlaygroundEditorAnnotationChanges,
         createAsyncBulkhead: __createAsyncBulkhead
