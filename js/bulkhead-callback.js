@@ -24,19 +24,21 @@ var bulkheadCallBack = (function() {
     var __addMicroProfileFaultToleranceFeature = function() {
         var FTFeature = "      <feature>mpFaultTolerance-1.0</feature>";
         var stepName = stepContent.getCurrentStepName();
+        var serverFileName = "server.xml";
+
         // reset content every time annotation is added through the button so as to clear out any
         // manual editing
-        contentManager.resetEditorContents(stepName);
-        var content = contentManager.getEditorContents(stepName);
+        contentManager.resetTabbedEditorContents(stepName, serverFileName);
+        var content = contentManager.getTabbedEditorContents(stepName, serverFileName);
 
-        contentManager.insertEditorContents(stepName, 5, FTFeature);
+        contentManager.insertTabbedEditorContents(stepName, serverFileName, 5, FTFeature);
         var readOnlyLines = [];
         // mark cdi feature line readonly
         readOnlyLines.push({
             from: 4,
             to: 4
         });
-        contentManager.markEditorReadOnlyLines(stepName, readOnlyLines);
+        contentManager.markTabbedEditorReadOnlyLines(stepName, serverFileName, readOnlyLines);
     };
 
     var __getMicroProfileFaultToleranceFeatureContent = function(content) {
@@ -602,7 +604,7 @@ var bulkheadCallBack = (function() {
                     clearInterval(waitingForBrowserContentTimeInterval);
                     var advisor = __advisors[requestNum - 1];
                     var advisorBackgroundColor = __advisorColors[requestNum - 1];
-                    var chatAdvisorCount  = "You are talking to advisor #" + requestNum;
+                    var chatAdvisorCount  = "You are talking to advisor " + requestNum + ".";
                     var chatIntro = "Hi, I am " + advisor + ",";
                     browser.getIframeDOM().find(".chatAdvisorCount").text(chatAdvisorCount);
                     browser.getIframeDOM().find(".advisorName").text(chatIntro);
