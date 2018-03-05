@@ -164,14 +164,13 @@
             "title": "Adding the @Bulkhead annotation",
             "description": [
                 "Now that you have seen how our application can easily fail when overloaded, let's fix that by applying a Bulkhead policy to limit the number of concurrent chat requests to the service.  This will limit the amount of system resources that service invocations can use and prevent the rest of the system from failing.",
-                "",
-                "With a Bulkhead policy, the microservice runs on the current thread.  The number of concurrent threads that invoke the service is limited and managed by a semaphore. When this maximum number of concurrent chat requests is reached, any subsequent requests immediately fail with a <code>BulkheadException</code>.<br>",
-                "The <code>@Bulkhead</code> annotation has one parameter which specifies the maximum number of concurrent requests to the service. If the parameter is not specified, the default is <code>10</code> requests.<br>",
+                "With a Bulkhead policy, the microservice runs on the current thread.  The number of concurrent threads that invoke the service is limited and managed by a semaphore. When this maximum number of concurrent chat requests is reached, any subsequent requests immediately fail with a <code>BulkheadException</code>.",
+                "The <code>@Bulkhead</code> annotation has one parameter which specifies the maximum number of concurrent requests to the service. If the parameter is not specified, the default is <code>10</code> requests.",
                 "After you modify your <code>server.xml</code> file to <a href='#enabling-microprofile-fault-tolerance'> include the fault tolerance feature</a>, add a Bulkhead policy to the VirtualFinancialAdvisor microservice."
             ],
             "instruction": [
                 "Add the <code>@Bulkhead</code> annotation with a value of <code>50</code> on line 22, before the <code>serviceForVFA</code> method, or click <action title='Add @Bulkhead' onclick=\"bulkheadCallBack.addBulkheadButton(event, 'BulkheadAnnotation')\">@Bulkhead(50)</action>. This limits the number of concurrent chat requests to 50. Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'BulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane.",
-                "Click <action title='Customer1 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation', 1)\"><b>Customer1 request chat</b></action> to open a chat session with a virtual financial advisor.<br>",
+                "Click <action title='Customer1 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation', 1)\"><b>Customer1 request chat</b></action> to open a chat session with a virtual financial advisor.",
                 "As more customers request chat sessions with a virtual financial advisor, all 50 sessions become busy. Once the maximum number of concurrent chat requests is reached, the next chat request is rejected.<br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation', 2)\"><b>50 customer chat requests</b></action> to fill the <b>IN PROGRESS</b> chats and see how an additional chat session fails to open for the last customer.<b>"
             ],
             "content": [
