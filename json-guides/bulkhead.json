@@ -64,7 +64,11 @@
             "name": "AsyncWithoutBulkhead",
             "title": "Adding Java Concurrency with Future and Executors",
             "description": [
+<<<<<<< HEAD
                 "The initial synchronous implementation of the VirtualFinancialAdvisor microservice allows only a single virtual financial advisor chat session at a time. Implementing Java concurrency using <code>Future</code> and <code>Executors</code> removes the single chat limitation and allows multiple chat sessions to be available at the same time.",
+=======
+                "The initial synchronous implementation of the VirtualFinancialAdvisor microservice allows only a single virtual financial advisor chat session at a time. Implementing Java concurrency using <code>Future</code> and <code>Executors</code> removes the single chat limitation and allows multiple chat sessions to be available at the same time.<br>",
+>>>>>>> update json
                 "A <code>Future</code> is a special return type used in Java Concurrency to fetch the result of a task when it is available. The <code>Executors</code> class provides convenient factory methods for creating executor services, which handle running tasks asynchronously.",
                 "Let us start by adding <code>Future</code> and <code>Executors</code> to the code."
             ],
