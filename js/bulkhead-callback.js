@@ -238,9 +238,13 @@ var bulkheadCallBack = (function() {
             __addJavaConcurrencyInEditor(stepName);
         } else if (stepName === "BulkheadAnnotation") { 
             __addBulkheadInEditor(stepName);
-        } else if (stepName === "AsyncBulkheadAnnotation") {     
+        } else if (stepName === "AsyncBulkheadAnnotation") {
+            var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
+            var hasRequestForVFAMethod = __checkRequestForVFAMethod(content);
             __addAsyncBulkheadInEditor(stepName);
-            __updateAsyncBulkheadMethodInEditor(stepName, false);
+            if (hasRequestForVFAMethod === false) {
+                __updateAsyncBulkheadMethodInEditor(stepName, false);
+            }                
         } else if (stepName === "Fallback") { 
             __addFallbackAsyncBulkheadInEditor(stepName);
         } else if (stepName === "AddLibertyMPFaultTolerance") {
@@ -407,8 +411,9 @@ var bulkheadCallBack = (function() {
 
     var __addAsyncBulkheadInEditor = function(stepName) {      
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
-        var hasRequestForVFAMethod = __checkRequestForVFAMethod(content);   
-        contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
+        var hasRequestForVFAMethod = __checkRequestForVFAMethod(content);
+
+        contentManager.resetTabbedEditorContents(stepName, bankServiceFileName); 
    
         var params = [];
         var constructAnnotation = function(params) {
