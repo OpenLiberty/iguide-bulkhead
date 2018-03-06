@@ -486,11 +486,11 @@ var bulkheadCallBack = (function() {
             contentManager.resetTabbedEditorContents(stepName, bankServiceFileName); 
         } 
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 11, 22, newContent, 10);
+        // Adjust the height of the editor back to the original height
+        __adjustEditorHeight(stepName, "468px");
     
         if (hasServiceForVFAMethod === true && (performReset === undefined || performReset === true)) {
             __addAsyncBulkheadInEditor(stepName);
-            // Adjust the height of the editor back to the original height
-            __adjustEditorHeight(stepName, "468px");
         }
     };
 
