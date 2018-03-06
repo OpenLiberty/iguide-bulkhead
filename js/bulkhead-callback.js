@@ -119,39 +119,13 @@ var bulkheadCallBack = (function() {
         return isFTFeatureThere;
     };
 
-    var __setMicroProfileFaultToleranceFeatureContent = function(stepName, content) {
-        var FTFeature = "   <feature>mpFaultTolerance-1.0</feature>\n   ";
-        var editorContentBreakdown = __getMicroProfileFaultToleranceFeatureContent(content);
-        __closeErrorBoxEditor(stepName);
-        if (editorContentBreakdown.hasOwnProperty("features")) {
-            var isFTFeatureThere = __isFaultToleranceInFeatures(editorContentBreakdown.features);
-            if (isFTFeatureThere === false) { // attempt to fix it
-                var newContent = editorContentBreakdown.beforeFeature + "<featureManager>" + editorContentBreakdown.features + FTFeature + "</featureManager>" + editorContentBreakdown.afterFeature;
-                contentManager.setEditorContents(stepName, newContent);
-            }
-        } else {
-            indexOfFeatureMgr = content.indexOf("featureManager");
-            indexOfFeature = content.indexOf("feature");
-            indexOfEndpoint = content.indexOf("<httpEndpoint");
-            if (indexOfFeatureMgr === -1 && indexOfFeature === -1 && indexOfEndpoint !== -1) {
-                var beforeEndpointContent = content.substring(0, indexOfEndpoint);
-                var afterEndpointContent = content.substring(indexOfEndpoint);
-                var newContent = beforeEndpointContent.trim() + "\n   <featureManager>\n   " + FTFeature + "</featureManager>\n   " + afterEndpointContent;
-                contentManager.setEditorContents(stepName, newContent);
-            } else {
-                // display error
-
-                editor.createErrorLinkForCallBack(true, __correctEditorError);
-            }
-        }
-    };
-
     var __saveServerXML = function(editor) {
         var stepName = stepContent.getCurrentStepName();
-        var content = contentManager.getEditorContents(stepName);
+        var serverFileName = "server.xml";
+
+        var content = contentManager.getTabbedEditorContents(stepName, serverFileName);
         if (__checkMicroProfileFaultToleranceFeatureContent(content)) {
             editor.closeEditorErrorBox(stepName);
-            var stepName = stepContent.getCurrentStepName();
             contentManager.markCurrentInstructionComplete(stepName);
         } else {
             // display error to fix it
@@ -170,8 +144,7 @@ var bulkheadCallBack = (function() {
         if (event.type === "click" ||
            (event.type === "keypress" && (event.which === 13 || event.which === 32))) {
             // Click or 'Enter' or 'Space' key event...
-            contentManager.saveEditor(stepContent.getCurrentStepName());
-            // __saveServerXML();
+            contentManager.saveTabbedEditor(stepContent.getCurrentStepName(), "server.xml");
         }
     };
     /** AddLibertyMPFaultTolerance step  end */
