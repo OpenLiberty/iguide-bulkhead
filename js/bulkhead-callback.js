@@ -454,6 +454,9 @@ var bulkheadCallBack = (function() {
     };
 
     var __addFallbackAsyncBulkheadInEditor = function(stepName) {
+        // Since the tabbed editor has 2 files for the fallback step, make sure the corrrect tab is in focus before
+        // adding the new content.
+        contentManager.focusTabbedEditorByName(stepName, bankServiceFileName);
         contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
         var newContent =
