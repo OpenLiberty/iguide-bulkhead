@@ -102,23 +102,3 @@
     color: #24263B;
     line-height: 19px;
 }
-
-.boatImages {
-    margin: 5px;
-    text-align: center;
-}
-
-.boatImages img {
-    height: 200px;
-    width: 200px;
-}
-
-figure {
-    width: 250px;
-    display: inline-block;
-}
-
-figcaption {
-    font-size: 14px;
-    padding-left: 8px;
-}
