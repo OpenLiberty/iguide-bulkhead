@@ -50,7 +50,7 @@ body {
 }
 
 .advisorChatBlock {
-    background: #92e6a5;
+    background: #FAE0CF;
     border-radius: 13px;
     margin: 11px 20px 0px 17px;
     width: 70%;
@@ -63,7 +63,7 @@ body {
 
 .advisorInitialBlock { 
     opacity: 0.76;
-    border:1px solid #34bc6e;
+    border:1px solid #E3700D;
     width: 30px; 
     height: 30px;
     border-radius: 100%;
@@ -73,7 +73,7 @@ body {
 }
 
 .advisorInitial {
-    color: #34bc6e;
+    color: #E3700D;
     float: left;  /* The rest of the css here is to position the text in the middle of the circle */
     width: 100%;
     padding-top: 50%;
