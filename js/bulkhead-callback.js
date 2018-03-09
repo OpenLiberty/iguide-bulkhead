@@ -238,31 +238,40 @@ var bulkheadCallBack = (function() {
         contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
         var newContent =
+            "  public Future<Service> requestForVFA() {\n" +
+            "    counterForVFA++;\n" +
             "    ExecutorService executor = Executors.newSingleThreadExecutor();\n" +
-            "    Future serviceRequest = executor.submit(() -> {\n" + 
+            "    Future<Service> serviceRequest = executor.submit(() -> {\n" +
             "      try {\n" +
             "        return serviceForVFA(counterForVFA);\n" +
-            "      } catch (Exception ex) {\n" + 
+            "      } catch (Exception ex) {\n" +
             "        handleException();\n" +
             "      }\n" +
             "      return null;\n" +
-            "    });";
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 12, 12, newContent, 9);
+            "    });\n" +
+            "    return serviceRequest;\n" +
+            "  }";
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 10, 13, newContent, 13);
     };
 
     var __validateEditorContentInJavaConcurrencyStep = function(content) {
         var match = false;
         try {
-            var codesToMatch = "([\\s\\S]*)counterForVFA\\+\\+;\\s*" +
+            var codesToMatch = "private int counterForVFA = 0;\\s*" + // boundary which is readonly
+                "public\\s+Future\\s*<\\s*Service\\s*>\\s+requestForVFA\\s*\\(\\s*\\)\\s*{\\s*" +
+                "counterForVFA\\+\\+;\\s*" +
                 "ExecutorService\\s+executor\\s*=\\s*Executors\\.newSingleThreadExecutor\\s*\\(\\s*\\)\\s*;\\s*" +
-                "Future\\s+serviceRequest\\s*=\\s*executor\\.submit\\s*\\(\\s*\\(\\s*\\)\\s*->\\s*{\\s*" +
+                "Future\\s*<\\s*Service\\s*>\\s+serviceRequest\\s*=\\s*executor\\.submit\\s*\\(\\s*\\(\\s*\\)\\s*->\\s*{\\s*" +
                 "try\\s*{\\s*" +
                 "return\\s+serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\)\\s*;\\s*" +
                 "}\\s*catch\\s*\\(\\s*Exception\\s+ex\\s*\\)\\s*{\\s*" +
                 "handleException\\s*\\(\\s*\\)\\s*;\\s*" +
                 "}\\s*" +
                 "return\\s+null\\s*;\\s*" +
-                "}\\s*\\)\\s*;\\s*}";
+                "}\\s*\\)\\s*;\\s*" +
+                "return\\s+serviceRequest\\s*;\\s*" +
+                "}\\s*" +
+                "private Service serviceForVFA";  // boundary which is readonly
             var regExpToMatch = new RegExp(codesToMatch, "g");
             content.match(regExpToMatch)[0];
             match = true;
@@ -275,7 +284,7 @@ var bulkheadCallBack = (function() {
     var __validateEditorContent_BulkheadStep = function(content) {
         var match = false;
         try {
-            var pattern = "return null;\\s*}\\s*\\)\\s*;\\s*}\\s*" +
+            var pattern = "return serviceRequest;\\s*}\\s*" +
             "@Bulkhead\\(50\\)\\s*public\\s*Service\\s*serviceForVFA";
             var regExpToMatch = new RegExp(pattern, "g");
             content.match(regExpToMatch)[0];
@@ -351,7 +360,7 @@ var bulkheadCallBack = (function() {
         contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
         var newContent = "  @Bulkhead(50)";
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 22, 22, newContent, 1);
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 23, 23, newContent, 1);
     };
 
     var addJavaConcurrencyButton = function(event, stepName) {
@@ -408,7 +417,7 @@ var bulkheadCallBack = (function() {
         params[0] = "value=50";
         params[1] = "waitingTaskQueue=50";
 
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 24, 29, constructAnnotation(params), 7);
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 25, 30, constructAnnotation(params), 7);
         if (hasRequestForVFAMethod === true) {
             __updateAsyncBulkheadMethodInEditor(stepName, false);
         }
@@ -463,7 +472,7 @@ var bulkheadCallBack = (function() {
         if (performReset === undefined || performReset === true) {
             contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
         }
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 11, 22, newContent, 10);
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 11, 23, newContent, 4);
         // Adjust the height of the editor back to the original height
         __adjustEditorHeight(stepName, "468px");
 
