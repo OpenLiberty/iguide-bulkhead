@@ -238,11 +238,11 @@ var bulkheadCallBack = (function() {
         contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
         var newContent =
-            "    ExecutorService executor = Executors.newFixedThreadPool(1);\n" +
+            "    ExecutorService executor = Executors.newSingleThreadExecutor();\n" +
             "    Future serviceRequest = executor.submit(() -> {\n" + 
             "      try {\n" +
             "        return serviceForVFA(counterForVFA);\n" +
-            "      } catch {Exception ex} {\n" + 
+            "      } catch (Exception ex) {\n" + 
             "        handleException();\n" +
             "      }\n" +
             "      return null;\n" +
@@ -254,11 +254,11 @@ var bulkheadCallBack = (function() {
         var match = false;
         try {
             var codesToMatch = "([\\s\\S]*)counterForVFA\\+\\+;\\s*" +
-                "ExecutorService\\s+executor\\s*=\\s*Executors\\.newFixedThreadPool\\s*\\(\\s*1\\s*\\)\\s*;\\s*" +
+                "ExecutorService\\s+executor\\s*=\\s*Executors\\.newSingleThreadExecutor\\s*\\(\\s*\\)\\s*;\\s*" +
                 "Future\\s+serviceRequest\\s*=\\s*executor\\.submit\\s*\\(\\s*\\(\\s*\\)\\s*->\\s*{\\s*" +
                 "try\\s*{\\s*" +
                 "return\\s+serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\)\\s*;\\s*" +
-                "}\\s*catch\\s*{\\s*Exception\\s+ex\\s*}\\s*{\\s*" +
+                "}\\s*catch\\s*\\(\\s*Exception\\s+ex\\s*\\)\\s*{\\s*" +
                 "handleException\\s*\\(\\s*\\)\\s*;\\s*" +
                 "}\\s*" +
                 "return\\s+null\\s*;\\s*" +
