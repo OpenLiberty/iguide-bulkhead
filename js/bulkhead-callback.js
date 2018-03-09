@@ -634,37 +634,46 @@ var bulkheadCallBack = (function() {
                 // Parse their annotation for values
                 params.forEach(function(param, index){
                     if (param.indexOf('value=') > -1){
-                        value = param.substring(param.indexOf('value=') + 6);
+                        value = parseInt(param.substring(param.indexOf('value=') + 6));
                     }
                     if (param.indexOf('waitingTaskQueue=') > -1){
-                        waitingTaskQueue = param.substring(param.indexOf('waitingTaskQueue=') + 17);
+                        waitingTaskQueue = parseInt(param.substring(param.indexOf('waitingTaskQueue=') + 17));
                     }
                 });
                 
                 var errorPosted = false;
-                if ((value !== undefined && !utils.isInteger(value)) || 
-                    (waitingTaskQueue !== undefined && !utils.isInteger(waitingTaskQueue))) {
-                    editor.createCustomErrorMessage(bulkheadMessages.parmsPositive);
-                    errorPosted = true;
-                } else {
-                    value = parseInt(value);
-                    waitingTaskQueue = parseInt(waitingTaskQueue);
-                    if (value > 10) {
+                if (value != undefined) {
+                    if (!utils.isInteger(value) || value < 1) {                        
+                        editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsGTZero, ["value"]));
+                        errorPosted = true;
+                    } else if (value > 10) {
                         editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsMaxValue,["value"]));
+                        errorPosted = true;
+                    }    
+                } else {
+                    value = 10; // Set to default value
+                }
+                
+                if (waitingTaskQueue != undefined) {
+                    if(!utils.isInteger(waitingTaskQueue) || waitingTaskQueue < 1) {
+                        editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsGTZero, ["waitingTaskQueue"]));
                         errorPosted = true;
                     } else if (waitingTaskQueue > 10) {
                         editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsMaxValue,["waitingTaskQueue"]));
                         errorPosted = true;
-                    } else if (waitingTaskQueue < value) {
+                    }
+                } else {
+                    waitingTaskQueue = 10;  // Set to default value
+                }
+                
+                if (!errorPosted) {
+                    if (waitingTaskQueue < value) {
                         editor.createCustomAlertMessage(bulkheadMessages.waitBestPractice);
                         // Do not return here.  Post warning and allow user to continue with their simulation.
                     } else {
                         // Clear out any previous error boxes displayed.
                         editor.closeEditorErrorBox();
-                    }
-                }
-
-                if (!errorPosted) {
+                    }                  
                     // Apply the annotation values to the bulkhead.
                     // If not specified, the bulkhead will use its default value.
                     bulkhead.updateParameters.apply(bulkhead, [value, waitingTaskQueue]);
