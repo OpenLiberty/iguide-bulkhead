@@ -243,7 +243,7 @@ var bulkheadCallBack = (function() {
             "    ExecutorService executor = Executors.newSingleThreadExecutor();\n" +
             "    Future<Service> serviceRequest = executor.submit(() -> {\n" +
             "      try {\n" +
-            "        return serviceForVFA(counterForVFA);\n" +
+            "        return bankService.serviceForVFA(counterForVFA);\n" +
             "      } catch (Exception ex) {\n" +
             "        handleException();\n" +
             "      }\n" +
@@ -258,12 +258,12 @@ var bulkheadCallBack = (function() {
         var match = false;
         try {
             var codesToMatch = "private int counterForVFA = 0;\\s*" + // boundary which is readonly
-                "public\\s+Future\\s*<\\s*Service\\s*>\\s+requestForVFA\\s*\\(\\s*\\)\\s*{\\s*" +
-                "counterForVFA\\+\\+;\\s*" +
-                "ExecutorService\\s+executor\\s*=\\s*Executors\\.newSingleThreadExecutor\\s*\\(\\s*\\)\\s*;\\s*" +
-                "Future\\s*<\\s*Service\\s*>\\s+serviceRequest\\s*=\\s*executor\\.submit\\s*\\(\\s*\\(\\s*\\)\\s*->\\s*{\\s*" +
+                "public\\s+Future\\s*<\\s*Service\\s*>\\s*requestForVFA\\s*\\(\\s*\\)\\s*{\\s*" +
+                "counterForVFA\\s*\\+\\+;\\s*" +
+                "ExecutorService\\s+executor\\s*=\\s*Executors\\s*\\.\\s*newSingleThreadExecutor\\s*\\(\\s*\\)\\s*;\\s*" +
+                "Future\\s*<\\s*Service\\s*>\\s*serviceRequest\\s*=\\s*executor\\s*\\.\\s*submit\\s*\\(\\s*\\(\\s*\\)\\s*->\\s*{\\s*" +
                 "try\\s*{\\s*" +
-                "return\\s+serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\)\\s*;\\s*" +
+                "return\\s+bankService\\s*.\\s*serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\)\\s*;\\s*" +
                 "}\\s*catch\\s*\\(\\s*Exception\\s+ex\\s*\\)\\s*{\\s*" +
                 "handleException\\s*\\(\\s*\\)\\s*;\\s*" +
                 "}\\s*" +
@@ -271,7 +271,7 @@ var bulkheadCallBack = (function() {
                 "}\\s*\\)\\s*;\\s*" +
                 "return\\s+serviceRequest\\s*;\\s*" +
                 "}\\s*" +
-                "private Service serviceForVFA";  // boundary which is readonly
+                "public Service serviceForVFA";  // boundary which is readonly
             var regExpToMatch = new RegExp(codesToMatch, "g");
             content.match(regExpToMatch)[0];
             match = true;
@@ -284,8 +284,9 @@ var bulkheadCallBack = (function() {
     var __validateEditorContent_BulkheadStep = function(content) {
         var match = false;
         try {
-            var pattern = "return serviceRequest;\\s*}\\s*" +
-            "@Bulkhead\\(50\\)\\s*public\\s*Service\\s*serviceForVFA";
+            var pattern = "return serviceRequest;\\s*}\\s*" + // readonly boundary
+            "@\\s*Bulkhead\\s*\\(\\s*50\\s*\\)\\s*" +
+            "public Service serviceForVFA"; // readonly boundary
             var regExpToMatch = new RegExp(pattern, "g");
             content.match(regExpToMatch)[0];
             match = true;
@@ -298,10 +299,10 @@ var bulkheadCallBack = (function() {
     var __checkRequestForVFAMethod = function(content) {
         var match = false;
         try {
-            var pattern = "counterForVFA\\s*=\\s*0;\\s*" +
-                    "public\\s*Future<Service>\\s*requestForVFA\\(\\)\\s*{\\s*" +
-                    "counterForVFA\\+\\+;\\s*" +
-                    "return\\s*serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\);\\s*" +
+            var pattern = "counterForVFA = 0;\\s*" + // readonly boundary
+                    "public\\s+Future\\s*<\\s*Service\\s*>\\s*requestForVFA\\s*\\(\\s*\\)\\s*{\\s*" +
+                    "counterForVFA\\s*\\+\\+\\s*;\\s*" +
+                    "return\\s+bankService\\s*.\\s*serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\)\\s*;\\s*" +
                     "}\\s*@";
             var regExp = new RegExp(pattern, "g");
             content.match(regExp)[0];
@@ -316,11 +317,11 @@ var bulkheadCallBack = (function() {
         var match = false;
         try {
             var pattern = ";\\s*}\\s*" +
-                "@Asynchronous\\s*@Bulkhead\\s*\\(\\s*value\\s*=\\s*50\\s*,\\s*" + 
+                "@\\s*Asynchronous\\s*@\\s*Bulkhead\\s*\\(\\s*value\\s*=\\s*50\\s*,\\s*" + 
                 "waitingTaskQueue\\s*=\\s*50\\s*\\)\\s*" +
-                "public\\s*Future<Service>\\s*serviceForVFA\\s*\\(\\s*int counterForVFA\\s*\\)\\s*{\\s*" +
-                "Service\\s*chatService\\s*=\\s*new\\s*ChatSession\\s*\\(\\s*counterForVFA\\s*\\);\\s*" + 
-                "return\\s*CompletableFuture\\.completedFuture\\s*\\(\\s*chatService\\s*\\);\\s*" +
+                "public\\s+Future\\s*<\\s*Service\\s*>\\s*serviceForVFA\\s*\\(\\s*int\\s+counterForVFA\\s*\\)\\s*{\\s*" +
+                "Service\\s+chatService\\s*=\\s*new\\s+ChatSession\\s*\\(\\s*counterForVFA\\s*\\);\\s*" + 
+                "return\\s+CompletableFuture\\s*.\\s*completedFuture\\s*\\(\\s*chatService\\s*\\);\\s*" +
                 "}\\s*}";
             var regExp = new RegExp(pattern, "g");
             content.match(regExp)[0];
@@ -339,10 +340,10 @@ var bulkheadCallBack = (function() {
     var __validateEditorContent_FallbackStep = function(content) {
         var match = false;
         try {
-            var pattern = "return\\s*serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\);\\s*" +
+            var pattern = "return bankService.serviceForVFA\\(counterForVFA\\);\\s*" + // readonly boundary
             "}\\s*" + 
-            "@Fallback\\s*\\(\\s*ServiceFallbackHandler\\.class\\s*\\)\\s*" +
-            "@Asynchronous";
+            "@\\s*Fallback\\s*\\(\\s*ServiceFallbackHandler\\s*\\.\\s*class\\s*\\)\\s*" +
+            "@Asynchronous"; // readonly boundary
             var regExp = new RegExp(pattern, "g");
             content.match(regExp)[0];
             match = true;
@@ -466,7 +467,7 @@ var bulkheadCallBack = (function() {
 
         var newContent = "  public Future<Service> requestForVFA() {\n" +
                          "    counterForVFA++;\n" + 
-                         "    return serviceForVFA(counterForVFA);\n" +
+                         "    return bankService.serviceForVFA(counterForVFA);\n" +
                          "  }";
 
         if (performReset === undefined || performReset === true) {
@@ -629,7 +630,7 @@ var bulkheadCallBack = (function() {
             // Get the parameters from the editor and send to the bulkhead
             var content = editor.getEditorContent();
             try{
-                var matchPattern = "@Asynchronous\\s*@Bulkhead\\s*\\((([^\\(\\)])*?)\\)\\s*public Future<Service> serviceForVFA";
+                var matchPattern = "@Asynchronous\\s*@\\s*Bulkhead\\s*\\((([^\\(\\)])*?)\\)\\s*public Future<Service> serviceForVFA";
                 var regexToMatch = new RegExp(matchPattern, "g");
                 var groups = regexToMatch.exec(content);
                 var annotation = groups[1];
