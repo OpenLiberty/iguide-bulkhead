@@ -11,6 +11,7 @@
 var bulkheadCallBack = (function() {
 
     var bankServiceFileName = "BankService.java";
+    var htmlRootDir = "/guides/draft-iguide-bulkhead/html/";
 
     /** AddLibertyMPFaultTolerance step  begin */
     var addMicroProfileFaultToleranceFeatureButton = function(event) {
@@ -167,13 +168,13 @@ var bulkheadCallBack = (function() {
 
         var htmlFile;
         if (stepName === "AsyncWithoutBulkhead") {
-            htmlFile = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-async-without-bulkhead.html";
+            htmlFile = htmlRootDir + "virtual-financial-advisor-async-without-bulkhead.html";
         } else if (stepName === "BulkheadAnnotation") {
-            htmlFile = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead.html";
+            htmlFile = htmlRootDir + "virtual-financial-advisor-bulkhead.html";
         } else if (stepName === "AsyncBulkheadAnnotation") {
-            htmlFile = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-asyncbulkhead.html";
+            htmlFile = htmlRootDir + "virtual-financial-advisor-asyncbulkhead.html";
         } else if (stepName === "Fallback") {
-            htmlFile = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-asyncbulkhead-fallback.html";
+            htmlFile = htmlRootDir + "virtual-financial-advisor-asyncbulkhead-fallback.html";
         }
 
         if (__checkEditorContent(stepName, content)) {
@@ -184,7 +185,7 @@ var bulkheadCallBack = (function() {
                 contentManager.updateWithNewInstructionNoMarkComplete(stepName);
                 // display the pod with chat button and web browser in it
                 contentManager.setPodContent(stepName, htmlFile);
-                    //"/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-new-session.html");
+                    //htmlRootDir + "virtual-financial-advisor-new-session.html");
                 // resize the height of the tabbed editor
                 contentManager.resizeTabbedEditor(stepName);
             }
@@ -243,7 +244,7 @@ var bulkheadCallBack = (function() {
             "    ExecutorService executor = Executors.newSingleThreadExecutor();\n" +
             "    Future<Service> serviceRequest = executor.submit(() -> {\n" +
             "      try {\n" +
-            "        return serviceForVFA(counterForVFA);\n" +
+            "        return bankService.serviceForVFA(counterForVFA);\n" +
             "      } catch (Exception ex) {\n" +
             "        handleException();\n" +
             "      }\n" +
@@ -258,12 +259,12 @@ var bulkheadCallBack = (function() {
         var match = false;
         try {
             var codesToMatch = "private int counterForVFA = 0;\\s*" + // boundary which is readonly
-                "public\\s+Future\\s*<\\s*Service\\s*>\\s+requestForVFA\\s*\\(\\s*\\)\\s*{\\s*" +
-                "counterForVFA\\+\\+;\\s*" +
-                "ExecutorService\\s+executor\\s*=\\s*Executors\\.newSingleThreadExecutor\\s*\\(\\s*\\)\\s*;\\s*" +
-                "Future\\s*<\\s*Service\\s*>\\s+serviceRequest\\s*=\\s*executor\\.submit\\s*\\(\\s*\\(\\s*\\)\\s*->\\s*{\\s*" +
+                "public\\s+Future\\s*<\\s*Service\\s*>\\s*requestForVFA\\s*\\(\\s*\\)\\s*{\\s*" +
+                "counterForVFA\\s*\\+\\+;\\s*" +
+                "ExecutorService\\s+executor\\s*=\\s*Executors\\s*\\.\\s*newSingleThreadExecutor\\s*\\(\\s*\\)\\s*;\\s*" +
+                "Future\\s*<\\s*Service\\s*>\\s*serviceRequest\\s*=\\s*executor\\s*\\.\\s*submit\\s*\\(\\s*\\(\\s*\\)\\s*->\\s*{\\s*" +
                 "try\\s*{\\s*" +
-                "return\\s+serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\)\\s*;\\s*" +
+                "return\\s+bankService\\s*.\\s*serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\)\\s*;\\s*" +
                 "}\\s*catch\\s*\\(\\s*Exception\\s+ex\\s*\\)\\s*{\\s*" +
                 "handleException\\s*\\(\\s*\\)\\s*;\\s*" +
                 "}\\s*" +
@@ -271,7 +272,7 @@ var bulkheadCallBack = (function() {
                 "}\\s*\\)\\s*;\\s*" +
                 "return\\s+serviceRequest\\s*;\\s*" +
                 "}\\s*" +
-                "private Service serviceForVFA";  // boundary which is readonly
+                "public Service serviceForVFA";  // boundary which is readonly
             var regExpToMatch = new RegExp(codesToMatch, "g");
             content.match(regExpToMatch)[0];
             match = true;
@@ -284,8 +285,9 @@ var bulkheadCallBack = (function() {
     var __validateEditorContent_BulkheadStep = function(content) {
         var match = false;
         try {
-            var pattern = "return serviceRequest;\\s*}\\s*" +
-            "@Bulkhead\\(50\\)\\s*public\\s*Service\\s*serviceForVFA";
+            var pattern = "return serviceRequest;\\s*}\\s*" + // readonly boundary
+            "@\\s*Bulkhead\\s*\\(\\s*50\\s*\\)\\s*" +
+            "public Service serviceForVFA"; // readonly boundary
             var regExpToMatch = new RegExp(pattern, "g");
             content.match(regExpToMatch)[0];
             match = true;
@@ -298,10 +300,10 @@ var bulkheadCallBack = (function() {
     var __checkRequestForVFAMethod = function(content) {
         var match = false;
         try {
-            var pattern = "counterForVFA\\s*=\\s*0;\\s*" +
-                    "public\\s*Future<Service>\\s*requestForVFA\\(\\)\\s*{\\s*" +
-                    "counterForVFA\\+\\+;\\s*" +
-                    "return\\s*serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\);\\s*" +
+            var pattern = "counterForVFA = 0;\\s*" + // readonly boundary
+                    "public\\s+Future\\s*<\\s*Service\\s*>\\s*requestForVFA\\s*\\(\\s*\\)\\s*{\\s*" +
+                    "counterForVFA\\s*\\+\\+\\s*;\\s*" +
+                    "return\\s+bankService\\s*.\\s*serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\)\\s*;\\s*" +
                     "}\\s*@";
             var regExp = new RegExp(pattern, "g");
             content.match(regExp)[0];
@@ -316,11 +318,11 @@ var bulkheadCallBack = (function() {
         var match = false;
         try {
             var pattern = ";\\s*}\\s*" +
-                "@Asynchronous\\s*@Bulkhead\\s*\\(\\s*value\\s*=\\s*50\\s*,\\s*" + 
+                "@\\s*Asynchronous\\s*@\\s*Bulkhead\\s*\\(\\s*value\\s*=\\s*50\\s*,\\s*" + 
                 "waitingTaskQueue\\s*=\\s*50\\s*\\)\\s*" +
-                "public\\s*Future<Service>\\s*serviceForVFA\\s*\\(\\s*int counterForVFA\\s*\\)\\s*{\\s*" +
-                "Service\\s*chatService\\s*=\\s*new\\s*ChatSession\\s*\\(\\s*counterForVFA\\s*\\);\\s*" + 
-                "return\\s*CompletableFuture\\.completedFuture\\s*\\(\\s*chatService\\s*\\);\\s*" +
+                "public\\s+Future\\s*<\\s*Service\\s*>\\s*serviceForVFA\\s*\\(\\s*int\\s+counterForVFA\\s*\\)\\s*{\\s*" +
+                "Service\\s+chatService\\s*=\\s*new\\s+ChatSession\\s*\\(\\s*counterForVFA\\s*\\);\\s*" + 
+                "return\\s+CompletableFuture\\s*.\\s*completedFuture\\s*\\(\\s*chatService\\s*\\);\\s*" +
                 "}\\s*}";
             var regExp = new RegExp(pattern, "g");
             content.match(regExp)[0];
@@ -339,10 +341,10 @@ var bulkheadCallBack = (function() {
     var __validateEditorContent_FallbackStep = function(content) {
         var match = false;
         try {
-            var pattern = "return\\s*serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\);\\s*" +
+            var pattern = "return bankService.serviceForVFA\\(counterForVFA\\);\\s*" + // readonly boundary
             "}\\s*" + 
-            "@Fallback\\s*\\(\\s*ServiceFallbackHandler\\.class\\s*\\)\\s*" +
-            "@Asynchronous";
+            "@\\s*Fallback\\s*\\(\\s*ServiceFallbackHandler\\s*\\.\\s*class\\s*\\)\\s*" +
+            "@Asynchronous"; // readonly boundary
             var regExp = new RegExp(pattern, "g");
             content.match(regExp)[0];
             match = true;
@@ -466,7 +468,7 @@ var bulkheadCallBack = (function() {
 
         var newContent = "  public Future<Service> requestForVFA() {\n" +
                          "    counterForVFA++;\n" + 
-                         "    return serviceForVFA(counterForVFA);\n" +
+                         "    return bankService.serviceForVFA(counterForVFA);\n" +
                          "  }";
 
         if (performReset === undefined || performReset === true) {
@@ -497,105 +499,99 @@ var bulkheadCallBack = (function() {
     var __advisorColors = ['royalblue', 'gray', 'seagreen'];
     var __advisorInitials = ["B", "J", "L"];
     var handleNewChatRequestInBrowser = function(stepName, requestNum) {
-        var browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-chat.html";  
+        var browserChatHTML = htmlRootDir + "virtual-financial-advisor-chat.html";  
+        var browserContentHTML = htmlRootDir + "virtual-financial-advisor-connecting.html";  
         var browserUrl = __browserVirtualAdvisorBaseURL + "Advisor" + requestNum;
         var browserErrorUrl = __browserVirtualAdvisorBaseURL + "error";
         var requestLimits = 1;
         var browser = contentManager.getBrowser(stepName);
-        var refreshBrowserContent = true;
 
+        // only mark current instruction as complete and delay showing the next instruction until processing is done
         contentManager.markCurrentInstructionComplete(stepName);
-        contentManager.updateWithNewInstructionNoMarkComplete(stepName);
+        //contentManager.updateWithNewInstructionNoMarkComplete(stepName);
         if (stepName === "AsyncWithoutBulkhead") {
             requestLimits = 3;
-            if (requestNum === 2) {
-                // we don't want to refresh the browser content as we could simply replace the financial advisor
-                // initial and name with the existing content. By not refreshing the browser content, we eliminate
-                // the timing problem of setting the advisor initial and name before the content is refreshed.
-                refreshBrowserContent = false;
-            }
             if (requestNum >= requestLimits) {
-                browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-error-503.html";
+                browserContentHTML = htmlRootDir + "virtual-financial-advisor-error-503.html";
                 browserUrl = browserErrorUrl;
             }
         } else if (stepName === "FinancialAdvisor") {
             requestLimits = 2;
             if (requestNum >= requestLimits) {        
-                browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-no-available.html";
+                browserContentHTML = htmlRootDir + "virtual-financial-advisor-no-available.html";
                 browserUrl = browserErrorUrl;
             }
         } else if (stepName === "BulkheadAnnotation") {
             requestLimits = 2;
-            if (requestNum === 1) {
-                $("#" + stepElementId).find(".busyCount").text('1');
-                $("#" + stepElementId).find(".busyChatCount").attr("aria-label", "1 chat is currently in progress");
-            } else if (requestNum === requestLimits) {
-                browser.setBrowserContent("/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-processing.html");
+            if (requestNum === requestLimits) {
+                browser.setBrowserContent(htmlRootDir + "virtual-financial-advisor-processing.html");
                 __incrementCounts(stepName, 2, 51, ".busyCount", browserErrorUrl,
-                                 "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html");
+                                 htmlRootDir + "virtual-financial-advisor-bulkhead-error.html");
                 return;
             } else if (requestNum > requestLimits) {
-                browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html";
+                browserContentHTML = htmlRootDir + "virtual-financial-advisor-bulkhead-error.html";
                 browserUrl = browserErrorUrl;
             }
         } else if (stepName === "AsyncBulkheadAnnotation") {
             requestLimits = 2;
-            if (requestNum === 1) {
-                $("#" + stepElementId).find(".busyCount").text('1');
-                $("#" + stepElementId).find(".busyChatCount").attr("aria-label", "1 chat is currently in progress");
-            } else if (requestNum === 2) {
-                browser.setBrowserContent("/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-processing.html");
+            if (requestNum === 2) {
+                browser.setBrowserContent(htmlRootDir + "virtual-financial-advisor-processing.html");
                 __incrementCounts(stepName, 2, 51, ".busyCount", __browserVirtualAdvisorBaseURL + "waitingqueue",
-                                 "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-waitingqueue.html", true);
+                                 htmlRootDir + "virtual-financial-advisor-waitingqueue.html", true);
                 return;
             } else if (requestNum === 3) {
                 browser.getIframeDOM().find(".errorTextBox").hide();
                 __incrementCounts(stepName, 2, 51, ".waitCount", browserErrorUrl,
-                                 "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html");
+                                 htmlRootDir + "virtual-financial-advisor-bulkhead-error.html");
                 return;
             } else if (requestNum > 3) {
-                browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-bulkhead-error.html";
+                browserContentHTML = htmlRootDir + "virtual-financial-advisor-bulkhead-error.html";
                 browserUrl = browserErrorUrl;
             }
         } else if (stepName === "Fallback") {
             requestLimits = 2;
-            if (requestNum === 1) {
-                $("#" + stepElementId).find(".busyCount").text('1');
-                $("#" + stepElementId).find(".busyChatCount").attr("aria-label", "1 chat is currently in progress");
-            } else if (requestNum === 2) {
-                browser.setBrowserContent("/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-processing.html");
+            if (requestNum === 2) {
+                browser.setBrowserContent(htmlRootDir + "virtual-financial-advisor-processing.html");
                 __incrementCounts(stepName, 2, 51, ".busyCount", __browserVirtualAdvisorBaseURL + "waitingqueue", 
-                                 "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-waitingqueue.html", true);
+                                 htmlRootDir + "virtual-financial-advisor-waitingqueue.html", true);
                 return;
             } else if (requestNum === 3) {
                 browser.getIframeDOM().find(".errorTextBox").hide();
                 __incrementCounts(stepName, 2, 51, ".waitCount", __browserVirtualAdvisorBaseURL + "scheduleAppointment",
-                                 "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-fallback.html");
+                                 htmlRootDir + "virtual-financial-advisor-fallback.html");
                 return;
             } else if (requestNum > 3) {
-                browserContentHTML = "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-fallback.html";
+                browserContentHTML = htmlRootDir + "virtual-financial-advisor-fallback.html";
                 browserUrl = __browserVirtualAdvisorBaseURL + "scheduleAppointment";
             }
         }
 
         contentManager.setBrowserURL(stepName, browserUrl, 0);
-        if (refreshBrowserContent) {
-            browser.setBrowserContent(browserContentHTML);
-        }
+        browser.setBrowserContent(browserContentHTML);
         if (requestNum < requestLimits) {
-            // use a interval timer to make sure the browser content is rendered before accessing the elements
-            var waitingForBrowserContentTimeInterval = setInterval(function () {
-                if (browser.getIframeDOM().find(".advisorName").length === 1) {
-                    clearInterval(waitingForBrowserContentTimeInterval);
-                    var advisor = __advisors[requestNum - 1];
-                    var advisorBackgroundColor = __advisorColors[requestNum - 1];
-                    var chatAdvisorCount  = "You are talking to advisor " + requestNum + ".";
-                    var chatIntro = "Hi, I am " + advisor + ",";
-                    browser.getIframeDOM().find(".chatAdvisorCount").text(chatAdvisorCount);
-                    browser.getIframeDOM().find(".advisorName").text(chatIntro);
-                    browser.getIframeDOM().find(".advisorInitial").text(__advisorInitials[requestNum-1]);
-                }
-            }, 10);
+            setTimeout(function () {
+                browser.setBrowserContent(browserChatHTML);
+                // use a interval timer to make sure the browser content is rendered before accessing the elements
+                var waitingForBrowserContentTimeInterval = setInterval(function () {
+                    if (browser.getIframeDOM().find(".advisorName").length === 1) {
+                        clearInterval(waitingForBrowserContentTimeInterval);
+                        var advisor = __advisors[requestNum - 1];
+                        var advisorBackgroundColor = __advisorColors[requestNum - 1];
+                        var chatAdvisorCount = "You are talking to advisor " + requestNum + ".";
+                        var chatIntro = "Hi, I am " + advisor + ",";
+                        browser.getIframeDOM().find(".chatAdvisorCount").text(chatAdvisorCount);
+                        browser.getIframeDOM().find(".advisorName").text(chatIntro);
+                        browser.getIframeDOM().find(".advisorInitial").text(__advisorInitials[requestNum - 1]);
+                        if (requestNum === 1 && $("#" + stepElementId).length === 1) {
+                            $("#" + stepElementId).find(".busyCount").text(1);
+                            $("#" + stepElementId).find(".busyChatCount").attr("aria-label", "1 chat is currently in progress");
+                        }
+                        contentManager.updateWithNewInstructionNoMarkComplete(stepName);
+                    }
+                }, 10);
+            }, 1000);
+        } else {
+            contentManager.updateWithNewInstructionNoMarkComplete(stepName);
         }
     };
 
@@ -618,6 +614,7 @@ var bulkheadCallBack = (function() {
                         $("#" + stepElementId).find(".waitChatCount").attr("aria-label", "50 chat requests are waiting in the queue");
                     }
                 }
+                contentManager.updateWithNewInstructionNoMarkComplete(stepName);
             }
         }, 20);
     };
@@ -629,7 +626,7 @@ var bulkheadCallBack = (function() {
             // Get the parameters from the editor and send to the bulkhead
             var content = editor.getEditorContent();
             try{
-                var matchPattern = "@Asynchronous\\s*@Bulkhead\\s*\\((([^\\(\\)])*?)\\)\\s*public Future<Service> serviceForVFA";
+                var matchPattern = "@Asynchronous\\s*@\\s*Bulkhead\\s*\\((([^\\(\\)])*?)\\)\\s*public Future<Service> serviceForVFA";
                 var regexToMatch = new RegExp(matchPattern, "g");
                 var groups = regexToMatch.exec(content);
                 var annotation = groups[1];
