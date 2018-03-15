@@ -44,7 +44,7 @@ public class Producer {
         try {
             Future<Service> future = bankService.requestForVFA();
             requests++;
-            System.out.println("request# " + requests);
+            //System.out.println("request# " + requests);
             //requests = Utils.calculateAdvisorNum(requests);            
             //System.out.println("advisor# " + requests);
                         
@@ -52,7 +52,7 @@ public class Producer {
                 waitQueue++;                
             }
         
-            System.out.println("waiting queue# " + waitQueue);
+            //System.out.println("waiting queue# " + waitQueue);
             if (requests > value &&
                 waitQueue <= waitingTaskQueue) {
                 //There are no financial advisors available. You are number # in the queue
@@ -69,7 +69,7 @@ public class Producer {
             }  
         } catch (Exception e) {
             returnMsg = e.getMessage();
-            System.out.println("Exception " + returnMsg);
+            //System.out.println("Exception " + returnMsg);
             //e.printStackTrace();
             if (e instanceof BulkheadException) {
                 returnMsg = Utils.getHTMLForBusy();

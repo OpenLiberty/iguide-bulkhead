@@ -18,16 +18,16 @@ public class Service {
     private String service = "";
 
     public Service(int counterForVFA) {
-        System.out.println("job " + counterForVFA + " started");
+        //System.out.println("job " + counterForVFA + " started");
         int localCounter = Utils.calculateAdvisorNum(counterForVFA);
         //System.out.println("localCounter " + localCounter);
         try {
             this.service = Utils.getHTMLForChatWithVFA(localCounter);  
             Thread.sleep(15000);
         } catch (InterruptedException ie) {
-            System.out.println("InterruptedException " + ie.getMessage());
+            //System.out.println("InterruptedException " + ie.getMessage());
         } finally {
-            System.out.println("job " + counterForVFA + " complete");           
+            //System.out.println("job " + counterForVFA + " complete");           
         }  
     }
 

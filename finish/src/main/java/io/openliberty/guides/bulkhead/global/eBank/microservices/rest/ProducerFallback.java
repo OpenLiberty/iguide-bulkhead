@@ -44,13 +44,13 @@ public class ProducerFallback {
         try {
             Future<Service> future = bankService.requestForVFA();
             requests++;
-            System.out.println("request# " + requests);           
+            //System.out.println("request# " + requests);           
             
             if (requests > value) {
                 waitQueue++;                
             }
         
-            System.out.println("waiting queue# " + waitQueue);
+            //System.out.println("waiting queue# " + waitQueue);
             if (requests > value &&
                 waitQueue <= waitingTaskQueue) {
                 //There are no financial advisors available. You are number # in the queue
@@ -68,7 +68,7 @@ public class ProducerFallback {
             }
         } catch (Exception e) {
             returnMsg = e.getMessage();
-            System.out.println("Exception " + returnMsg);
+            //System.out.println("Exception " + returnMsg);
             //e.printStackTrace();
         } 
         return returnMsg;

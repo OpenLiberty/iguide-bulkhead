@@ -21,7 +21,6 @@ public class ServiceFallbackHandler implements FallbackHandler<Future<Service>> 
 
     @Override
     public Future<Service> handle(ExecutionContext context) {
-        System.out.println("ServiceFallbackHandler for " + context.getMethod().getName() + " is called");
         return handleFallback(context);
     }
 
