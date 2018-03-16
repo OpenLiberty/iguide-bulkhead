@@ -4,8 +4,8 @@ which call the Virtual Finance Advisor (VFA) service.
 
 Use the 'mvn install' Maven command from the directory that contains the extracted .zip files to build 
 the project and install it in your local repository. The command creates the 
-'sampleapp_bulkhead/target/liberty' directory that contains your bulkheadSampleServer Liberty server.
-Next, start the server.
+'sampleapp_bulkhead/target/liberty' directory that contains your bulkheadSampleServer Liberty server
+and starts the server.
 
 The <extract-directory>\sampleapp_bulkhead\src directory contains the BankService.java and 
 BankServiceWithFallback.java files as shown throughout this guide. The
