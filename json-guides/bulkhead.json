@@ -4,7 +4,7 @@
     "description": "Learn how to use the MicroProfile Bulkhead policy to prevent cascading failures.",
     "duration": "20 minutes",
     "audience": "developer",
-    "repo": "https://github.com/OpenLiberty/iguide-bulkhead",
+    "repo": "https://github.com/OpenLiberty/draft-iguide-bulkhead",
     "steps": [
         {
             "name": "Intro",
@@ -23,7 +23,7 @@
                         "<h4>Bulkhead</h4>",
                         "The term <b>bulkhead</b> comes from the structure that is used in ships to create partitions in the hull. In the event of a hull breach, these isolated partitions prevent water from filling up the entire hull and sinking the ship.",
                         "The bulkhead pattern in software systems works similarly by isolating services to prevent them from starving the system of resources. Two approaches to bulkhead are semaphore isolation and thread pool isolation.",
-                        "<div class=\"boatImages\"><figure><img src=\"/guides/iguide-bulkhead/html/images/without-bulkhead.svg\" alt=\"Ship without bulkheads\"><figcaption>A ship without bulkheads allows water to fill the entire hull.</figcaption></figure><figure><img src=\"/guides/iguide-bulkhead/html/images/with-bulkhead.svg\" alt=\"Ship with bulkheads\"><figcaption>A ship with bulkheads isolates the water damage.</figcaption></figure></div>",
+                        "<div class=\"boatImages\"><figure><img src=\"/guides/draft-iguide-bulkhead/html/images/without-bulkhead.svg\" alt=\"Ship without bulkheads\"><figcaption>A ship without bulkheads allows water to fill the entire hull.</figcaption></figure><figure><img src=\"/guides/draft-iguide-bulkhead/html/images/with-bulkhead.svg\" alt=\"Ship with bulkheads\"><figcaption>A ship with bulkheads isolates the water damage.</figcaption></figure></div>",
                         "The <b>semaphore</b> isolation approach limits the number of concurrent requests to the service. It rejects requests immediately once the limit is hit.",
                         "The <b>thread pool</b> isolation approach uses a thread pool to separate the service from the caller and contain it to a subset of system resources. This approach also provides a waiting queue, rejecting requests only when both the pool and queue are full. Thread pool management adds some overhead, which slightly reduces performance compared to using a semaphore, but allows hanging threads to time out.",
                         "<h4>Asynchronous</h4>",
@@ -54,7 +54,7 @@
                     "content":[
                         {
                             "displayType":"pod",
-                            "content": "/guides/iguide-bulkhead/html/virtual-financial-advisor-example-scenario.html"
+                            "content": "/guides/draft-iguide-bulkhead/html/virtual-financial-advisor-example-scenario.html"
                         }
                     ]
                 }
@@ -372,7 +372,7 @@
               },
               {
                   "displayType":"pod",
-                  "content": "/guides/iguide-bulkhead/html/async-bulkhead-playground.html",
+                  "content": "/guides/draft-iguide-bulkhead/html/async-bulkhead-playground.html",
                   "callback": "(function(pod) {bulkheadCallBack.createAsyncBulkhead(pod, 'playground');})"
               }
             ]
