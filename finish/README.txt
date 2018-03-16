@@ -13,12 +13,12 @@ BankServiceWithFallback.java files as shown throughout this guide. These files a
 default values for these properties are value=5, waitingTaskQueue=5. This means that after 
 5 concurrent chat requests to the VFA service is reached, the next 5 concurrent chat requests will be 
 add to the waiting queue. When a chat request cannot be added to the waiting queue 
-a message is display to indicate all the financial advisors are currently busy. 
+a message is display to indicate all the financial advisors are currently busy.   
 
 The BankServiceWithFallback.java also contains @Fallback annotation. The ServiceFallbackHandler.java 
-contains the fallback class. The fallback class is invoked when the maximum limit of concurrent requests 
-has been reached and the wait queue is full. When the fallback is running a message is display to ask 
-the customer to schedule an appointment.
+contains the fallback class identifies by @Fallback annotation. The fallback class is invoked when the 
+maximum limit of concurrent requests has been reached and the wait queue is full. When the fallback is 
+running, a message is display to allow a customer to schedule an appointment.
 
 To start and stop the server, issue the following commands from 
 <extract-directory>/sampleapp_bulkhead/target/liberty/wlp/bin:
@@ -44,9 +44,9 @@ Each click on Click here will open a separate chat window. To simulate the async
 click on Click here multiple times to open concurrent chat requests.
 
 Initially, after each chat browser session open, this will show "We are working to connect you with 
-a financial advisor". The first 5 requests will then display the message "You are talking to advisor #".
-The next 5 requests will display the message "All financial advisors are currently busy. You are number # 
-in the queue".
+a financial advisor". Then the message "You are talking to advisor #" will display when the financial advisor
+is available. Once the maximum concurrent chat requests is reached, the message "All financial advisors 
+are currently busy. You are number # in the queue" will be display.
 
 You can edit the java files to change the parameter values of the @Bulkhead annotation. If the 
 bulkheadSampleServer is running, run the Maven command 'mvn package' from the directory that contains 
