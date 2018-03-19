@@ -1,20 +1,23 @@
 To use the sample application, extract the sampleapp_bulkhead.zip file to your local directory. 
 The application contains two servlets, BankServiceServlet and BankServiceWithFallbackServlet, 
-which call the Virtual Finance Advisor (VFA) service. 
+which call the VirtualFinancialAdvisor (VFA) service. 
 
 Use the 'mvn install' Maven command from the directory that contains the extracted .zip files 
 to build the project and install it in your local repository. The command creates the 
-'target/liberty' directory that contains your bulkheadSampleServer Liberty 
-server and starts the server.
+'<extract-directory>/target/liberty' directory that contains your Liberty server, 
+bulkheadSampleServer, and starts the server.
 
-The <extract-directory>\src directory contains the BankService.java and 
-BankServiceWithFallback.java files as shown throughout this guide. The @Bulkhead and 
+To start and stop the server, issue the following commands from the
+<extract-directory>/ directory:
+      mvn liberty:start-server
+      mvn liberty:stop-server
+
+The <extract-directory>/src directory contains the BankService.java and 
+ServiceFallbackHandler.java files as shown throughout this guide. The @Bulkhead and 
 @Asynchronous annotations that are injected into the code are located in these files. For this 
-sample app, value=5, waitingTaskQueue=5 are the default values for these properties. These 
-values indicate that after 5 concurrent chat requests reach the VFA service, the next 5 
-concurrent chat requests are added to the waiting queue. When a chat request cannot be added 
-to the waiting queue, a message is displayed to indicate that all the financial advisors are 
-currently busy.   
+sample app, the values for the bulkhead parameters are set to their default values which are 
+value=5 and waitingTaskQueue=5. These values indicate that after 5 concurrent chat requests reach 
+the VFA service, the next 5 concurrent chat requests are added to the waiting queue.
 
 The BankServiceWithFallback.java file also contains the @Fallback annotation. The 
 ServiceFallbackHandler.java file contains the fallback class that is identified by the 
@@ -22,17 +25,12 @@ ServiceFallbackHandler.java file contains the fallback class that is identified 
 requests is reached and the wait queue is full. When the fallback runs, a message displays 
 to allow a customer to schedule an appointment.
 
-To start and stop the server, issue the following commands from the
-<extract-directory>/sampleapp_bulkhead directory:
-      mvn liberty:start-server
-      mvn liberty:stop-server
-
 To access the sample application, visit the following URL from your browser:
       http://localhost:9080/bulkheadSample/vfa
 
-This URL initially shows the following message:
+This URL shows the following message:
 
-    "We are working to connect you with a financial advisor."
+      "We are working to connect you with a financial advisor."
 
 To simulate the asynchronous requests, open multiple tabs with the above link or click on 
 refresh button multiple times.
