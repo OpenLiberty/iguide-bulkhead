@@ -44,9 +44,9 @@ Each click on the 'Click here' button opens a separate chat window. To simulate 
 click the 'Click here' button multiple times to open concurrent chat requests.
 
 Initially, after each chat browser session opens, the browser displays a message that states, "We are working to connect you with 
-a financial advisor." Next, the message that states, "You are talking to advisor <number>," displays when the financial advisor
-is available. When the maximum concurrent chat requests is reached, the message, "All financial advisors 
-are currently busy. You are <number> in the queue," displays.
+a financial advisor." Next, the message that states, "You are talking to advisor <number>," is displayed when the financial advisor
+is available. When the maximum limit of concurrent chat requests is reached, the message, "All financial advisors 
+are currently busy. You are <number> in the queue," is displayed.
 
 You can edit the Java files to change the parameter values of the @Bulkhead annotation. If the 
 bulkheadSampleServer server is running, run the 'mvn package' Maven command from the directory that contains 
