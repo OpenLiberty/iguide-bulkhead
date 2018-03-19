@@ -66,7 +66,6 @@ public class Producer {
             }
         } catch (Exception e) {
             returnMsg = e.getMessage();
-            System.out.println("Exception " + returnMsg);
         } 
         return returnMsg;
     }

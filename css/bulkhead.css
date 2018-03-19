@@ -19,10 +19,6 @@
     height: 30px;
 }
 
-.browserHolder {
-    /* margin-top: 10px; */
-}
-
 #guide_content .codeeditor .CodeMirror {
     height: 100%;
     border-bottom: none;
