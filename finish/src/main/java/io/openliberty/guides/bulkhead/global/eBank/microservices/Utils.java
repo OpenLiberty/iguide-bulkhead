@@ -8,9 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package global.eBank.microservices;
+package io.openliberty.guides.bulkhead.global.eBank.microservices;
 
-//import global.eBank.microservices.BankService;
+
 
 public class Utils {
 
@@ -103,7 +103,7 @@ public class Utils {
     }
 
     public static int calculateAdvisorNum(int requests) {
-        int localCounter = ((requests - 1) % global.eBank.microservices.BankService.bulkheadValue) + 1;
+        int localCounter = ((requests - 1) % io.openliberty.guides.bulkhead.global.eBank.microservices.BankService.bulkheadValue) + 1;
         return localCounter;     
     }
 

@@ -10,7 +10,7 @@
  *     IBM Corporation - Initial implementation
  *******************************************************************************/
 // end::comment[]
-package global.eBank.microservices.rest;
+package io.openliberty.guides.bulkhead.global.eBank.microservices.rest;
 
 import javax.ws.rs.core.Application;
 import javax.ws.rs.ApplicationPath;

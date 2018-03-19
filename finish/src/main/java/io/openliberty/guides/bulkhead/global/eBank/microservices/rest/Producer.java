@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package global.eBank.microservices.rest;
+package io.openliberty.guides.bulkhead.global.eBank.microservices.rest;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -18,9 +18,9 @@ import javax.ws.rs.core.MediaType;
 
 import java.util.concurrent.Future;
 
-import global.eBank.microservices.Service;
-import global.eBank.microservices.BankService;
-import global.eBank.microservices.Utils;
+import io.openliberty.guides.bulkhead.global.eBank.microservices.Service;
+import io.openliberty.guides.bulkhead.global.eBank.microservices.Utils;
+import io.openliberty.guides.bulkhead.global.eBank.microservices.BankService;
 import org.eclipse.microprofile.faulttolerance.exceptions.BulkheadException;
 
 
@@ -39,42 +39,36 @@ public class Producer {
         int value = bankService.bulkheadValue;
         int waitingTaskQueue = bankService.bulkheadWaitingQueue;
 
-        String returnMsg = "";
+        String returnMsg = "";        
             
         try {
             Future<Service> future = bankService.requestForVFA();
             requests++;
-            //System.out.println("request# " + requests);
-            //requests = Utils.calculateAdvisorNum(requests);            
-            //System.out.println("advisor# " + requests);
-                        
+            
             if (requests > value) {
                 waitQueue++;                
             }
         
-            //System.out.println("waiting queue# " + waitQueue);
             if (requests > value &&
                 waitQueue <= waitingTaskQueue) {
                 //There are no financial advisors available. You are number # in the queue
-                returnMsg = Utils.getHTMLForWaitingQueue(waitQueue);           
+                returnMsg = Utils.getHTMLForWaitingQueue(waitQueue);
                 return returnMsg;
             }
                 
             // You are talking to advisor #
             Service service = future.get();
-            returnMsg = service.toString();          
-
+            returnMsg = service.toString();
+           
+            // after chat service is done
             if (waitQueue > 0) {
                 waitQueue--;
-            }  
+            }
         } catch (Exception e) {
             returnMsg = e.getMessage();
-            //System.out.println("Exception " + returnMsg);
-            //e.printStackTrace();
-            if (e instanceof BulkheadException) {
-                returnMsg = Utils.getHTMLForBusy();
-            } 
+            System.out.println("Exception " + returnMsg);
         } 
         return returnMsg;
     }
+    
 }

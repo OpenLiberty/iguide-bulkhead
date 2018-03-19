@@ -8,9 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package global.eBank.microservices;
+package io.openliberty.guides.bulkhead.global.eBank.microservices;
 
-import global.eBank.microservices.Utils;
+import io.openliberty.guides.bulkhead.global.eBank.microservices.Utils;
 
 
 public class Service {
@@ -18,17 +18,13 @@ public class Service {
     private String service = "";
 
     public Service(int counterForVFA) {
-        //System.out.println("job " + counterForVFA + " started");
         int localCounter = Utils.calculateAdvisorNum(counterForVFA);
-        //System.out.println("localCounter " + localCounter);
         try {
             this.service = Utils.getHTMLForChatWithVFA(localCounter);  
-            Thread.sleep(15000);
+            Thread.sleep(30000);
         } catch (InterruptedException ie) {
-            //System.out.println("InterruptedException " + ie.getMessage());
-        } finally {
-            //System.out.println("job " + counterForVFA + " complete");           
-        }  
+            System.out.println("InterruptedException " + ie.getMessage());
+        } 
     }
 
     public Service() {     

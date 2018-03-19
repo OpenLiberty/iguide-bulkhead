@@ -10,7 +10,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
  // end::comment[]
-package global.eBank.microservices;
+package io.openliberty.guides.bulkhead.global.eBank.microservices;
 
 import java.io.IOException;
 

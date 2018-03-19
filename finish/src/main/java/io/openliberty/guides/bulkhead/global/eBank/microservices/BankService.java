@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package global.eBank.microservices;
+package io.openliberty.guides.bulkhead.global.eBank.microservices;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -16,17 +16,17 @@ import javax.inject.Inject;
 import org.eclipse.microprofile.faulttolerance.exceptions.BulkheadException;
 import org.eclipse.microprofile.faulttolerance.Asynchronous;
 import org.eclipse.microprofile.faulttolerance.Bulkhead;
+import org.eclipse.microprofile.faulttolerance.Fallback;
 
-//import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.Future;
 import java.util.concurrent.CompletableFuture;
 
-import global.eBank.microservices.Service;
+import io.openliberty.guides.bulkhead.global.eBank.microservices.Service;
 
 
 @ApplicationScoped
 public class BankService {
-  
+
     public final static int bulkheadValue = 5;
     public final static int bulkheadWaitingQueue = 5;
  
@@ -39,11 +39,11 @@ public class BankService {
         return bankService.serviceForVFA(counterForVFA);
     }
 
+    @Fallback(ServiceFallbackHandler.class)
     @Asynchronous
     @Bulkhead(value = bulkheadValue, waitingTaskQueue = bulkheadWaitingQueue)
     public Future<Service> serviceForVFA(int counterForVFA) throws Exception {
         Service chatService = new Service(counterForVFA);
         return CompletableFuture.completedFuture(chatService);           
     }
-    
 }
