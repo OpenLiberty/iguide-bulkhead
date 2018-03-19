@@ -35,8 +35,8 @@ public class Utils {
         "    </div>" +
         "</div>" +
         "<div class='customerChatBlock flexContainer'>" +
-        "    <input type='text' class='customerChatInput' aria-label='Chat input from customer' value='For demo only and will not do anything'/>" +
-        "    <button class='customerChatSubmitButton' title='For demo only and will not do anything'>Submit</button>" +
+        "    <input type='text' class='customerChatInput' aria-label='Chat input from customer' value='For demo only'/>" +
+        "    <button class='customerChatSubmitButton' title='For demo only'>Submit</button>" +
         "</div>";
         return msg;
     }
@@ -103,7 +103,7 @@ public class Utils {
     }
 
     public static int calculateAdvisorNum(int requests) {
-        int localCounter = ((requests - 1) % io.openliberty.guides.bulkhead.global.eBank.microservices.BankService.bulkheadValue) + 1;
+        int localCounter = ((requests - 1) % 10) + 1;
         return localCounter;     
     }
 

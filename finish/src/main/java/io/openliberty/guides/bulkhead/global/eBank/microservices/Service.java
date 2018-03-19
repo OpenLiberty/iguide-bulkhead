@@ -10,8 +10,6 @@
  *******************************************************************************/
 package io.openliberty.guides.bulkhead.global.eBank.microservices;
 
-import io.openliberty.guides.bulkhead.global.eBank.microservices.Utils;
-
 
 public class Service {
 

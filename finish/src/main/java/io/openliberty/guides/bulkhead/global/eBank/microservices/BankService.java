@@ -21,7 +21,6 @@ import org.eclipse.microprofile.faulttolerance.Fallback;
 import java.util.concurrent.Future;
 import java.util.concurrent.CompletableFuture;
 
-import io.openliberty.guides.bulkhead.global.eBank.microservices.Service;
 
 
 @ApplicationScoped

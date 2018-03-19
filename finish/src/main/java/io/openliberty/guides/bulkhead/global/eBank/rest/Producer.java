@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package io.openliberty.guides.bulkhead.global.eBank.microservices.rest;
+package io.openliberty.guides.bulkhead.global.eBank.rest;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
