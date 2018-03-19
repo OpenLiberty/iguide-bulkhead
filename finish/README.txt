@@ -19,7 +19,7 @@ sample app, the values for the bulkhead parameters are set to their default valu
 value=5 and waitingTaskQueue=5. These values indicate that after 5 concurrent chat requests reach 
 the VFA service, the next 5 concurrent chat requests are added to the waiting queue.
 
-The BankServiceWithFallback.java file also contains the @Fallback annotation. The 
+The BankService.java file also contains the @Fallback annotation. The 
 ServiceFallbackHandler.java file contains the fallback class that is identified by the 
 @Fallback annotation. The fallback class is invoked when the maximum limit of concurrent 
 requests is reached and the wait queue is full. When the fallback runs, a message displays 
