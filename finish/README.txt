@@ -4,8 +4,8 @@ which call the VirtualFinancialAdvisor (VFA) service.
 
 Use the 'mvn install' Maven command from the directory that contains the extracted .zip files 
 to build the project and install it in your local repository. The command creates the 
-'<extract-directory>/target/liberty' directory that contains your Liberty server, 
-bulkheadSampleServer, and starts the server.
+'target/liberty' directory that contains your Liberty server, bulkheadSampleServer, and starts 
+the server.
 
 To start and stop the server, issue the following commands from the
 <extract-directory>/ directory:
