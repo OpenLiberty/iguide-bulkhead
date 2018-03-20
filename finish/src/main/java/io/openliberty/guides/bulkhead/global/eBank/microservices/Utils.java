@@ -13,8 +13,7 @@ package io.openliberty.guides.bulkhead.global.eBank.microservices;
 
 public class Utils {
 
-    // default timeout in the microservice
-    public static final int TIMEOUT = 20000;
+
     private static String[] __advisors = {"Bob", "Jenny", "Lee", "Mary", "John", "Mike", "Sam", "Sandy", "Joann", "Frank" };
     private static String[] __advisorInitials = {"B", "J", "L", "M", "J", "M", "S", "S", "J", "F"};
 

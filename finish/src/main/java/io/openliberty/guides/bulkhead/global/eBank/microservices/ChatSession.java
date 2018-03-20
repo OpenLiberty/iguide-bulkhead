@@ -18,7 +18,7 @@ public class ChatSession extends Service {
         int localCounter = Utils.calculateAdvisorNum(counterForVFA);
         try {
             this.service = Utils.getHTMLForChatWithVFA(localCounter);  
-            Thread.sleep(Utils.TIMEOUT);
+            Thread.sleep(BankService.TIMEOUT);
         } catch (InterruptedException ie) {
             System.out.println("InterruptedException " + ie.getMessage());
         } 

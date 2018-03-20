@@ -44,7 +44,7 @@ public class Producer {
         String returnMsg = "";        
             
         try {
-            // once both the request and waitQueue are full
+            // once the scheduling is displayed 
             // return right away to stop the simulation
             // until the server is restart
             if (requests > value && waitQueue > waitingTaskQueue) {
@@ -65,7 +65,7 @@ public class Producer {
                 // since we are keeping track of the waitQueue
                 // put the same amount of a sleep here as in the microservice
                 // to simulate the waiting
-                Thread.sleep(Utils.TIMEOUT);
+                Thread.sleep(bankService.TIMEOUT);
                 //There are no financial advisors available. You are number # in the queue               
                 returnMsg = Utils.getHTMLForWaitingQueue(waitQueue);
                 return returnMsg;

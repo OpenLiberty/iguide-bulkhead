@@ -402,6 +402,7 @@
                                 "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
                                 "import org.eclipse.microprofile.faulttolerance.ExecutionContext;",
                                 "import org.eclipse.microprofile.faulttolerance.FallbackHandler;",
+                                "import java.util.concurrent.CompletableFuture;",
                                 "import java.util.concurrent.Future;",
                                 "",
                                 "public class ServiceFallbackHandler implements FallbackHandler<Future<Service>> {",

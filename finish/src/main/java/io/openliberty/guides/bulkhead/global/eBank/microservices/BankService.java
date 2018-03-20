@@ -26,6 +26,11 @@ import java.util.concurrent.CompletableFuture;
 @ApplicationScoped
 public class BankService {
 
+    // For demo purpose only
+    // The length of time (in milliseconds) to pause the currently executing thread 
+    // so as to simulate concurrent
+    public static final int TIMEOUT = 20000;
+
     public final static int bulkheadValue = 5;
     public final static int bulkheadWaitingQueue = 5;
  
