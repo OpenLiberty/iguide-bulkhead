@@ -45,7 +45,8 @@ public class Producer {
             
         try {
             // once both the request and waitQueue are full
-            // return right away
+            // return right away to stop the simulation
+            // until the server is restart
             if (requests > value && waitQueue > waitingTaskQueue) {
                 returnMsg = Utils.getHTMLRestart();
                 return returnMsg;
