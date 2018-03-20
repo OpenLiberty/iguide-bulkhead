@@ -21,13 +21,13 @@ the browser with the above link then click on refresh button multiple times.
 Initially, after each chat session opens, the browser displays the following message:  
       "We are working to connect you with a financial advisor." 
 
-The message changes after 10 seconds simulating the delay until a financial advisor is available:
-      "You are talking to advisor <number>"
+The message changes after 20 seconds simulating the delay until a financial advisor is available:
+      "You are talking to advisor <number>."
  
 When the maximum limit of concurrent chat requests is reached, the following message is displayed:
       "All financial advisors are currently busy. You are <number> in the queue."
 
-If the waiting queue becomes full within 10 seconds of simulating the concurrent requests, the 
+If the waiting queue becomes full within 20 seconds of simulating the concurrent requests, the 
 fallback method runs and display the panel that asks the user to schedule an appointment to chat
 with a financial advisor.
 
@@ -44,13 +44,13 @@ ServiceFallbackHandler.java file contains the fallback class that is identified 
 requests is reached and the waiting queue is full. When the fallback runs, a message displays 
 to allow a customer to schedule an appointment.
 
-The Utils.java file contains the delay TIMEOUT value that is default to 10 seconds.
+The Utils.java file contains the delay TIMEOUT value that is default to 20 seconds.
 
 You can edit the Java files to change the parameter values of the @Bulkhead annotation and the 
-delay TIMEOUT. If the bulkheadSampleServer server is running, run the 'mvn package' Maven command 
-from the directory that contains the extracted .zip file to rebuild the application. The changes 
-take effect without restarting the server. Otherwise, stop the bulkheadSampleServer server as 
-indicated, run the 'mvn install' Maven command. 
+delay TIMEOUT value. If the bulkheadSampleServer server is running, run the 'mvn package' Maven 
+command from the directory that contains the extracted .zip file to rebuild the application. The 
+changes take effect without restarting the server. Otherwise, stop the bulkheadSampleServer server 
+as indicated, run the 'mvn install' Maven command. 
 
 To restart the application to simulate the chat requests again, you can stop and restart the 
 bulkheadSampleServer server as indicated.
