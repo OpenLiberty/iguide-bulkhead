@@ -28,7 +28,7 @@ import org.eclipse.microprofile.faulttolerance.exceptions.BulkheadException;
 public class Producer {
 
     // for demo purpose only to keep track
-    // of the number in the queue
+    // of the number in the waiting queue
     private static int waitQueue = 0;
     private static int requests = 0; 
 
