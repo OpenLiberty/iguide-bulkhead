@@ -16,7 +16,7 @@ To access the sample application, visit the following URL from your browser:
       http://localhost:9080/bulkheadSample/vfa
 
 To simulate making multiple asynchronous requests to the VirtualFinancialAdvisor service, open 
-the browser with the above link then click on refresh button multiple times.
+the browser with the above link then click on refresh button multiple times. 
 
 Initially, after each chat session opens, the browser displays the following message:  
       "We are working to connect you with a financial advisor." 
@@ -28,8 +28,10 @@ When the maximum limit of concurrent chat requests is reached, the following mes
       "All financial advisors are currently busy. You are <number> in the queue."
 
 If the waiting queue becomes full within 20 seconds of simulating the concurrent requests, the 
-fallback method runs and display the panel that asks the user to schedule an appointment to chat
-with a financial advisor.
+panel is displayed that asks the user to schedule an appointment to chat with a financial advisor.
+
+This is a simple simulation to show how the Bulkhead works with concurrent chat requests and the 
+waiting queue. Therefore we did not go into removing requests from the wait queue to being processed. 
 
 The <extract-directory>/src directory contains the BankService.java and 
 ServiceFallbackHandler.java files as shown throughout this guide. The @Bulkhead and 
