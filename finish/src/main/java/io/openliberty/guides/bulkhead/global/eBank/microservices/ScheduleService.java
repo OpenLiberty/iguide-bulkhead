@@ -11,13 +11,11 @@
 package io.openliberty.guides.bulkhead.global.eBank.microservices;
 
 
-public class Service {
+public class ScheduleService extends Service {
+ 
 
-    protected String service = "";
-
-
-    public String toString() {
-        return this.service;
+    public ScheduleService() {
+        this.service = Utils.getHTMLForScheduleAppt(); 
     }
 
 }

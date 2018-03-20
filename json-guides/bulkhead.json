@@ -410,6 +410,11 @@
                                 "  public Future<Service> handle(ExecutionContext context) {",
                                 "    return handleFallback(context);",
                                 "  }",
+                                "",
+                                "  private Future<Service> handleFallback(ExecutionContext context) {",
+                                "    Service service = new ScheduleService();",
+                                "    return CompletableFuture.completedFuture(service);",
+                                "  }",
                                 "}"
                             ],
                             "readonly": true,

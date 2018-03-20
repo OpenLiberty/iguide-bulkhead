@@ -11,9 +11,10 @@
 package io.openliberty.guides.bulkhead.global.eBank.microservices;
 
 
-
 public class Utils {
 
+    // default timeout in the microservice
+    public static final int TIMEOUT = 20000;
     private static String[] __advisors = {"Bob", "Jenny", "Lee", "Mary", "John", "Mike", "Sam", "Sandy", "Joann", "Frank" };
     private static String[] __advisorInitials = {"B", "J", "L", "M", "J", "M", "S", "S", "J", "F"};
 
@@ -100,6 +101,10 @@ public class Utils {
         "<p class='errorTextBox' style='margin-top: 120px'>Thank you!</p>" +
         "</div>";
         return msg;
+    }
+
+    public static String getHTMLRestart() {
+        return "<div class='spacing errorTextBox'>Please restart the server and retry the scenario.</div>";
     }
 
     public static int calculateAdvisorNum(int requests) {

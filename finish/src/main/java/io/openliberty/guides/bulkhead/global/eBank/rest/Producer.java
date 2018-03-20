@@ -27,6 +27,8 @@ import org.eclipse.microprofile.faulttolerance.exceptions.BulkheadException;
 @Path("vfa")
 public class Producer {
 
+    // for demo purpose only to keep track
+    // of the number in the queue
     private static int waitQueue = 0;
     private static int requests = 0; 
 
@@ -42,6 +44,13 @@ public class Producer {
         String returnMsg = "";        
             
         try {
+            // once both the request and waitQueue are full
+            // return right away
+            if (requests > value && waitQueue > waitingTaskQueue) {
+                returnMsg = Utils.getHTMLRestart();
+                return returnMsg;
+            }
+
             Future<Service> future = bankService.requestForVFA();
             requests++;
             
@@ -51,7 +60,12 @@ public class Producer {
         
             if (requests > value &&
                 waitQueue <= waitingTaskQueue) {
-                //There are no financial advisors available. You are number # in the queue
+                // for the purpose of demo
+                // since we are keeping track of the waitQueue
+                // put the same amount of a sleep here as in the microservice
+                // to simulate the waiting
+                Thread.sleep(Utils.TIMEOUT);
+                //There are no financial advisors available. You are number # in the queue               
                 returnMsg = Utils.getHTMLForWaitingQueue(waitQueue);
                 return returnMsg;
             }
@@ -59,11 +73,7 @@ public class Producer {
             // You are talking to advisor #
             Service service = future.get();
             returnMsg = service.toString();
-           
-            // after chat service is done
-            if (waitQueue > 0) {
-                waitQueue--;
-            }
+      
         } catch (Exception e) {
             returnMsg = e.getMessage();
         } 

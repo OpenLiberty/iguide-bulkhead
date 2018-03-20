@@ -25,7 +25,7 @@ public class ServiceFallbackHandler implements FallbackHandler<Future<Service>> 
     }
 
     private Future<Service> handleFallback(ExecutionContext context) {
-        Service myChat = new Service();
-        return CompletableFuture.completedFuture(myChat);
+        Service service = new ScheduleService();
+        return CompletableFuture.completedFuture(service);
     }
 } 

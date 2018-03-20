@@ -42,7 +42,7 @@ public class BankService {
     @Asynchronous
     @Bulkhead(value = bulkheadValue, waitingTaskQueue = bulkheadWaitingQueue)
     public Future<Service> serviceForVFA(int counterForVFA) throws Exception {
-        Service chatService = new Service(counterForVFA);
+        Service chatService = new ChatSession(counterForVFA);
         return CompletableFuture.completedFuture(chatService);           
     }
 }

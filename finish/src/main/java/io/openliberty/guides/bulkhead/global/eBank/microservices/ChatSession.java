@@ -11,13 +11,17 @@
 package io.openliberty.guides.bulkhead.global.eBank.microservices;
 
 
-public class Service {
+public class ChatSession extends Service {
+ 
 
-    protected String service = "";
-
-
-    public String toString() {
-        return this.service;
+    public ChatSession(int counterForVFA) {
+        int localCounter = Utils.calculateAdvisorNum(counterForVFA);
+        try {
+            this.service = Utils.getHTMLForChatWithVFA(localCounter);  
+            Thread.sleep(Utils.TIMEOUT);
+        } catch (InterruptedException ie) {
+            System.out.println("InterruptedException " + ie.getMessage());
+        } 
     }
 
 }
