@@ -38,6 +38,7 @@ public class Producer {
     public String getVFA() {
         int value = bankService.bulkheadValue;
         int waitingTaskQueue = bankService.bulkheadWaitingQueue;
+        int localWaitQueue = waitQueue;  // Local copy of the waitQueue value
 
         String returnMsg = "";        
             
@@ -54,18 +55,19 @@ public class Producer {
             requests++;
             
             if (requests > value) {
-                waitQueue++;                
+                waitQueue++;
+                localWaitQueue = waitQueue;                
             }
         
             if (requests > value &&
-                waitQueue <= waitingTaskQueue) {
+                localWaitQueue <= waitingTaskQueue) {
                 // for the purpose of demo
                 // since we are keeping track of the waitQueue
                 // put the same amount of a sleep here as in the microservice
                 // to simulate the waiting
                 Thread.sleep(bankService.TIMEOUT);
                 //There are no financial advisors available. You are number # in the queue               
-                returnMsg = Utils.getHTMLForWaitingQueue(waitQueue);
+                returnMsg = Utils.getHTMLForWaitingQueue(localWaitQueue);
                 return returnMsg;
             }
                 
