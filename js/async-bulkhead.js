@@ -39,11 +39,11 @@ var asyncBulkhead = function(){
         var queueSpot;
         // Thread pool queue - available chat spots
         for (queueSpot = 0; queueSpot < this.value; queueSpot++) {
-           $("<img class='queuePerson' src='/guides/draft-iguide-bulkhead/html/images/user_outline-green.svg' alt='Available chat session' />").appendTo(requestQueue);
+           $("<img class='queuePerson' src='/guides/iguide-bulkhead/html/images/user_outline-green.svg' alt='Available chat session' />").appendTo(requestQueue);
         }
         // Wait queue - chats waiting to be queued
         for (queueSpot = 0; queueSpot < this.waitingTaskQueue; queueSpot++) {
-          $("<img class='queuePerson' src='/guides/draft-iguide-bulkhead/html/images/user_outline-orange.svg' alt='Available wait queue slot' />").appendTo(waitingTasksQueue);
+          $("<img class='queuePerson' src='/guides/iguide-bulkhead/html/images/user_outline-orange.svg' alt='Available wait queue slot' />").appendTo(waitingTasksQueue);
         }
       },
 
@@ -58,7 +58,7 @@ var asyncBulkhead = function(){
         var queueSpots = requestContainer.find('img');
 
         for (requestCount = 0; requestCount < queueSpots.length && requestCount < this.requestChatCount; requestCount++) {
-          queueSpots[requestCount].setAttribute('src', '/guides/draft-iguide-bulkhead/html/images/user_green.svg');
+          queueSpots[requestCount].setAttribute('src', '/guides/iguide-bulkhead/html/images/user_green.svg');
           queueSpots[requestCount].setAttribute('alt', 'Active chat session');
         }
 
@@ -66,13 +66,13 @@ var asyncBulkhead = function(){
           // The request queue is not full. Add empty chats to the request queue.
           var emptyRequestCount;
           for (emptyRequestCount = requestCount; emptyRequestCount < queueSpots.length; emptyRequestCount++) {
-            queueSpots[emptyRequestCount].setAttribute('src', '/guides/draft-iguide-bulkhead/html/images/user_outline-green.svg');
+            queueSpots[emptyRequestCount].setAttribute('src', '/guides/iguide-bulkhead/html/images/user_outline-green.svg');
             queueSpots[emptyRequestCount].setAttribute('alt', 'Available chat session');
           }
           // No requests for the wait queue.  Fill with empty queue slots.
           queueSpots = waitQueueContainer.find('img');
           for (emptyRequestCount = 0; emptyRequestCount < queueSpots.length; emptyRequestCount++) {
-            queueSpots[emptyRequestCount].setAttribute('src', '/guides/draft-iguide-bulkhead/html/images/user_outline-orange.svg');
+            queueSpots[emptyRequestCount].setAttribute('src', '/guides/iguide-bulkhead/html/images/user_outline-orange.svg');
             queueSpots[emptyRequestCount].setAttribute('alt', 'Available wait queue slot');
           }
         } else if (requestCount <= this.requestChatCount) {
@@ -82,7 +82,7 @@ var asyncBulkhead = function(){
           for (waitRequestCount = 0;
                requestCount < this.requestChatCount && waitRequestCount < queueSpots.length;
                requestCount++, waitRequestCount++) {
-                 queueSpots[waitRequestCount].setAttribute('src', '/guides/draft-iguide-bulkhead/html/images/user_orange.svg');
+                 queueSpots[waitRequestCount].setAttribute('src', '/guides/iguide-bulkhead/html/images/user_orange.svg');
                  queueSpots[waitRequestCount].setAttribute('alt', 'Taken wait queue slot');
           }
           if (requestCount !== this.requestChatCount) {
@@ -95,7 +95,7 @@ var asyncBulkhead = function(){
             this.root.find(".bulkheadExceptionDiv").hide();
             // The wait queue is not full.  Add empty boxes to the wait queue.
             for ( ; waitRequestCount < queueSpots.length; waitRequestCount++) {
-              queueSpots[waitRequestCount].setAttribute('src', '/guides/draft-iguide-bulkhead/html/images/user_outline-orange.svg');
+              queueSpots[waitRequestCount].setAttribute('src', '/guides/iguide-bulkhead/html/images/user_outline-orange.svg');
               queueSpots[waitRequestCount].setAttribute('alt', 'Available wait queue slot');
             }
           }

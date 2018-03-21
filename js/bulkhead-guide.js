@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 $(document).ready(function() {
-    var iguideJsonName = "/guides/draft-iguide-bulkhead/json-guides/bulkhead.json";
+    var iguideJsonName = "/guides/iguide-bulkhead/json-guides/bulkhead.json";
     var iguideContextRoot = "Bulkhead";
 
     jsonGuide.getAGuide(iguideJsonName).done(function() {
