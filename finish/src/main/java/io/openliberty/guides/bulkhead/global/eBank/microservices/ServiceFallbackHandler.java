@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package global.eBank.microservices;
+package io.openliberty.guides.bulkhead.global.eBank.microservices;
 
 import org.eclipse.microprofile.faulttolerance.ExecutionContext;
 import org.eclipse.microprofile.faulttolerance.FallbackHandler;
@@ -25,7 +25,7 @@ public class ServiceFallbackHandler implements FallbackHandler<Future<Service>> 
     }
 
     private Future<Service> handleFallback(ExecutionContext context) {
-        Service myChat = new Service();
-        return CompletableFuture.completedFuture(myChat);
+        Service service = new ScheduleService();
+        return CompletableFuture.completedFuture(service);
     }
 } 

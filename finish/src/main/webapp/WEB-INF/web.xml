@@ -12,9 +12,5 @@
   Contributors:
       IBM Corporation - initial API and implementation
 -->
-    <display-name>Virtual Financial Advisor Servlet</display-name>
-
-    <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
-    </welcome-file-list>
+    <display-name>Virtual Financial Advisor</display-name>   
 </web-app>

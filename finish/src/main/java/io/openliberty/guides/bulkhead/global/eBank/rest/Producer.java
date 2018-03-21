@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package global.eBank.microservices.rest;
+package io.openliberty.guides.bulkhead.global.eBank.rest;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -18,58 +18,65 @@ import javax.ws.rs.core.MediaType;
 
 import java.util.concurrent.Future;
 
-import global.eBank.microservices.Service;
-import global.eBank.microservices.Utils;
-import global.eBank.microservices.BankServiceWithFallback;
-import org.eclipse.microprofile.faulttolerance.exceptions.BulkheadException;
+import io.openliberty.guides.bulkhead.global.eBank.microservices.Service;
+import io.openliberty.guides.bulkhead.global.eBank.microservices.Utils;
+import io.openliberty.guides.bulkhead.global.eBank.microservices.BankService;
 
+@Path("vfa")
+public class Producer {
 
-@Path("vfafb")
-public class ProducerFallback {
-
+    // for demo purpose only to keep track
+    // of the number in the waiting queue
     private static int waitQueue = 0;
     private static int requests = 0; 
 
     @Inject
-    BankServiceWithFallback bankService;
+    BankService bankService;
 
     @GET
     @Produces(MediaType.TEXT_HTML)
     public String getVFA() {
         int value = bankService.bulkheadValue;
         int waitingTaskQueue = bankService.bulkheadWaitingQueue;
+        int localWaitQueue = waitQueue;  // Local copy of the waitQueue value
 
         String returnMsg = "";        
             
         try {
+            // once the scheduling is displayed 
+            // return right away to stop the simulation
+            // until the server is restart
+            if (requests > value && waitQueue > waitingTaskQueue) {
+                returnMsg = Utils.getHTMLRestart();
+                return returnMsg;
+            }
+
             Future<Service> future = bankService.requestForVFA();
             requests++;
-            //System.out.println("request# " + requests);           
             
             if (requests > value) {
-                waitQueue++;                
+                waitQueue++;
+                localWaitQueue = waitQueue;                
             }
         
-            //System.out.println("waiting queue# " + waitQueue);
             if (requests > value &&
-                waitQueue <= waitingTaskQueue) {
-                //There are no financial advisors available. You are number # in the queue
-                returnMsg = Utils.getHTMLForWaitingQueue(waitQueue);
+                localWaitQueue <= waitingTaskQueue) {
+                // for the purpose of demo
+                // since we are keeping track of the waitQueue
+                // put the same amount of a sleep here as in the microservice
+                // to simulate the waiting
+                Thread.sleep(bankService.TIMEOUT);
+                //There are no financial advisors available. You are number # in the queue               
+                returnMsg = Utils.getHTMLForWaitingQueue(localWaitQueue);
                 return returnMsg;
             }
                 
             // You are talking to advisor #
             Service service = future.get();
             returnMsg = service.toString();
-           
-            //if (requests <= value && waitQueue > 0) {
-            if (waitQueue > 0) {
-                waitQueue--;
-            }
+      
         } catch (Exception e) {
             returnMsg = e.getMessage();
-            //System.out.println("Exception " + returnMsg);
-            //e.printStackTrace();
         } 
         return returnMsg;
     }

@@ -508,7 +508,6 @@ var bulkheadCallBack = (function() {
 
         // only mark current instruction as complete and delay showing the next instruction until processing is done
         contentManager.markCurrentInstructionComplete(stepName);
-        //contentManager.updateWithNewInstructionNoMarkComplete(stepName);
         if (stepName === "AsyncWithoutBulkhead") {
             requestLimits = 3;
             if (requestNum >= requestLimits) {

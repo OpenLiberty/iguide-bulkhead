@@ -8,11 +8,11 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package global.eBank.microservices;
+package io.openliberty.guides.bulkhead.global.eBank.microservices;
 
-//import global.eBank.microservices.BankService;
 
 public class Utils {
+
 
     private static String[] __advisors = {"Bob", "Jenny", "Lee", "Mary", "John", "Mike", "Sam", "Sandy", "Joann", "Frank" };
     private static String[] __advisorInitials = {"B", "J", "L", "M", "J", "M", "S", "S", "J", "F"};
@@ -35,8 +35,8 @@ public class Utils {
         "    </div>" +
         "</div>" +
         "<div class='customerChatBlock flexContainer'>" +
-        "    <input type='text' class='customerChatInput' aria-label='Chat input from customer' value='For demo only and will not do anything'/>" +
-        "    <button class='customerChatSubmitButton' title='For demo only and will not do anything'>Submit</button>" +
+        "    <input type='text' class='customerChatInput' aria-label='Chat input from customer' value='For demo only'/>" +
+        "    <button class='customerChatSubmitButton' title='For demo only'>Submit</button>" +
         "</div>";
         return msg;
     }
@@ -102,8 +102,12 @@ public class Utils {
         return msg;
     }
 
+    public static String getHTMLRestart() {
+        return "<div class='spacing errorTextBox'>Please restart the server and retry the scenario.</div>";
+    }
+
     public static int calculateAdvisorNum(int requests) {
-        int localCounter = ((requests - 1) % global.eBank.microservices.BankService.bulkheadValue) + 1;
+        int localCounter = ((requests - 1) % 10) + 1;
         return localCounter;     
     }
 
