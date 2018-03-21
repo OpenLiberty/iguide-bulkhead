@@ -13,7 +13,6 @@ package io.openliberty.guides.bulkhead.global.eBank.microservices;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.eclipse.microprofile.faulttolerance.exceptions.BulkheadException;
 import org.eclipse.microprofile.faulttolerance.Asynchronous;
 import org.eclipse.microprofile.faulttolerance.Bulkhead;
 import org.eclipse.microprofile.faulttolerance.Fallback;
@@ -28,7 +27,7 @@ public class BankService {
 
     // For demo purpose only
     // The length of time (in milliseconds) to pause the currently executing thread 
-    // so as to simulate concurrent
+    // so as to simulate concurrency
     public static final int TIMEOUT = 20000;
 
     public final static int bulkheadValue = 5;

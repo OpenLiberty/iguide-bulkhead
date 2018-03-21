@@ -53,7 +53,7 @@ You can edit the Java files to change the parameter values of the @Bulkhead anno
 delay TIMEOUT value. If the bulkheadSampleServer server is running, run the 'mvn package' Maven 
 command from the directory that contains the extracted .zip file to rebuild the application. The 
 changes take effect without restarting the server. Otherwise, stop the bulkheadSampleServer server 
-as indicated, run the 'mvn install' Maven command which will restart the server. 
+as indicated and run the 'mvn install' Maven command which will restart the server. 
 
 To restart the application to simulate the chat requests again, you can stop and restart the 
 bulkheadSampleServer server as indicated.

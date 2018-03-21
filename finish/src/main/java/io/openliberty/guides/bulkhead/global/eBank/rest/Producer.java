@@ -21,8 +21,6 @@ import java.util.concurrent.Future;
 import io.openliberty.guides.bulkhead.global.eBank.microservices.Service;
 import io.openliberty.guides.bulkhead.global.eBank.microservices.Utils;
 import io.openliberty.guides.bulkhead.global.eBank.microservices.BankService;
-import org.eclipse.microprofile.faulttolerance.exceptions.BulkheadException;
-
 
 @Path("vfa")
 public class Producer {
