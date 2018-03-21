@@ -11,7 +11,7 @@
 var bulkheadCallBack = (function() {
 
     var bankServiceFileName = "BankService.java";
-    var htmlRootDir = "/guides/draft-iguide-bulkhead/html/";
+    var htmlRootDir = "/guides/iguide-bulkhead/html/";
 
     /** AddLibertyMPFaultTolerance step  begin */
     var addMicroProfileFaultToleranceFeatureButton = function(event) {
