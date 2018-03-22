@@ -8,12 +8,16 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-$(document).ready(function() {
-    var iguideJsonName = "/guides/iguide-bulkhead/json-guides/bulkhead.json";
-    var iguideContextRoot = "Bulkhead";
+package io.openliberty.guides.bulkhead.global.eBank.microservices;
 
-    jsonGuide.getAGuide(iguideJsonName).done(function() {
-      blueprint.create(iguideContextRoot);
-      $(ID.toc_guide_title).hide();
-    });
-  });
+
+public class Service {
+
+    protected String service = "";
+
+
+    public String toString() {
+        return this.service;
+    }
+
+}

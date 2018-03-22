@@ -1,0 +1,47 @@
+<!--
+  Copyright (c) 2018 IBM Corporation and others.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+ 
+  Contributors:
+      IBM Corporation - initial API and implementation
+-->
+<div id="asyncBulkheadFallbackStep" class="pod-animation-slide-from-right" tabindex="0" aria-label="Virtual financial advisor chat summary and sample browser window">
+    <table class="dashboardContainer" tabindex="0" aria-label="Chat summary">
+        <tr class="chatSummary" tabindex="0">
+            <th class="countTableCellLine">
+                <span class="chatLabel" aria-label="50 concurrent chats are allowed">IN PROGRESS</span>
+                <span class="chatCount busyChatCount" aria-label="No chat is in progress">
+                    <span class="busyCount">0</span>
+                        /50
+                </span>
+            </th>
+            <th class="countTableCellLine">
+                <span class="chatLabel" aria-label="50 chat requests are allowed in the waiting queue">WAITING</span>
+                <span class="chatCount waitChatCount" aria-label="No request is waiting in the queue">
+                    <span class="waitCount">0</span>
+                        /50
+                </span>
+            </th>
+        </tr>
+    </table>
+    <div class='browserHolder'></div>
+</div>
+<script>
+    var stepName = "Fallback";
+    var stepElementId = "asyncBulkheadFallbackStep";
+    var browser;
+
+    var content = {
+        url: "https://global-ebank.openliberty.io/",
+        browserContent: "/guides/iguide-bulkhead/html/global-eBank.html",
+        enableStatusBar: false,
+        enableRefreshButton: false
+    };
+    webBrowser.create($('#' + stepElementId).find('.browserHolder'), stepName,  content).done(function(newWebBrowser){
+        contentManager.setWebBrowser(stepName, newWebBrowser, 0);
+        browser = newWebBrowser;
+    });
+</script>

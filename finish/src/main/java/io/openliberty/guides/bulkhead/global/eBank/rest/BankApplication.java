@@ -1,3 +1,4 @@
+// tag::comment[]
 /*******************************************************************************
  * Copyright (c) 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
@@ -6,14 +7,15 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ *     IBM Corporation - Initial implementation
  *******************************************************************************/
-$(document).ready(function() {
-    var iguideJsonName = "/guides/iguide-bulkhead/json-guides/bulkhead.json";
-    var iguideContextRoot = "Bulkhead";
+// end::comment[]
+package io.openliberty.guides.bulkhead.global.eBank.rest;
 
-    jsonGuide.getAGuide(iguideJsonName).done(function() {
-      blueprint.create(iguideContextRoot);
-      $(ID.toc_guide_title).hide();
-    });
-  });
+import javax.ws.rs.core.Application;
+import javax.ws.rs.ApplicationPath;
+
+@ApplicationPath("/Bank")
+public class BankApplication extends Application {
+
+}
