@@ -286,7 +286,7 @@ var bulkheadCallBack = (function() {
         var match = false;
         try {
             var pattern = "return serviceRequest;\\s*}\\s*" + // readonly boundary
-            "@\\s*Bulkhead\\s*\\(\\s*50\\s*\\)\\s*" +
+            "@Bulkhead\\s*\\(\\s*50\\s*\\)\\s*" +
             "public Service serviceForVFA"; // readonly boundary
             var regExpToMatch = new RegExp(pattern, "g");
             content.match(regExpToMatch)[0];
