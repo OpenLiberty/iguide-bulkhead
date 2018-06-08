@@ -318,7 +318,7 @@ var bulkheadCallBack = (function() {
         var match = false;
         try {
             var pattern = ";\\s*}\\s*" +
-                "@\\s*Asynchronous\\s*@\\s*Bulkhead\\s*\\(\\s*value\\s*=\\s*50\\s*,\\s*" + 
+                "@Asynchronous\\s*@Bulkhead\\s*\\(\\s*value\\s*=\\s*50\\s*,\\s*" + 
                 "waitingTaskQueue\\s*=\\s*50\\s*\\)\\s*" +
                 "public\\s+Future\\s*<\\s*Service\\s*>\\s*serviceForVFA\\s*\\(\\s*int\\s+counterForVFA\\s*\\)\\s*{\\s*" +
                 "Service\\s+chatService\\s*=\\s*new\\s+ChatSession\\s*\\(\\s*counterForVFA\\s*\\);\\s*" + 
@@ -343,7 +343,7 @@ var bulkheadCallBack = (function() {
         try {
             var pattern = "return bankService.serviceForVFA\\(counterForVFA\\);\\s*" + // readonly boundary
             "}\\s*" + 
-            "@\\s*Fallback\\s*\\(\\s*ServiceFallbackHandler\\s*\\.\\s*class\\s*\\)\\s*" +
+            "@Fallback\\s*\\(\\s*ServiceFallbackHandler\\s*\\.\\s*class\\s*\\)\\s*" +
             "@Asynchronous"; // readonly boundary
             var regExp = new RegExp(pattern, "g");
             content.match(regExp)[0];
@@ -625,7 +625,7 @@ var bulkheadCallBack = (function() {
             // Get the parameters from the editor and send to the bulkhead
             var content = editor.getEditorContent();
             try{
-                var matchPattern = "@Asynchronous\\s*@\\s*Bulkhead\\s*\\((([^\\(\\)])*?)\\)\\s*public Future<Service> serviceForVFA";
+                var matchPattern = "@Asynchronous\\s*@Bulkhead\\s*\\((([^\\(\\)])*?)\\)\\s*public Future<Service> serviceForVFA";
                 var regexToMatch = new RegExp(matchPattern, "g");
                 var groups = regexToMatch.exec(content);
                 var annotation = groups[1];
