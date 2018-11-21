@@ -8,6 +8,10 @@
 * Contributors:
 *     IBM Corporation - initial API and implementation
 *******************************************************************************/
+.wbContent {  /* not including the status bar in the browser content height */
+    height: calc( 100% - 40px );
+}
+
 .newSessionButton {
     color: blue;
     background-color: #ABD155;
@@ -17,22 +21,6 @@
 
 .chatMessageImg {
     height: 30px;
-}
-
-#guide_content .codeeditor .CodeMirror {
-    height: 100%;
-}
-
-#guide_content .editorContainer{
-    height: 468px;
-}
-
-#guide_content .teContainer .editorContainer{
-    height: 468px;
-}
-
-#guide_content .wbContent {
-    height: 430px;
 }
     
 .bulkheadRequestButtons {

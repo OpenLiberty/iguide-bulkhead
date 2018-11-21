@@ -29,6 +29,7 @@ var bulkheadCallBack = (function() {
 
         // reset content every time annotation is added through the button so as to clear out any
         // manual editing
+        contentManager.focusTabbedEditorByName(stepName, serverFileName);
         contentManager.resetTabbedEditorContents(stepName, serverFileName);
         var content = contentManager.getTabbedEditorContents(stepName, serverFileName);
 
@@ -167,9 +168,11 @@ var bulkheadCallBack = (function() {
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
 
         var htmlFile;
+        /*
         if (stepName === "AsyncWithoutBulkhead") {
             htmlFile = htmlRootDir + "virtual-financial-advisor-async-without-bulkhead.html";
-        } else if (stepName === "BulkheadAnnotation") {
+        } else */ 
+        if (stepName === "BulkheadAnnotation") {
             htmlFile = htmlRootDir + "virtual-financial-advisor-bulkhead.html";
         } else if (stepName === "AsyncBulkheadAnnotation") {
             htmlFile = htmlRootDir + "virtual-financial-advisor-asyncbulkhead.html";
@@ -182,12 +185,18 @@ var bulkheadCallBack = (function() {
             var index = contentManager.getCurrentInstructionIndex();
             if(index === 0){
                 contentManager.markCurrentInstructionComplete(stepName);
-                contentManager.updateWithNewInstructionNoMarkComplete(stepName);
-                // display the pod with chat button and web browser in it
-                contentManager.setPodContent(stepName, htmlFile);
+                if (htmlFile) {
+                    var stepWidgets = stepContent.getStepWidgets(stepName);
+                    stepContent.resizeStepWidgets(stepWidgets, "pod", true);
+                    // display the pod with chat button and web browser in it
+                    contentManager.setPodContent(stepName, htmlFile);
+                }
+                //stepContent.resizeStepWidgets(stepWidgets, "webBrowser");
+                var stepBrowser = contentManager.getBrowser(stepName);
+                stepBrowser.contentRootElement.trigger("click");
                     //htmlRootDir + "virtual-financial-advisor-new-session.html");
                 // resize the height of the tabbed editor
-                contentManager.resizeTabbedEditor(stepName);
+                //contentManager.resizeTabbedEditor(stepName);
             }
         } else {
             // display error and provide link to fix it
@@ -359,6 +368,7 @@ var bulkheadCallBack = (function() {
     };
 
     var __addBulkheadInEditor = function(stepName) {
+        contentManager.focusTabbedEditorByName(stepName, bankServiceFileName);
         contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
         var newContent = "  @Bulkhead(50)";
@@ -399,6 +409,7 @@ var bulkheadCallBack = (function() {
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
         var hasRequestForVFAMethod = __checkRequestForVFAMethod(content);
 
+        contentManager.focusTabbedEditorByName(stepName, bankServiceFileName);
         contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
    
         var params = [];
@@ -428,7 +439,7 @@ var bulkheadCallBack = (function() {
     var listenToEditorForAsyncBulkhead = function(editor) {
         editor.addSaveListener(__showPodWithRequestButtonAndBrowser);
         // Adjust the initial height of the editor to display the entire content
-        __adjustEditorHeight(editor.getStepName(), "510px");
+        //__adjustEditorHeight(editor.getStepName(), "510px");
     };
 
     var addFallbackAsyncBulkheadButton = function(event, stepName) {
@@ -471,18 +482,20 @@ var bulkheadCallBack = (function() {
                          "    return bankService.serviceForVFA(counterForVFA);\n" +
                          "  }";
 
+        contentManager.focusTabbedEditorByName(stepName, bankServiceFileName);
         if (performReset === undefined || performReset === true) {
             contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
         }
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 11, 23, newContent, 4);
         // Adjust the height of the editor back to the original height
-        __adjustEditorHeight(stepName, "468px");
+        //__adjustEditorHeight(stepName, "468px");
 
         if (hasServiceForVFAMethod === true && (performReset === undefined || performReset === true)) {
             __addAsyncBulkheadInEditor(stepName);
         }
     };
 
+    /*
     var __adjustEditorHeight = function(stepName, heightToUse) {
         var containers = $(".subContainerDiv[data-step='" + stepName + "']");
         $.each( containers, function(index, container) {
@@ -493,6 +506,7 @@ var bulkheadCallBack = (function() {
             }
         });
     };
+    */
 
     var __browserVirtualAdvisorBaseURL = "https://global-ebank.openliberty.io/virtualFinancialAdvisor/";
     var __advisors = ["Bob", "Jenny", "Lee", "Mary", "John", "Mike", "Sam", "Sandy", "Joann", "Frank" ];
@@ -505,6 +519,7 @@ var bulkheadCallBack = (function() {
         var browserErrorUrl = __browserVirtualAdvisorBaseURL + "error";
         var requestLimits = 1;
         var browser = contentManager.getBrowser(stepName);
+        var pod = contentManager.getPod(stepName);
 
         // only mark current instruction as complete and delay showing the next instruction until processing is done
         contentManager.markCurrentInstructionComplete(stepName);
@@ -581,39 +596,49 @@ var bulkheadCallBack = (function() {
                         browser.getIframeDOM().find(".chatAdvisorCount").text(chatAdvisorCount);
                         browser.getIframeDOM().find(".advisorName").text(chatIntro);
                         browser.getIframeDOM().find(".advisorInitial").text(__advisorInitials[requestNum - 1]);
-                        if (requestNum === 1 && $("#" + stepElementId).length === 1) {
-                            $("#" + stepElementId).find(".busyCount").text(1);
-                            $("#" + stepElementId).find(".busyChatCount").attr("aria-label", "1 chat is currently in progress");
+                        // if (requestNum === 1 && $("#" + stepElementId).length === 1) {
+                        //     $("#" + stepElementId).find(".busyCount").text(1);
+                        //     $("#" + stepElementId).find(".busyChatCount").attr("aria-label", "1 chat is currently in progress");
+                        // }
+                        if (requestNum === 1 && (pod && pod.contentRootElement.find(".chatSummary").length === 1)) {
+                            var chatSummary = pod.contentRootElement.find('.chatSummary');
+                            chatSummary.find(".busyCount").text(1);
+                            chatSummary.find(".busyChatCount").attr("aria-label", "1 chat is currently in progress");
                         }
-                        contentManager.updateWithNewInstructionNoMarkComplete(stepName);
+                        //contentManager.updateWithNewInstructionNoMarkComplete(stepName);
                     }
                 }, 10);
             }, 1000);
-        } else {
-            contentManager.updateWithNewInstructionNoMarkComplete(stepName);
+        // } else {
+        //     contentManager.updateWithNewInstructionNoMarkComplete(stepName);
         }
     };
 
     var __incrementCounts = function(stepName, startingCount, endingCount, elementToBeCounted, urlForAfterCount, htmlForAfterCount, startingWaitingQueue) {
         var timeInterval = setInterval(function () {
-            $("#" + stepElementId).find(elementToBeCounted).text(startingCount);
-            startingCount++;
-            if (startingCount === endingCount) {
-                clearInterval(timeInterval);
-                contentManager.setBrowserURL(stepName, urlForAfterCount, 0);
-                browser.setBrowserContent(htmlForAfterCount);
-                if (startingWaitingQueue) {
-                    $("#" + stepElementId).find(".waitCount").text(1);
-                    $("#" + stepElementId).find(".waitChatCount").attr("aria-label", "1 chat request is waiting in the queue");
-                    $("#" + stepElementId).find(".busyChatCount").attr("aria-label", "50 chats are currently in progress");
-                } else {
-                    if (elementToBeCounted === ".busyCount") {
-                        $("#" + stepElementId).find(".busyChatCount").attr("aria-label", "50 chats are currently in progress");
+            var pod = contentManager.getPod(stepName);
+            var browser = contentManager.getBrowser(stepName);
+            if (pod && browser) {
+                var chatSummary = pod.contentRootElement.find('.chatSummary');
+                chatSummary.find(elementToBeCounted).text(startingCount);
+                startingCount++;
+                if (startingCount === endingCount) {
+                    clearInterval(timeInterval);
+                    contentManager.setBrowserURL(stepName, urlForAfterCount, 0);
+                    browser.setBrowserContent(htmlForAfterCount);
+                    if (startingWaitingQueue) {
+                        chatSummary.find(".waitCount").text(1);
+                        chatSummary.find(".waitChatCount").attr("aria-label", "1 chat request is waiting in the queue");
+                        chatSummary.find(".busyChatCount").attr("aria-label", "50 chats are currently in progress");
                     } else {
-                        $("#" + stepElementId).find(".waitChatCount").attr("aria-label", "50 chat requests are waiting in the queue");
+                        if (elementToBeCounted === ".busyCount") {
+                            chatSummary.find(".busyChatCount").attr("aria-label", "50 chats are currently in progress");
+                        } else {
+                            chatSummary.find(".waitChatCount").attr("aria-label", "50 chat requests are waiting in the queue");
+                        }
                     }
+                    //contentManager.updateWithNewInstructionNoMarkComplete(stepName);
                 }
-                contentManager.updateWithNewInstructionNoMarkComplete(stepName);
             }
         }, 20);
     };

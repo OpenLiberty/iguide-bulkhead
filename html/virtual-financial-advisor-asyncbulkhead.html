@@ -8,40 +8,21 @@
   Contributors:
       IBM Corporation - initial API and implementation
 -->
-<div id="asyncBulkheadStep" class="pod-animation-slide-from-right" tabindex="0" aria-label="Virtual financial advisor chat summary and sample browser window">
-    <table class="dashboardContainer" tabindex="0" aria-label="Chat summary">
-        <tr class="chatSummary" tabindex="0">
-            <th class="countTableCellLine">
-                <span class="chatLabel" aria-label="50 concurrent chats are allowed">IN PROGRESS</span>
-                <span class="chatCount busyChatCount" aria-label="No chat is in progress">
-                    <span class="busyCount">0</span>
-                    /50
-                </span>
-            </th>
-            <th class="countTableCellLine">
-                <span class="chatLabel" aria-label="50 chat requests are allowed in the waiting queue">WAITING</span>
-                <span class="chatCount waitChatCount" aria-label="No request is waiting in the queue">
-                    <span class="waitCount">0</span>
-                    /50
-                </span>
-            </th>
-        </tr>
-    </table>
-    <div class='browserHolder'></div>
-</div>
-<script>
-    var stepName = "AsyncBulkheadAnnotation";
-    var stepElementId = "asyncBulkheadStep";
-    var browser;
-
-    var content = {
-        url: "https://global-ebank.openliberty.io/",
-        browserContent: "/guides/iguide-bulkhead/html/global-eBank.html",
-        enableStatusBar: false,
-        enableRefreshButton: false
-    };
-    webBrowser.create($('#' + stepElementId).find('.browserHolder'), stepName,  content).done(function(newWebBrowser){
-        contentManager.setWebBrowser(stepName, newWebBrowser, 0);
-        browser = newWebBrowser;
-    });
-</script>
+<table style="height: 100%;" tabindex="0" aria-label="Chat summary">
+    <tr class="chatSummary" tabindex="0">
+        <th class="countTableCellLine">
+            <span class="chatLabel" aria-label="50 concurrent chats are allowed">IN PROGRESS</span>
+            <span class="chatCount busyChatCount" aria-label="No chat is in progress">
+                <span class="busyCount">0</span>
+                /50
+            </span>
+        </th>
+        <th class="countTableCellLine">
+            <span class="chatLabel" aria-label="50 chat requests are allowed in the waiting queue">WAITING</span>
+            <span class="chatCount waitChatCount" aria-label="No request is waiting in the queue">
+                <span class="waitCount">0</span>
+                /50
+            </span>
+        </th>
+    </tr>
+</table>

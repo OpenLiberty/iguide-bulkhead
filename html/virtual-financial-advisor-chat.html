@@ -14,10 +14,27 @@
 <head>
     <link href="https://fonts.googleapis.com/css?family=Asap" rel="stylesheet">
     <link rel="stylesheet" href="/guides/iguide-bulkhead/css/chat.css">
+    <link rel="stylesheet" href="/guides/iguides-common/css/interactive-guides/bankApp.css">
+
+    <script type="text/javascript"> 
+        var script = document.createElement('script');
+        
+        script.onload = function() {
+            var guideRootDir = "/guides/iguides-common/js/interactive-guides/nls/"
+            retrieveExternalizedStrings(guideRootDir);
+        };
+        script.src = '/guides/iguides-common/js/interactive-guides/externalized-string.js';
+        document.getElementsByTagName('head')[0].appendChild(script);
+    </script>    
 </head>
 <body> 
-    <div class="bankHeadingBlock">
+    <div class="bankHeadingBlockFlexContainer">
         <div class="bankHeading">Global eBank</div>
+            <span>
+                <img src="/guides/iguides-common/img/interactive-guides/bank-info.svg" data-externalizedAlt="ABOUT">
+                <img src="/guides/iguides-common/img/interactive-guides/bank-user.svg" data-externalizedAlt="USER">
+            </span>
+        </div>
     </div>
     <div class="chatIntro">
         <img class="chatIcon" src="/guides/iguide-bulkhead/html/images/chat-icon.svg" alt="chat icon"/>

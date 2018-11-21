@@ -231,6 +231,10 @@ body {
     margin-bottom: 8px;
 }
 
+.timeChoices {
+    display: inline-flex;
+}
+
 .timeChoices input {
     margin-bottom: 9px;
 }
@@ -240,6 +244,7 @@ body {
     width: 15px;
     height: 15px;
     border-radius: 100%;
+    margin-left: 20px;
 }
 
 .scheduleButton {

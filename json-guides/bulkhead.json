@@ -5,6 +5,61 @@
     "duration": "20 minutes",
     "audience": "developer",
     "repo": "https://github.com/OpenLiberty/iguide-bulkhead",
+    "defaultWidgets": [
+        {   
+            "displayType": "webBrowser",
+            "url": "https://global-ebank.openliberty.io/welcome",
+            "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
+            "enable": false
+        },
+        {   
+            "displayType": "tabbedEditor",
+            "enable": false,
+            "editorList": [
+             {
+                "displayType": "fileEditor",
+                "fileName": "BankService.java",
+                "preload": [
+                    "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
+                    "import java.util.concurrent.Future;",
+                    "import java.util.concurrent.Executors;",
+                    "import java.util.concurrent.ExecutorService;",
+                    "",
+                    "public class BankService {",
+                    "  @Inject private BankService bankService;",
+                    "  private int counterForVFA = 0;",
+                    "",
+                    "  public Service requestForVFA() {",
+                    "    counterForVFA++;",
+                    "    return bankService.serviceForVFA(counterForVFA);",
+                    "  }",
+                    "",
+                    "  public Service serviceForVFA(int counterForVFA) {",
+                    "    Service chatService = new ChatSession(counterForVFA);",
+                    "    return chatService;",
+                    "  }",
+                    "}"
+                ],
+                "save": false
+             }
+            ]
+        }
+    ],
+    "configWidgets": [
+        {   
+            "displayType": "webBrowser",
+            "height": "350px",
+            "singleColumnHeight": "450px"
+        },
+        {   
+            "displayType": "pod",
+            "height": "50px"
+        },
+        {
+            "displayType": "tabbedEditor",
+            "height": "400px"
+        }  
+    ],
     "steps": [
         {
             "name": "Intro",
@@ -52,9 +107,45 @@
                         "Currently, the microservice allows only one active chat session. The next chat session request fails while the Customer1 chat is still active.<br>Click <action title='Customer2 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'FinancialAdvisor', 2)\"><b>Customer2 requests chat</b></action> to see the failure."
                     ],
                     "content":[
-                        {
-                            "displayType":"pod",
-                            "content": "/guides/iguide-bulkhead/html/virtual-financial-advisor-example-scenario.html"
+                        {   
+                            "displayType": "webBrowser",
+                            "url": "https://global-ebank.openliberty.io/",
+                            "browserContent": "/guides/iguide-bulkhead/html/global-eBank.html",
+                            "enableStatusBar": false,
+                            "enableRefreshButton": false,
+                            "active": true
+                        },
+                        {   
+                            "displayType": "tabbedEditor",
+                            "enable": false,
+                            "editorList": [
+                            {
+                                "displayType": "fileEditor",
+                                "fileName": "BankService.java",
+                                "preload": [
+                                    "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
+                                    "import java.util.concurrent.Future;",
+                                    "import java.util.concurrent.Executors;",
+                                    "import java.util.concurrent.ExecutorService;",
+                                    "",
+                                    "public class BankService {",
+                                    "  @Inject private BankService bankService;",
+                                    "  private int counterForVFA = 0;",
+                                    "",
+                                    "  public Service requestForVFA() {",
+                                    "    counterForVFA++;",
+                                    "    return bankService.serviceForVFA(counterForVFA);",
+                                    "  }",
+                                    "",
+                                    "  public Service serviceForVFA(int counterForVFA) {",
+                                    "    Service chatService = new ChatSession(counterForVFA);",
+                                    "    return chatService;",
+                                    "  }",
+                                    "}"
+                                ]
+                            }
+                            ],
+                            "save": false
                         }
                     ]
                 }
@@ -69,14 +160,22 @@
                 "Let us start by adding <code>Future</code> and <code>Executors</code> to the code."
             ],
             "instruction": [
-                "Replace the <code>return bankService.serviceforVFA(counterForVFA);</code> on line 12 with the following block of code, or click <br><action title='Adding Java concurrency' onclick=\"bulkheadCallBack.addJavaConcurrencyButton(event, 'AsyncWithoutBulkhead')\"><b>ExecutorService executor = Executors.newSingleThreadExecutor();\nFuture serviceRequest = executor.submit(<span title='Lambda Expression'>() -> {\n  try{\n    return bankService.serviceForVFA(counterForVFA);\n  } catch (Exception ex) {\n    handleException();\n  }\n  return null;\n}</span>);</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncWithoutBulkhead')\"><b>Run</b></action> on the editor menu pane.",
+                "Replace the <code>requestForVFA</code> method on line 10 with the following block of code, or click <br><action title='Adding Java concurrency' onclick=\"bulkheadCallBack.addJavaConcurrencyButton(event, 'AsyncWithoutBulkhead')\"><b>public Future&ltService&gt requestForVFA() {\n  counterForVFA++;\n  ExecutorService executor = Executors.newSingleThreadExecutor();\n  Future serviceRequest = executor.submit(<span title='Lambda Expression'>() -> {\n    try{\n      return bankService.serviceForVFA(counterForVFA);\n    } catch (Exception ex) {\n      handleException();\n    }\n    return null;\n  }</span>);\n  return serviceRequest;\n}</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncWithoutBulkhead')\"><b>Run</b></action> on the editor menu pane.",
                 "Click <action title='Customer1 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead', 1)\"><b>Customer1 requests chat</b></action> to open a chat session with a virtual financial advisor.",
                 "While Customer1 is still chatting with a financial advisor, click <action title='Customer2 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead', 2)\"><b>Customer2 requests chat</b></action> to open a separate chat session with a virtual financial advisor.",
                 "As more customers request chat sessions with a virtual financial advisor, more sessions become busy. Currently, the code does not implement a limit to the number of available advisor sessions. The VirtualFinancialAdvisor microservice causes the system to slowly run out of CPU or memory resources, which affects other microservices. <br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead', 3)\"><b>50 customer chat requests</b></action> to see the cascading failure."
             ],
             "content":[
+                {   
+                    "displayType": "webBrowser",
+                    "url": "https://global-ebank.openliberty.io/",
+                    "browserContent": "/guides/iguide-bulkhead/html/global-eBank.html",
+                    "enableStatusBar": false,
+                    "enableRefreshButton": false
+                },
                 {
                     "displayType": "tabbedEditor",
+                    "active": true,
                     "editorList": [
                         {
                             "displayType":"fileEditor",
@@ -112,13 +211,24 @@
                                     "to": "19"
                                 }
                             ],
+                            "writable": [
+                                {
+                                    "line": "10"
+                                },
+                                {
+                                    "line": "11"
+                                },
+                                {
+                                    "line": "12"
+                                },
+                                {
+                                    "line": "13"
+                                }
+                            ],
                             "save": false,
                             "callback": "(function test(editor) {bulkheadCallBack.listenToEditorForJavaConcurrency(editor); })"
                         }
                     ]
-                },
-                {
-                    "displayType": "pod"
                 }
             ]
         },
@@ -129,12 +239,58 @@
                 "Microprofile Fault Tolerance allows microservices to handle unavailable services. It uses different policies such as Bulkhead and Fallback to guide the execution and result of some logic. The MicroProfile Fault Tolerance 1.0 feature provides an environment to support resilient microservices through patterns that include bulkheads. Enable the MicroProfile Fault Tolerance 1.0 feature in the <code>server.xml</code> file of the Liberty server where the VirtualFinancialAdvisor microservice runs."
             ],
             "instruction": [
-              "Add the following element declaration inside the featureManager element of the <code>server.xml</code> file, or click <action title='Enable MicroProfile Fault Tolerance' onclick=\"bulkheadCallBack.addMicroProfileFaultToleranceFeatureButton(event)\"><b>&lt;feature>mpFaultTolerance-1.0&lt;/feature&gt;</b></action>. Then, click <action title='Save' onclick=\"bulkheadCallBack.saveServerXMLButton(event)\"><b>Save</b></action> on the editor menu pane."
+              "Add the following element declaration inside the featureManager element of the <code>server.xml</code> file, or click <action title='Enable MicroProfile Fault Tolerance' onclick=\"bulkheadCallBack.addMicroProfileFaultToleranceFeatureButton(event)\"><b>&lt;feature>mpFaultTolerance-1.0&lt;/feature&gt;</b></action>. <br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveServerXMLButton(event)\"><b>Run</b></action> on the editor menu pane."
             ],
             "content": [
-              {
+                {
+                    "displayType": "webBrowser",
+                    "url": "https://global-ebank.openliberty.io/",
+                    "browserContent": "/guides/iguide-bulkhead/html/global-eBank.html",
+                    "enableStatusBar": false,
+                    "enableRefreshButton": false,
+                    "enable": false
+                },
+                {
                 "displayType": "tabbedEditor",
+                "active": true,
+                "activeTab": "server.xml",
                 "editorList": [
+                    {
+                        "displayType": "tabbedEditor",
+                        "fileName": "BankService.java",
+                        "preload": [
+                            "package global.eBank.microservices;",
+                            "import java.util.concurrent.Future;",
+                            "import java.util.concurrent.Executors;",
+                            "import java.util.concurrent.ExecutorService;",
+                            "",
+                            "public class BankService {",
+                            "  @Inject private BankService bankService;",
+                            "  private int counterForVFA = 0;",
+                            "",
+                            "  public Future<Service> requestForVFA() {",
+                            "    counterForVFA++;",
+                            "    ExecutorService executor = Executors.newSingleThreadExecutor();",
+                            "    Future<Service> serviceRequest = executor.submit(() -> {",
+                            "      try {",
+                            "        return bankService.serviceForVFA(counterForVFA);",
+                            "      } catch (Exception ex) {",
+                            "        handleException();",
+                            "      }",
+                            "      return null;",
+                            "    });",
+                            "    return serviceRequest;",
+                            "  }",
+                            "",
+                            "  public Service serviceForVFA(int counterForVFA) {",
+                            "    Service chatService = new ChatSession(counterForVFA);",
+                            "    return chatService;",
+                            "  }",
+                            "}"
+                        ],
+                        "readonly": true,
+                        "save": false
+                    },
                     {
                         "displayType": "fileEditor",
                         "fileName": "server.xml",
@@ -147,7 +303,6 @@
                             "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
                             "</server>"
                         ],
-                        "save": true,
                         "readonly": [
                             {
                                 "from": "1",
@@ -158,10 +313,16 @@
                                 "to": "7"
                             }
                         ],
+                        "writable": [
+                            {
+                                "line": "4"
+                            }
+                        ],
+                        "save": false,
                         "callback": "(function test(editor) {bulkheadCallBack.listenToEditorForFeatureInServerXML(editor); })"
                     }
                 ]
-              }
+                }
             ]
         } ,
         {
@@ -174,13 +335,26 @@
                 "After you modify your <code>server.xml</code> file to <a href='#enabling-microprofile-fault-tolerance'> include the Fault Tolerance feature</a>, add a Bulkhead policy to the VirtualFinancialAdvisor microservice."
             ],
             "instruction": [
-                "Add the <code>@Bulkhead</code> annotation with a value of <code>50</code> on line 23, before the <code>serviceForVFA</code> method, or click <action title='Add @Bulkhead' onclick=\"bulkheadCallBack.addBulkheadButton(event, 'BulkheadAnnotation')\">@Bulkhead(50)</action>. This annotation limits the number of concurrent chat requests to 50. Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'BulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane.",
+                "Add the <code>@Bulkhead</code> annotation with a value of <code>50</code> on line 23, before the <code>serviceForVFA</code> method, or click <action title='Add @Bulkhead' onclick=\"bulkheadCallBack.addBulkheadButton(event, 'BulkheadAnnotation')\">@Bulkhead(50)</action>. This annotation limits the number of concurrent chat requests to 50. <br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'BulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane.",
                 "Click <action title='Customer1 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation', 1)\"><b>Customer1 request chat</b></action> to open a chat session with a virtual financial advisor.",
                 "As more customers request chat sessions with a virtual financial advisor, all 50 sessions become busy. Once the maximum number of concurrent chat requests is reached, the next chat request is rejected.<br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation', 2)\"><b>50 customer chat requests</b></action> to fill the <b>IN PROGRESS</b> chats and see how an additional chat session fails to open for the last customer.<b>"
             ],
             "content": [
                 {
+                    "displayType": "webBrowser",
+                    "url": "https://global-ebank.openliberty.io/",
+                    "browserContent": "/guides/iguide-bulkhead/html/global-eBank.html",
+                    "enableStatusBar": false,
+                    "enableRefreshButton": false
+                },
+                {
+                    "displayType": "pod",
+                    "hidden": true
+                },
+                {
                     "displayType": "tabbedEditor",
+                    "active": true,
+                    "activeTab": "BankService.java",
                     "editorList": [
                         {
                             "displayType": "tabbedEditor",
@@ -225,13 +399,31 @@
                                     "to": "28"
                                 }
                             ],
+                            "writable": [
+                                {
+                                    "line": "23"
+                                }
+                            ],
                             "save": false,
                             "callback": "(function test(tabbedEditor) {bulkheadCallBack.listenToEditorForJavaConcurrency(tabbedEditor, 'BankService.java'); })"
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+                                "      <feature>cdi-1.2</feature>",
+                                "      <feature>mpFaultTolerance-1.0</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
+                                "</server>"
+                            ],
+                            "readonly": true,
+                            "save": false
                         }
                     ]
-                },
-                {
-                    "displayType": "pod"
                 }
             ]
         },
@@ -245,14 +437,26 @@
                 "<ul><li><b>value</b>: The maximum number of concurrent requests to the service. If the parameter is not specified, the default is <code>10</code> requests.</li><li><b>waitingTaskQueue</b>: The size of the waiting queue that holds requests to run at a different time. This parameter must be greater than 0. If the parameter is not specified, the default is <code>10</code> requests. This parameter for the <code>@Bulkhead</code> annotation takes effect only when you use the <code>@Asynchronous</code> annotation.</li></ul>It is best practice to set the <code>waitingTaskQueue</code> parameter so that it has a value equal to or larger than the <code>value</code> parameter."
             ],
             "instruction": [
-                "The method annotated with an <code>@Asynchronous</code> annotation must return a <code>Future</code>. To add the <code>@Asynchronous</code> annotation, update the <code>@Bulkhead</code> annotation's parameters and change the return type for <code>serviceForVFA</code>, replace the code from lines 24 - 28 with the following block of code, or click <br><action title='Bulkhead annotation with Asynchronous' onclick=\"bulkheadCallBack.addAsyncBulkheadButton(event, 'AsyncBulkheadAnnotation')\"><b>@Asynchronous\n@Bulkhead(value = 50, waitingTaskQueue = 50)\npublic Future&ltService&gt serviceForVFA(int counterForVFA) {\n  Service chatService = new ChatSession( counterForVFA );\n  return CompletableFuture.completedFuture( chatService );\n}</b></action>.<br>Because the <code>@Asynchronous</code> annotation manages thread pools, you no longer need to use <code>Executors</code>. Replace the <code>requestForVFA</code> method on line 11 with the following block of code, or click <br><action title='Update requestForVFA method' onclick=\"bulkheadCallBack.updateAsyncBulkheadMethodButton(event, 'AsyncBulkheadAnnotation')\"><b>public Future&ltService&gt requestForVFA() {\n  counterForVFA++;\n  return bankService.serviceForVFA(counterForVFA);\n}</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncBulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane.",
+                "The method annotated with an <code>@Asynchronous</code> annotation must return a <code>Future</code>. To add the <code>@Asynchronous</code> annotation, update the <code>@Bulkhead</code> annotation's parameters and change the return type for <code>serviceForVFA</code>, replace the code from lines 25 - 29 with the following block of code, or click <br><action title='Bulkhead annotation with Asynchronous' onclick=\"bulkheadCallBack.addAsyncBulkheadButton(event, 'AsyncBulkheadAnnotation')\"><b>@Asynchronous\n@Bulkhead(value = 50, waitingTaskQueue = 50)\npublic Future&ltService&gt serviceForVFA(int counterForVFA) {\n  Service chatService = new ChatSession( counterForVFA );\n  return CompletableFuture.completedFuture( chatService );\n}</b></action>.<br>Because the <code>@Asynchronous</code> annotation manages thread pools, you no longer need to use <code>Executors</code>. Replace the <code>requestForVFA</code> method on line 11 with the following block of code, or click <br><action title='Update requestForVFA method' onclick=\"bulkheadCallBack.updateAsyncBulkheadMethodButton(event, 'AsyncBulkheadAnnotation')\"><b>public Future&ltService&gt requestForVFA() {\n  counterForVFA++;\n  return bankService.serviceForVFA(counterForVFA);\n}</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncBulkheadAnnotation')\"><b>Run</b></action> on the editor menu pane.",
                 "Click <action title='Customer1 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation', 1)\"><b>Customer1 requests chat</b></action> to open a chat session with a virtual financial advisor.",
                 "As more customers request chat sessions with a virtual financial advisor, all 50 sessions become busy. Once the maximum number of concurrent chat requests is reached, the next chat request is placed in the waiting queue.<br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation', 2)\"><b>50 customer chat requests</b></action> to fill the <b>IN PROGRESS</b> chats and to see that the last customer is placed in the waiting queue.",
                 "As more customers request chat sessions with a virtual financial advisor, the waiting queue eventually fills up. Our Bulkhead policy limits the maximum number of requests in the waiting queue to 50. The next chat request cannot be started and cannot be added to the waiting queue.<br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation', 3)\"><b>50 customer chat requests</b></action> to fill the <b>WAITING</b> queue and see that an additional chat session fails to open for the last customer."
             ],
             "content":[
                 {
+                    "displayType": "webBrowser",
+                    "url": "https://global-ebank.openliberty.io/",
+                    "browserContent": "/guides/iguide-bulkhead/html/global-eBank.html",
+                    "enableStatusBar": false,
+                    "enableRefreshButton": false
+                },
+                {
+                    "displayType": "pod",
+                    "hidden": true
+                },
+                {
                     "displayType":"tabbedEditor",
+                    "active": true,
                     "activeTab": "BankService.java",
                     "editorList": [
                         {
@@ -301,13 +505,82 @@
                                     "to": "31"
                                 }
                             ],
+                            "writable": [
+                                {
+                                    "line": "11"
+                                },
+                                {
+                                    "line": "12"
+                                },
+                                {
+                                    "line": "13"
+                                },
+                                {
+                                    "line": "14"
+                                },
+                                {
+                                    "line": "15"
+                                },
+                                {
+                                    "line": "16"
+                                },
+                                {
+                                    "line": "17"
+                                },
+                                {
+                                    "line": "18"
+                                },
+                                {
+                                    "line": "19"
+                                },
+                                {
+                                    "line": "20"
+                                },
+                                {
+                                    "line": "21"
+                                },
+                                {
+                                    "line": "22"
+                                },
+                                {
+                                    "line": "23"
+                                },
+                                {
+                                    "line": "25"
+                                },
+                                {
+                                    "line": "26"
+                                },
+                                {
+                                    "line": "27"
+                                },
+                                {
+                                    "line": "28"
+                                },
+                                {
+                                    "line": "29"
+                                }
+                            ],
                             "save": false,
                             "callback": "(function test(editor) {bulkheadCallBack.listenToEditorForAsyncBulkhead(editor); })"
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+                                "      <feature>cdi-1.2</feature>",
+                                "      <feature>mpFaultTolerance-1.0</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
+                                "</server>"
+                            ],
+                            "readonly": true,
+                            "save": false
                         }
                     ]
-                },
-                {
-                    "displayType": "pod"
                 }
             ]
         },
@@ -324,8 +597,22 @@
               "<instruction class='playgroundInstructionStyle' tabindex='0'>Modify the parameters for the <code>@Bulkhead</code> annotation in the following file. In this simulation, the maximum value for <code>value</code> and <code>waitingTaskQueue</code> is 10. Repeat the process as many times as you like. <br><br>Click <b>Chat request</b> to initiate a request with a virtual financial advisor or <b>End chat</b> to end an arbitrary chat and observe the simulation.</instruction>"
             ],
             "content":[
+                {
+                    "displayType": "webBrowser",
+                    "url": "https://global-ebank.openliberty.io/",
+                    "browserContent": "/guides/iguide-bulkhead/html/global-eBank.html",
+                    "enableStatusBar": false,
+                    "enableRefreshButton": false,
+                    "enable": false
+                },
+                {
+                    "displayType":"pod",
+                    "content": "/guides/iguide-bulkhead/html/async-bulkhead-playground.html",
+                    "callback": "(function(pod) {bulkheadCallBack.createAsyncBulkhead(pod, 'playground');})"
+                },
               {
                 "displayType": "tabbedEditor",
+                "active": true,
                 "editorList": [
                     {
                         "displayType":"fileEditor",
@@ -369,11 +656,6 @@
                         "callback": "(function test(editor) {bulkheadCallBack.listenToPlaygroundEditorAnnotationChanges(editor); })"
                     }
                 ]
-              },
-              {
-                  "displayType":"pod",
-                  "content": "/guides/iguide-bulkhead/html/async-bulkhead-playground.html",
-                  "callback": "(function(pod) {bulkheadCallBack.createAsyncBulkhead(pod, 'playground');})"
               }
             ]
         },
@@ -392,35 +674,21 @@
             ],
             "content":[
                 {
+                    "displayType": "webBrowser",
+                    "url": "https://global-ebank.openliberty.io/",
+                    "browserContent": "/guides/iguide-bulkhead/html/global-eBank.html",
+                    "enableStatusBar": false,
+                    "enableRefreshButton": false
+                },
+                {
+                    "displayType": "pod",
+                    "hidden": true
+                },
+                {
                     "displayType":"tabbedEditor",
+                    "active": true,
                     "activeTab": "BankService.java",
                     "editorList": [
-                        {
-                            "displayType":"fileEditor",
-                            "fileName": "ServiceFallbackHandler.java",
-                            "preload": [
-                                "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
-                                "import org.eclipse.microprofile.faulttolerance.ExecutionContext;",
-                                "import org.eclipse.microprofile.faulttolerance.FallbackHandler;",
-                                "import java.util.concurrent.CompletableFuture;",
-                                "import java.util.concurrent.Future;",
-                                "",
-                                "public class ServiceFallbackHandler implements FallbackHandler<Future<Service>> {",
-                                "",
-                                "  @Override",
-                                "  public Future<Service> handle(ExecutionContext context) {",
-                                "    return handleFallback(context);",
-                                "  }",
-                                "",
-                                "  private Future<Service> handleFallback(ExecutionContext context) {",
-                                "    Service service = new ScheduleService();",
-                                "    return CompletableFuture.completedFuture(service);",
-                                "  }",
-                                "}"
-                            ],
-                            "readonly": true,
-                            "save": false
-                        },
                         {
                             "displayType":"fileEditor",
                             "fileName": "BankService.java",
@@ -460,13 +728,57 @@
                                     "to": "24"
                                 }
                             ],
+                            "writable": [
+                                {
+                                    "line": "16"
+                                }
+                            ],
                             "save": false,
                             "callback": "(function test(editor) {bulkheadCallBack.listenToEditorForAsyncBulkheadFallback(editor); })"
+                        },
+                        {
+                            "displayType":"fileEditor",
+                            "fileName": "ServiceFallbackHandler.java",
+                            "preload": [
+                                "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
+                                "import org.eclipse.microprofile.faulttolerance.ExecutionContext;",
+                                "import org.eclipse.microprofile.faulttolerance.FallbackHandler;",
+                                "import java.util.concurrent.CompletableFuture;",
+                                "import java.util.concurrent.Future;",
+                                "",
+                                "public class ServiceFallbackHandler implements FallbackHandler<Future<Service>> {",
+                                "",
+                                "  @Override",
+                                "  public Future<Service> handle(ExecutionContext context) {",
+                                "    return handleFallback(context);",
+                                "  }",
+                                "",
+                                "  private Future<Service> handleFallback(ExecutionContext context) {",
+                                "    Service service = new ScheduleService();",
+                                "    return CompletableFuture.completedFuture(service);",
+                                "  }",
+                                "}"
+                            ],
+                            "readonly": true,
+                            "save": false
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+                                "      <feature>cdi-1.2</feature>",
+                                "      <feature>mpFaultTolerance-1.0</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
+                                "</server>"
+                            ],
+                            "readonly": true,
+                            "save": false
                         }
                     ]
-                },
-                {
-                    "displayType": "pod"
                 }
             ]
         },
