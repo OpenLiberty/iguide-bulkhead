@@ -129,6 +129,7 @@ var bulkheadCallBack = (function() {
         if (__checkMicroProfileFaultToleranceFeatureContent(content)) {
             editor.closeEditorErrorBox(stepName);
             contentManager.markCurrentInstructionComplete(stepName);
+            editor.addCodeUpdated();
         } else {
             // display error to fix it
             editor.createErrorLinkForCallBack(true, __correctEditorError);
@@ -179,6 +180,7 @@ var bulkheadCallBack = (function() {
         if (__checkEditorContent(stepName, content)) {
             editor.closeEditorErrorBox(stepName);
             var index = contentManager.getCurrentInstructionIndex();
+            editor.addCodeUpdated();
             if(index === 0){
                 contentManager.markCurrentInstructionComplete(stepName);
                 if (htmlFile) {
