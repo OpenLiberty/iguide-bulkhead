@@ -168,10 +168,6 @@ var bulkheadCallBack = (function() {
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
 
         var htmlFile;
-        /*
-        if (stepName === "AsyncWithoutBulkhead") {
-            htmlFile = htmlRootDir + "virtual-financial-advisor-async-without-bulkhead.html";
-        } else */ 
         if (stepName === "BulkheadAnnotation") {
             htmlFile = htmlRootDir + "virtual-financial-advisor-bulkhead.html";
         } else if (stepName === "AsyncBulkheadAnnotation") {
@@ -191,12 +187,8 @@ var bulkheadCallBack = (function() {
                     // display the pod with chat button and web browser in it
                     contentManager.setPodContent(stepName, htmlFile);
                 }
-                //stepContent.resizeStepWidgets(stepWidgets, "webBrowser");
                 var stepBrowser = contentManager.getBrowser(stepName);
                 stepBrowser.contentRootElement.trigger("click");
-                    //htmlRootDir + "virtual-financial-advisor-new-session.html");
-                // resize the height of the tabbed editor
-                //contentManager.resizeTabbedEditor(stepName);
             }
         } else {
             // display error and provide link to fix it
@@ -438,8 +430,6 @@ var bulkheadCallBack = (function() {
 
     var listenToEditorForAsyncBulkhead = function(editor) {
         editor.addSaveListener(__showPodWithRequestButtonAndBrowser);
-        // Adjust the initial height of the editor to display the entire content
-        //__adjustEditorHeight(editor.getStepName(), "510px");
     };
 
     var addFallbackAsyncBulkheadButton = function(event, stepName) {
@@ -487,26 +477,11 @@ var bulkheadCallBack = (function() {
             contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
         }
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 11, 23, newContent, 4);
-        // Adjust the height of the editor back to the original height
-        //__adjustEditorHeight(stepName, "468px");
 
         if (hasServiceForVFAMethod === true && (performReset === undefined || performReset === true)) {
             __addAsyncBulkheadInEditor(stepName);
         }
     };
-
-    /*
-    var __adjustEditorHeight = function(stepName, heightToUse) {
-        var containers = $(".subContainerDiv[data-step='" + stepName + "']");
-        $.each( containers, function(index, container) {
-            var editorContainer = $(container).find(".editorContainer");
-            if (editorContainer.length === 1) {
-                editorContainer.css("height", heightToUse);
-                return false; // break out of the loop
-            }
-        });
-    };
-    */
 
     var __browserVirtualAdvisorBaseURL = "https://global-ebank.openliberty.io/virtualFinancialAdvisor/";
     var __advisors = ["Bob", "Jenny", "Lee", "Mary", "John", "Mike", "Sam", "Sandy", "Joann", "Frank" ];
@@ -602,15 +577,13 @@ var bulkheadCallBack = (function() {
                         // }
                         if (requestNum === 1 && (pod && pod.contentRootElement.find(".chatSummary").length === 1)) {
                             var chatSummary = pod.contentRootElement.find('.chatSummary');
+                            chatSummary.find('.busyCount').addClass('chatSummaryTransition');
                             chatSummary.find(".busyCount").text(1);
                             chatSummary.find(".busyChatCount").attr("aria-label", "1 chat is currently in progress");
                         }
-                        //contentManager.updateWithNewInstructionNoMarkComplete(stepName);
                     }
                 }, 10);
             }, 1000);
-        // } else {
-        //     contentManager.updateWithNewInstructionNoMarkComplete(stepName);
         }
     };
 
@@ -627,6 +600,7 @@ var bulkheadCallBack = (function() {
                     contentManager.setBrowserURL(stepName, urlForAfterCount, 0);
                     browser.setBrowserContent(htmlForAfterCount);
                     if (startingWaitingQueue) {
+                        chatSummary.find(".waitCount").addClass('chatSummaryTransition');
                         chatSummary.find(".waitCount").text(1);
                         chatSummary.find(".waitChatCount").attr("aria-label", "1 chat request is waiting in the queue");
                         chatSummary.find(".busyChatCount").attr("aria-label", "50 chats are currently in progress");
@@ -637,7 +611,6 @@ var bulkheadCallBack = (function() {
                             chatSummary.find(".waitChatCount").attr("aria-label", "50 chat requests are waiting in the queue");
                         }
                     }
-                    //contentManager.updateWithNewInstructionNoMarkComplete(stepName);
                 }
             }
         }, 20);

@@ -345,16 +345,19 @@
                     "url": "https://global-ebank.openliberty.io/",
                     "browserContent": "/guides/iguide-bulkhead/html/global-eBank.html",
                     "enableStatusBar": false,
-                    "enableRefreshButton": false
+                    "enableRefreshButton": false,
+                    "singleColumnOrder": "3"
                 },
                 {
                     "displayType": "pod",
-                    "hidden": true
+                    "hidden": true,
+                    "singleColumnOrder": "2"
                 },
                 {
                     "displayType": "tabbedEditor",
                     "active": true,
                     "activeTab": "BankService.java",
+                    "singleColumnOrder": "1",
                     "editorList": [
                         {
                             "displayType": "tabbedEditor",
@@ -448,16 +451,19 @@
                     "url": "https://global-ebank.openliberty.io/",
                     "browserContent": "/guides/iguide-bulkhead/html/global-eBank.html",
                     "enableStatusBar": false,
-                    "enableRefreshButton": false
+                    "enableRefreshButton": false,
+                    "singleColumnOrder": "3"
                 },
                 {
                     "displayType": "pod",
-                    "hidden": true
+                    "content": "/guides/iguide-bulkhead/html/virtual-financial-advisor-transition-asyncbulkhead.html",
+                    "singleColumnOrder": "2"
                 },
                 {
                     "displayType":"tabbedEditor",
                     "active": true,
                     "activeTab": "BankService.java",
+                    "singleColumnOrder": "1",
                     "editorList": [
                         {
                             "displayType":"fileEditor",
@@ -678,16 +684,19 @@
                     "url": "https://global-ebank.openliberty.io/",
                     "browserContent": "/guides/iguide-bulkhead/html/global-eBank.html",
                     "enableStatusBar": false,
-                    "enableRefreshButton": false
+                    "enableRefreshButton": false,
+                    "singleColumnOrder": "3"
                 },
                 {
                     "displayType": "pod",
-                    "hidden": true
+                    "content": "/guides/iguide-bulkhead/html/virtual-financial-advisor-transition-asyncbulkhead-fallback.html",
+                    "singleColumnOrder": "2"
                 },
                 {
                     "displayType":"tabbedEditor",
                     "active": true,
                     "activeTab": "BankService.java",
+                    "singleColumnOrder": "1",
                     "editorList": [
                         {
                             "displayType":"fileEditor",

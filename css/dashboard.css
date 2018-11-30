@@ -64,3 +64,30 @@
 .waitCount {
     color: #d04b02;
 }
+
+.chatSummaryTransition {
+    height: 100%;
+    -webkit-animation: fadeinout 1s linear 1 forwards;
+    animation: fadeinout 1s linear 1 forwards;
+}
+
+@-webkit-keyframes fadeinout {
+    0% { opacity: 0; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+@keyframes fadeinout {
+    0% { opacity: 0; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+
+element.style {
+    height: 100%;
+}
+
+#guide_content table {
+    margin-top: 1.25em; /* balance out the margin-bottom imposed by guide-multipane */
+}
