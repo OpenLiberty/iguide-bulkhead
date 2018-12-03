@@ -128,8 +128,8 @@ var bulkheadCallBack = (function() {
         var content = contentManager.getTabbedEditorContents(stepName, serverFileName);
         if (__checkMicroProfileFaultToleranceFeatureContent(content)) {
             editor.closeEditorErrorBox(stepName);
-            contentManager.markCurrentInstructionComplete(stepName);
             editor.addCodeUpdated();
+            contentManager.markCurrentInstructionComplete(stepName);
         } else {
             // display error to fix it
             editor.createErrorLinkForCallBack(true, __correctEditorError);
@@ -179,8 +179,8 @@ var bulkheadCallBack = (function() {
 
         if (__checkEditorContent(stepName, content)) {
             editor.closeEditorErrorBox(stepName);
-            var index = contentManager.getCurrentInstructionIndex();
             editor.addCodeUpdated();
+            var index = contentManager.getCurrentInstructionIndex();
             if(index === 0){
                 contentManager.markCurrentInstructionComplete(stepName);
                 if (htmlFile) {
@@ -506,7 +506,7 @@ var bulkheadCallBack = (function() {
                 browserContentHTML = htmlRootDir + "virtual-financial-advisor-error-503.html";
                 browserUrl = browserErrorUrl;
             }
-        } else if (stepName === "FinancialAdvisor") {
+        } else if (stepName === "ExampleScenario") {
             requestLimits = 2;
             if (requestNum >= requestLimits) {        
                 browserContentHTML = htmlRootDir + "virtual-financial-advisor-no-available.html";
@@ -678,7 +678,8 @@ var bulkheadCallBack = (function() {
                     } else {
                         // Clear out any previous error boxes displayed.
                         editor.closeEditorErrorBox();
-                    }                  
+                    }        
+                    editorInstance.addCodeUpdated();          
                     // Apply the annotation values to the bulkhead.
                     // If not specified, the bulkhead will use its default value.
                     bulkhead.updateParameters.apply(bulkhead, [value, waitingTaskQueue]);

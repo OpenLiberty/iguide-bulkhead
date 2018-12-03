@@ -23,6 +23,10 @@
     height: 30px;
 }
     
+.bulkhead {
+    margin-left: 20px;
+}
+
 .bulkheadRequestButtons {
     margin-top: 30px;
     margin-bottom: 18px;

@@ -93,19 +93,13 @@
             "name": "ExampleScenario",
             "title": "Example: bank scenario",
             "description": [
-                "Imagine that you're developing a VirtualFinancialAdvisor (VFA) microservice for a bank to allow clients to chat online with a virtual financial advisor. The initial naive synchronous implementation of the microservice allows only one customer to chat with a financial advisor at a time. As you progress through the guide, you will see how the number of available chat sessions impacts the service and the system."
+                "Imagine that you're developing a VirtualFinancialAdvisor (VFA) microservice for a bank to allow clients to chat online with a virtual financial advisor. The initial naive synchronous implementation of the microservice allows only one customer to chat with a financial advisor at a time. As you progress through the guide, you will see how the number of available chat sessions impacts the service and the system.",
+                "Begin by requesting an online chat with a virtual financial advisor."
             ],
-            "sections": [
-                {
-                    "name": "FinancialAdvisor",
-                    "title": "Request a virtual financial advisor",
-                    "description": [
-                        "Begin by requesting an online chat with a virtual financial advisor."
-                    ],
-                    "instruction": [
-                        "Click <action title='Customer1 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'FinancialAdvisor', 1)\"><b>Customer1 requests chat</b></action> to open a chat session with a virtual financial advisor.",
-                        "Currently, the microservice allows only one active chat session. The next chat session request fails while the Customer1 chat is still active.<br>Click <action title='Customer2 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'FinancialAdvisor', 2)\"><b>Customer2 requests chat</b></action> to see the failure."
-                    ],
+            "instruction": [
+                "Click <action title='Customer1 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'ExampleScenario', 1)\"><b>Customer1 requests chat</b></action> to open a chat session with a virtual financial advisor.",
+                "Currently, the microservice allows only one active chat session. The next chat session request fails while the Customer1 chat is still active.<br>Click <action title='Customer2 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'ExampleScenario', 2)\"><b>Customer2 requests chat</b></action> to see the failure."
+            ],
                     "content":[
                         {   
                             "displayType": "webBrowser",
@@ -148,8 +142,6 @@
                             "save": false
                         }
                     ]
-                }
-            ]
         },
         {
             "name": "AsyncWithoutBulkhead",
@@ -234,9 +226,9 @@
         },
         {
             "name": "AddLibertyMPFaultTolerance",
-            "title": "Enabling MicroProfile Fault Tolerance",
+            "title": "Enabling MicroProfile Fault Tolerance in Open Liberty",
             "description": [
-                "Microprofile Fault Tolerance allows microservices to handle unavailable services. It uses different policies such as Bulkhead and Fallback to guide the execution and result of some logic. The MicroProfile Fault Tolerance 1.0 feature provides an environment to support resilient microservices through patterns that include bulkheads. Enable the MicroProfile Fault Tolerance 1.0 feature in the <code>server.xml</code> file of the Liberty server where the VirtualFinancialAdvisor microservice runs."
+                "Microprofile Fault Tolerance allows microservices to handle unavailable services. It uses different policies such as Bulkhead and Fallback to guide the execution and result of some logic. The MicroProfile Fault Tolerance 1.0 feature provides an environment to support resilient microservices through patterns that include bulkheads. Enable the MicroProfile Fault Tolerance 1.0 feature in the <code>server.xml</code> file of the Open Liberty server where the VirtualFinancialAdvisor microservice runs."
             ],
             "instruction": [
               "Add the following element declaration inside the featureManager element of the <code>server.xml</code> file, or click <action title='Enable MicroProfile Fault Tolerance' onclick=\"bulkheadCallBack.addMicroProfileFaultToleranceFeatureButton(event)\"><b>&lt;feature>mpFaultTolerance-1.0&lt;/feature&gt;</b></action>. <br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveServerXMLButton(event)\"><b>Run</b></action> on the editor menu pane."
@@ -599,8 +591,10 @@
               "<li><b>value</b>: The maximum number of concurrent requests to the service. The default is <code>10</code> requests.",
               "<li><b>waitingTaskQueue</b>: The size of the waiting queue that holds requests to execute at a different time. The default is <code>10</code> requests.",
               "</ul>",
-              "It is best practice to set the <b>waitingTaskQueue</b> parameter so that it is has a value equal to or larger than the <b>value</b> parameter.",
-              "<instruction class='playgroundInstructionStyle' tabindex='0'>Modify the parameters for the <code>@Bulkhead</code> annotation in the following file. In this simulation, the maximum value for <code>value</code> and <code>waitingTaskQueue</code> is 10. Repeat the process as many times as you like. <br><br>Click <b>Chat request</b> to initiate a request with a virtual financial advisor or <b>End chat</b> to end an arbitrary chat and observe the simulation.</instruction>"
+              "It is best practice to set the <b>waitingTaskQueue</b> parameter so that it is has a value equal to or larger than the <b>value</b> parameter."
+            ],
+            "instruction": [
+                "Modify the parameters for the <code>@Bulkhead</code> annotation in the editor. In this simulation, the maximum value for <code>value</code> and <code>waitingTaskQueue</code> is 10. <br>Then click Run to use the new values. Repeat the process as many times as you like. <br><br>Click <b>Chat request</b> to initiate a request with a virtual financial advisor or <b>End chat</b> to end an arbitrary chat and observe the simulation."
             ],
             "content":[
                 {
@@ -614,7 +608,8 @@
                 {
                     "displayType":"pod",
                     "content": "/guides/iguide-bulkhead/html/async-bulkhead-playground.html",
-                    "callback": "(function(pod) {bulkheadCallBack.createAsyncBulkhead(pod, 'playground');})"
+                    "callback": "(function(pod) {bulkheadCallBack.createAsyncBulkhead(pod, 'playground');})",
+                    "height": "300px"
                 },
               {
                 "displayType": "tabbedEditor",
@@ -670,7 +665,7 @@
             "title": "Adding the @Fallback annotation",
             "description": [
                 "The <code>@Asynchronous</code> and <code>@Bulkhead</code> annotations together place requests for a financial advisor in a waiting queue after the number of requests exceeds the specified maximum number of concurrent requests. If the waiting queue is full, a <code>BulkheadException</code> is thrown. Let's add a fallback service to handle the exception. A fallback service runs when the main service fails. It can provide graceful failure or continued or partial operation of the original service.",
-                "The <code>@Fallback</code> annotation identifies a class or <a href='https://openliberty.io/guides/circuit-breaker.html#adding-the-fallback-annotation' target='_blank' rel='noopener noreferrer'>a method</a> that automatically runs when a <code>BulkheadException</code> occurs. To use the <code>@Fallback</code> annotation, modify your <code>server.xml</code> file to <a href='#enabling-microprofile-fault-tolerance'>include the Fault Tolerance feature</a>. In our scenario, add the <code>ServiceFallbackHandler.class</code>, which implements the <code>FallbackHandler.class</code>, to allow a customer to schedule an appointment. When a customer makes a request for a chat session, and the request cannot be handled because the maximum limit of concurrent requests has been reached and the wait queue is full, the <code>ServiceFallbackHandler.handle</code> method is called. The return type of both methods, <code>ServiceFallbackHandler.handle</code> and <code>BankService.serviceForVFA</code>, must be of type <code>Future&ltService&gt</code>. Otherwise, a <code>FaultToleranceDefinitionException</code> is thrown."
+                "The <code>@Fallback</code> annotation identifies a class or a method that automatically runs when a <code>BulkheadException</code> occurs. To use the <code>@Fallback</code> annotation, modify your <code>server.xml</code> file to <a href='#enabling-microprofile-fault-tolerance'>include the Fault Tolerance feature</a>. In our scenario, add the <code>ServiceFallbackHandler.class</code>, which implements the <code>FallbackHandler.class</code>, to allow a customer to schedule an appointment. When a customer makes a request for a chat session, and the request cannot be handled because the maximum limit of concurrent requests has been reached and the wait queue is full, the <code>ServiceFallbackHandler.handle</code> method is called. The return type of both methods, <code>ServiceFallbackHandler.handle</code> and <code>BankService.serviceForVFA</code>, must be of type <code>Future&ltService&gt</code>. Otherwise, a <code>FaultToleranceDefinitionException</code> is thrown. <br><br>For more information on using the <code>@Fallback</code> annotation to identify a method, see the <a href='https://openliberty.io/guides/circuit-breaker.html#adding-the-fallback-annotation' target='_blank' rel='noopener noreferrer'>MicroProfile Circuit Breaker </a>guide."
             ],
             "instruction": [
                 "In the <code>BankService.java</code> file, add the <code>@Fallback(ServiceFallbackHandler.class)</code> annotation on line 16, or click <action title='Async Bulkhead annotation with Fallback' onclick=\"bulkheadCallBack.addFallbackAsyncBulkheadButton(event, 'Fallback')\"><b>@Fallback(ServiceFallbackHandler.class)</b></action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'Fallback')\"><b>Run</b></action> on the editor menu pane.",
