@@ -498,6 +498,7 @@ var bulkheadCallBack = (function() {
         var browser = contentManager.getBrowser(stepName);
         var pod = contentManager.getPod(stepName);
 
+        browser.contentRootElement.trigger("click");
         // only mark current instruction as complete and delay showing the next instruction until processing is done
         contentManager.markCurrentInstructionComplete(stepName);
         if (stepName === "AsyncWithoutBulkhead") {
