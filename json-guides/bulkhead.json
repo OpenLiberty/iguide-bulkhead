@@ -595,7 +595,7 @@
               "It is best practice to set the <b>waitingTaskQueue</b> parameter so that it is has a value equal to or larger than the <b>value</b> parameter."
             ],
             "instruction": [
-                "Modify the parameters for the <code>@Bulkhead</code> annotation in the editor. In this simulation, the maximum value for <code>value</code> and <code>waitingTaskQueue</code> is 10. <br>Then click Run to use the new values. Repeat the process as many times as you like. <br><br>Click <b>Chat request</b> to initiate a request with a virtual financial advisor or <b>End chat</b> to end an arbitrary chat and observe the simulation."
+                "Modify the parameter values for the <code>@Bulkhead</code> annotation on lines 17 and 18 in the editor. In this simulation, the maximum value for <code>value</code> and <code>waitingTaskQueue</code> is 10. <br>Then click Run to use the new values. Repeat the process as many times as you like. <br><br>Click <b>Chat request</b> to initiate a request with a virtual financial advisor or <b>End chat</b> to end an arbitrary chat and observe the simulation."
             ],
             "content":[
                 {
