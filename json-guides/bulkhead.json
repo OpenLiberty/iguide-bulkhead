@@ -103,8 +103,8 @@
                     "content":[
                         {   
                             "displayType": "webBrowser",
-                            "url": "https://global-ebank.openliberty.io/",
-                            "browserContent": "/guides/iguide-bulkhead/html/global-eBank.html",
+                            "url": "https://global-ebank.openliberty.io/welcome",
+                            "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
                             "enableStatusBar": false,
                             "enableRefreshButton": false,
                             "active": true
@@ -160,8 +160,8 @@
             "content":[
                 {   
                     "displayType": "webBrowser",
-                    "url": "https://global-ebank.openliberty.io/",
-                    "browserContent": "/guides/iguide-bulkhead/html/global-eBank.html",
+                    "url": "https://global-ebank.openliberty.io/welcome",
+                    "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
                     "enableStatusBar": false,
                     "enableRefreshButton": false
                 },
@@ -236,8 +236,8 @@
             "content": [
                 {
                     "displayType": "webBrowser",
-                    "url": "https://global-ebank.openliberty.io/",
-                    "browserContent": "/guides/iguide-bulkhead/html/global-eBank.html",
+                    "url": "https://global-ebank.openliberty.io/welcome",
+                    "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
                     "enableStatusBar": false,
                     "enableRefreshButton": false,
                     "enable": false
@@ -334,8 +334,8 @@
             "content": [
                 {
                     "displayType": "webBrowser",
-                    "url": "https://global-ebank.openliberty.io/",
-                    "browserContent": "/guides/iguide-bulkhead/html/global-eBank.html",
+                    "url": "https://global-ebank.openliberty.io/welcome",
+                    "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
                     "enableStatusBar": false,
                     "enableRefreshButton": false,
                     "singleColumnOrder": "3"
@@ -441,8 +441,8 @@
             "content":[
                 {
                     "displayType": "webBrowser",
-                    "url": "https://global-ebank.openliberty.io/",
-                    "browserContent": "/guides/iguide-bulkhead/html/global-eBank.html",
+                    "url": "https://global-ebank.openliberty.io/welcome",
+                    "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
                     "enableStatusBar": false,
                     "enableRefreshButton": false,
                     "singleColumnOrder": "3"
@@ -600,8 +600,8 @@
             "content":[
                 {
                     "displayType": "webBrowser",
-                    "url": "https://global-ebank.openliberty.io/",
-                    "browserContent": "/guides/iguide-bulkhead/html/global-eBank.html",
+                    "url": "https://global-ebank.openliberty.io/welcome",
+                    "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
                     "enableStatusBar": false,
                     "enableRefreshButton": false,
                     "enable": false
@@ -677,8 +677,8 @@
             "content":[
                 {
                     "displayType": "webBrowser",
-                    "url": "https://global-ebank.openliberty.io/",
-                    "browserContent": "/guides/iguide-bulkhead/html/global-eBank.html",
+                    "url": "https://global-ebank.openliberty.io/welcome",
+                    "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
                     "enableStatusBar": false,
                     "enableRefreshButton": false,
                     "singleColumnOrder": "3"
