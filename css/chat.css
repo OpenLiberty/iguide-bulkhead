@@ -267,6 +267,8 @@ body {
 }
 
 .timeResponse {
-    margin-top: 40px;
-    display: none;
+    display: none;  /* will change to display flex when schedule appointment button is clicked */
+    height: calc(100% - 86px);
+    justify-content: center;
+    align-items: center;
 }

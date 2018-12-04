@@ -9,7 +9,7 @@
   Contributors:
       IBM Corporation - initial API and implementation
 -->
-<html>
+<html style="height: 100%;">
 <head>
     <link href="https://fonts.googleapis.com/css?family=Asap" rel="stylesheet">
     <link rel="stylesheet" href="/guides/iguide-bulkhead/css/chat.css">
@@ -31,12 +31,12 @@
 
         function submitSchedule() {
             document.getElementById("formContent").style.display = "none";
-            document.getElementById("formResponse").style.display = "block";
+            document.getElementById("formResponse").style.display = "flex";
         }
     </script>
 </head>
 
-<body>    
+<body style="height: 100%;">    
     <div class="bankHeadingBlockFlexContainer">
         <div class="bankHeading">Global eBank</div>
             <span>
@@ -63,7 +63,7 @@
         </div>
     </div>
     <div id="formResponse" class="timeResponse">
-        <p class="errorTextBox" style="margin-top: 120px">Thank you!</p>
+        <p>Thank you!</p>
     </div>
 </body>
 </html>
