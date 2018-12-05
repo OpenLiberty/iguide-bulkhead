@@ -83,11 +83,6 @@
     100% { opacity: 1; }
 }
 
-
-element.style {
-    height: 100%;
-}
-
 #guide_content table {
     margin-top: 1.25em; /* balance out the margin-bottom imposed by guide-multipane */
 }
