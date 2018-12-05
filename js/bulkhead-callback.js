@@ -171,6 +171,8 @@ var bulkheadCallBack = (function() {
         var htmlFile;
         if (stepName === "BulkheadAnnotation") {
             htmlFile = htmlRootDir + "virtual-financial-advisor-bulkhead.html";
+        } else if (stepName === "AsyncBulkheadAnnotation") {
+            htmlFile = htmlRootDir + "virtual-financial-advisor-asyncbulkhead.html";
         }
 
         if (__checkEditorContent(stepName, content)) {
