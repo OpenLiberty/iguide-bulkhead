@@ -9,25 +9,41 @@
   Contributors:
       IBM Corporation - initial API and implementation
 -->
-<html>
+<html style="height: 100%;">
 <head>
     <link href="https://fonts.googleapis.com/css?family=Asap" rel="stylesheet">
     <link rel="stylesheet" href="/guides/iguide-bulkhead/css/chat.css">
-</head>
-<script>
-    function timeCheck(value) {
-        document.getElementById("scheduleSubmitButton").disabled = false;
-    }
+    <link rel="stylesheet" href="/guides/iguides-common/css/interactive-guides/bankApp.css">
 
-    function submitSchedule() {
-        document.getElementById("formContent").style.display = "none";
-        document.getElementById("formResponse").style.display = "block";
-    }
-</script>
-</script>
-<body>    
-    <div class="bankHeadingBlock">
+    <script type="text/javascript"> 
+        var script = document.createElement('script');
+        
+        script.onload = function() {
+            var guideRootDir = "/guides/iguides-common/js/interactive-guides/nls/"
+            retrieveExternalizedStrings(guideRootDir);
+        };
+        script.src = '/guides/iguides-common/js/interactive-guides/externalized-string.js';
+        document.getElementsByTagName('head')[0].appendChild(script);
+    
+        function timeCheck(value) {
+            document.getElementById("scheduleSubmitButton").disabled = false;
+        }
+
+        function submitSchedule() {
+            document.getElementById("formContent").style.display = "none";
+            document.getElementById("formResponse").style.display = "flex";
+        }
+    </script>
+</head>
+
+<body style="height: 100%;">    
+    <div class="bankHeadingBlockFlexContainer">
         <div class="bankHeading">Global eBank</div>
+            <span>
+                <img src="/guides/iguides-common/img/interactive-guides/bank-info.svg" data-externalizedAlt="ABOUT">
+                <img src="/guides/iguides-common/img/interactive-guides/bank-user.svg" data-externalizedAlt="USER">
+            </span>
+        </div>
     </div>
     <div class="chatIntro">
         <img class="chatIcon" src="/guides/iguide-bulkhead/html/images/chat-icon.svg" alt="chat icon"/>
@@ -47,7 +63,7 @@
         </div>
     </div>
     <div id="formResponse" class="timeResponse">
-        <p class="errorTextBox" style="margin-top: 120px">Thank you!</p>
+        <p>Thank you!</p>
     </div>
 </body>
 </html>

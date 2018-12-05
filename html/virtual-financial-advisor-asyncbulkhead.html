@@ -8,7 +8,7 @@
   Contributors:
       IBM Corporation - initial API and implementation
 -->
-<div id="asyncBulkheadStep" class="pod-animation-slide-from-right" tabindex="0" aria-label="Virtual financial advisor chat summary and sample browser window">
+<div class="chatSummaryTransition">
     <table class="dashboardContainer" tabindex="0" aria-label="Chat summary">
         <tr class="chatSummary" tabindex="0">
             <th class="countTableCellLine">
@@ -27,21 +27,4 @@
             </th>
         </tr>
     </table>
-    <div class='browserHolder'></div>
 </div>
-<script>
-    var stepName = "AsyncBulkheadAnnotation";
-    var stepElementId = "asyncBulkheadStep";
-    var browser;
-
-    var content = {
-        url: "https://global-ebank.openliberty.io/",
-        browserContent: "/guides/iguide-bulkhead/html/global-eBank.html",
-        enableStatusBar: false,
-        enableRefreshButton: false
-    };
-    webBrowser.create($('#' + stepElementId).find('.browserHolder'), stepName,  content).done(function(newWebBrowser){
-        contentManager.setWebBrowser(stepName, newWebBrowser, 0);
-        browser = newWebBrowser;
-    });
-</script>

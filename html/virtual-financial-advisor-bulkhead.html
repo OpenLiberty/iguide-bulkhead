@@ -8,11 +8,10 @@
   Contributors:
       IBM Corporation - initial API and implementation
 -->
-<div id="bulkheadStep" class="pod-animation-slide-from-right" tabindex="0" aria-label="Virtual financial advisor chat summary and sample browser window">
-    <!-- <div class="dashboardContainer"></div> -->
+<div class="chatSummaryTransition">
     <table class="dashboardContainer" tabindex="0" aria-label="Chat summary">
-        <tr class="chatSummary" tabindex="0">          
-            <th class="oneCount" >
+        <tr class="chatSummary" tabindex="0">
+            <th class="oneCount">
                 <span class="chatLabel" aria-label="50 concurrent chats are allowed">IN PROGRESS</span>
                 <span class="chatCount busyChatCount" aria-label="No chat is in progress">
                     <span class="busyCount">0</span>
@@ -21,22 +20,4 @@
             </th>
         </tr>
     </table>
-
-    <div class='browserHolder'></div>
 </div>
-<script>
-    var stepName = "BulkheadAnnotation";
-    var stepElementId = "bulkheadStep";
-    var browser;
-
-    content = {
-        url: "https://global-ebank.openliberty.io/",
-        browserContent: "/guides/iguide-bulkhead/html/global-eBank.html",
-        enableStatusBar: false,
-        enableRefreshButton: false
-    };
-    webBrowser.create($('#' + stepElementId).find('.browserHolder'), stepName,  content).done(function(newWebBrowser){
-        contentManager.setWebBrowser(stepName, newWebBrowser, 0);
-        browser = newWebBrowser;
-    });
-</script>
