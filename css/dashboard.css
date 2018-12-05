@@ -9,12 +9,7 @@
 *     IBM Corporation - initial API and implementation
 *******************************************************************************/
 .dashboardContainer {
-    font-family: Asap;
-    background: #ffffff !important;
-    border:1px solid  #cbcbcb !important;
-    border-radius: 1px;
-    height: 42px !important;
-    margin-bottom: 2px !important;
+    height: 100%;
     width: 100%;
 }
 

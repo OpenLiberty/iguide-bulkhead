@@ -572,10 +572,6 @@ var bulkheadCallBack = (function() {
                         browser.getIframeDOM().find(".chatAdvisorCount").text(chatAdvisorCount);
                         browser.getIframeDOM().find(".advisorName").text(chatIntro);
                         browser.getIframeDOM().find(".advisorInitial").text(__advisorInitials[requestNum - 1]);
-                        // if (requestNum === 1 && $("#" + stepElementId).length === 1) {
-                        //     $("#" + stepElementId).find(".busyCount").text(1);
-                        //     $("#" + stepElementId).find(".busyChatCount").attr("aria-label", "1 chat is currently in progress");
-                        // }
                         if (requestNum === 1 && (pod && pod.contentRootElement.find(".chatSummary").length === 1)) {
                             var chatSummary = pod.contentRootElement.find('.chatSummary');
                             chatSummary.find('.busyCount').addClass('chatSummaryTransition');
