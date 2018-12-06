@@ -783,10 +783,16 @@
             "name": "WhatNext",
             "title": "Great work!  You're done!",
             "description": [
-               "You learned about the benefits of asynchronous processing and how a faulty process could potentially build up many requests, which, if not limited, could consume all resources, such as CPU, threads, and memory, in the host and lead to a cascading failure.  You learned that a bulkhead isolation policy can be used to limit the number of parallel executions so that the impact of a failing process is isolated from affecting the whole system.  You learned about the two approaches to bulkhead, semaphore isolation and thread pool isolation, and how to identify a fallback service to run when the number of concurrent processes as defined by the bulkhead policy is reached.",
-               "<p> <a href='https://github.com/OpenLiberty/iguide-bulkhead/tree/master/finish/sampleapp_bulkhead.zip' >Download the sample asynchronous bulkhead application on github</a>.</p>"
+               "You learned about the benefits of asynchronous processing and how a faulty process could potentially build up many requests, which, if not limited, could consume all resources, such as CPU, threads, and memory, in the host and lead to a cascading failure.  You learned that a bulkhead isolation policy can be used to limit the number of parallel executions so that the impact of a failing process is isolated from affecting the whole system.  You learned about the two approaches to bulkhead, semaphore isolation and thread pool isolation, and how to identify a fallback service to run when the number of concurrent processes as defined by the bulkhead policy is reached."
             ]
+        },
+        {
+            "name": "RelatedLinks",
+            "title": "Related links",
+            "description": ["Learn more about <b>MicroProfile</b>.",
+                            "<p> <a target='_blank' rel='noopener noreferrer' href='http://microprofile.io/' >See the MicroProfile specs.</a></p>",
+                            "<p> <a target='_blank' rel='noopener noreferrer' href='https://openliberty.io/docs/ref/microprofile/' >View MicroProfile API.</a></p>"
+                           ]
         }
-
     ]
 }
