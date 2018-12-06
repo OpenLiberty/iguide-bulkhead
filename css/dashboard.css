@@ -45,7 +45,7 @@
     white-space: nowrap;
 }
 
-th:nth-child(odd) {
+th:nth-child(odd):not(:last-child) {
     border-right: 1px solid #cbcbcb;
 }
 
