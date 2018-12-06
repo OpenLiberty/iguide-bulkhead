@@ -45,10 +45,11 @@
     white-space: nowrap;
 }
 
+th:nth-child(odd) {
+    border-right: 1px solid #cbcbcb;
+}
+
 .countTableCellLine {
-    border: 1px solid #cbcbcb;
-    width: 1px;
-    height: 41px;
     text-align: center;
 }
 
