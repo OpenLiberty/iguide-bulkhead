@@ -501,7 +501,9 @@ var bulkheadCallBack = (function() {
         contentManager.markCurrentInstructionComplete(stepName);
         if (stepName === "AsyncWithoutBulkhead") {
             requestLimits = 3;
-            if (requestNum >= requestLimits) {
+            if (requestNum === 2) {
+                browserChatHTML = htmlRootDir + "virtual-financial-advisor-chat-2.html";
+            } else if (requestNum >= requestLimits) {
                 browserContentHTML = htmlRootDir + "virtual-financial-advisor-error-503.html";
                 browserUrl = browserErrorUrl;
             }
@@ -561,25 +563,6 @@ var bulkheadCallBack = (function() {
         if (requestNum < requestLimits) {
             setTimeout(function () {
                 browser.setBrowserContent(browserChatHTML);
-                // use a interval timer to make sure the browser content is rendered before accessing the elements
-                var waitingForBrowserContentTimeInterval = setInterval(function () {
-                    if (browser.getIframeDOM().find(".advisorName").length === 1) {
-                        clearInterval(waitingForBrowserContentTimeInterval);
-                        var advisor = __advisors[requestNum - 1];
-                        var advisorBackgroundColor = __advisorColors[requestNum - 1];
-                        var chatAdvisorCount = "You are talking to advisor " + requestNum + ".";
-                        var chatIntro = "Hi, I am " + advisor + ",";
-                        browser.getIframeDOM().find(".chatAdvisorCount").text(chatAdvisorCount);
-                        browser.getIframeDOM().find(".advisorName").text(chatIntro);
-                        browser.getIframeDOM().find(".advisorInitial").text(__advisorInitials[requestNum - 1]);
-                        if (requestNum === 1 && (pod && pod.contentRootElement.find(".chatSummary").length === 1)) {
-                            var chatSummary = pod.contentRootElement.find('.chatSummary');
-                            chatSummary.find('.busyCount').addClass('chatSummaryTransition');
-                            chatSummary.find(".busyCount").text(1);
-                            chatSummary.find(".busyChatCount").attr("aria-label", "1 chat is currently in progress");
-                        }
-                    }
-                }, 10);
             }, 1000);
         }
     };
