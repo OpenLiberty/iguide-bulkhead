@@ -41,22 +41,6 @@ public class Utils {
         return msg;
     }
 
-    public static String getHTMLBankHeader() {
-        String result = 
-                    "<head><link href='https://fonts.googleapis.com/css?family=Asap' rel='stylesheet'>" +
-                    "      <link rel='stylesheet' href='/bulkheadSample/css/chat.css'></head>" +
-                    "<body>" +
-                    "   <div class='bankHeadingBlock'>" + 
-                    "       <div class='bankHeading'>Global eBank</div>" +
-                    "   </div>" +
-                    "   <div class='chatIntro'>" +
-                    "       <img class='chatIcon' src='/bulkheadSample/images/chat-icon.svg' alt='chat icon'/>" +
-                    "       <span class='chatIntroText'>Chat with a financial advisor</span>" +
-                    "   </div>" +
-                    "   <div id='fallback'>";
-        return result;
-    }
-
     public static String getHTMLForWaitingQueue(int waitQueue) {
         String msg = "<div>" +
                      "<p class='dotdotdot'><span>.</span><span>.</span><span>.</span></p>" +
