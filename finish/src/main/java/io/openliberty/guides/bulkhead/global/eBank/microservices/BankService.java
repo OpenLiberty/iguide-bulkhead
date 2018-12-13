@@ -28,7 +28,7 @@ public class BankService {
     // For demo purpose only
     // The length of time (in milliseconds) to pause the currently executing thread 
     // so as to simulate concurrency
-    public static final int TIMEOUT = 60000;
+    public static final int TIMEOUT = 30000;
 
     public final static int bulkheadValue = 2;
     public final static int bulkheadWaitingQueue = 2;

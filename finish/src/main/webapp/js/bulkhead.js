@@ -57,7 +57,7 @@ function endChat(responseText) {
     if (responseText.indexOf("advisorChat") > 0) {
         setTimeout(function() {
             displayText("Chat has ended");
-        }, 30000);
+        }, 60000);
     }
 };
 
