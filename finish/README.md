@@ -7,22 +7,23 @@ Use the 'mvn install' Maven command from the directory that contains the extract
 To stop the running server, run the Maven command `mvn liberty:stop-server` from the <extract-directory> directory. To start the bulkheadSampleServer, run the Maven command `mvn liberty:start-server` in the <extract-directory> directory.
 
 To access the sample application, visit the following URL from your browser:
-      http://localhost:9080/bulkheadSample/vfa
+      http://localhost:9080/bulkheadSample/virtualFinancialAdvisor
 
-To simulate making multiple asynchronous requests to the VirtualFinancialAdvisor service, open the browser with the above link then click on the refresh button multiple times. 
+The default sample sets the maximum number of concurrency requests and the size of the waiting queue to 2.
+To simulate making multiple asynchronous requests to the VirtualFinancialAdvisor service with the default values, open the browser with multiple tabs having the above URL. 
 
 Initially, after each chat session opens, the browser displays the following message:  
       "We are working to connect you with a financial advisor." 
 
-The message changes after 20 seconds simulating the delay until a financial advisor is available:
+The message changes after 30+ seconds simulating the delay until a financial advisor is available:
       "You are talking to advisor <number>."
  
-The default maximum number of concurrent requests to the chat service is 5. After clicking the refresh button on the browser 5 times to reach the maximum limit of concurrent chat requests, the following message is displayed:
+The default maximum number of concurrent requests to the chat service is 2. After reaching the maximum limit of concurrent chat requests, the next request displays the following message:
       "All financial advisors are currently busy. You are <number> in the queue."
 
-If the waiting queue becomes full within 20 seconds of simulating concurrent requests, the fallback method runs and displays the panel that asks the user to schedule an appointment to chat with a financial advisor.
+The default size of the waiting queue in the sample application is 2. When the waiting queue becomes full, the next request triggers the fallback method and displays the panel that asks the user to schedule an appointment to chat with a financial advisor.
 
-Edit the Java files to change the parameter values of the `@Bulkhead` annotation. If the bulkheadSampleServer server is running, run the `mvn package` Maven command from the directory that contains the extracted .zip file to rebuild the application. The changes take effect without restarting the server. Otherwise, stop the circuitBreakerSampleServer server as indicated and run the `mvn install` Maven command which will restart the server.
+Edit the Java files to change the parameter values of the `@Bulkhead` annotation. If the bulkheadSampleServer server is running, run the `mvn package` Maven command from the directory that contains the extracted .zip file to rebuild the application. The changes take effect without restarting the server. Otherwise, run the `mvn install` Maven command which will start the server.
 
 To restart the application to simulate the chat requests again, you can stop and restart the 
 bulkheadSampleServer server as indicated.
@@ -44,11 +45,11 @@ The `@Bulkhead` annotation has parameters to configure its usage.
 * **waitingTaskQueue** specifies the size of the waiting queue that holds requests to run at a different time. This parameter must be greater than `0`. If the parameter is not specified, the default is `10` requests. This parameter for the `@Bulkhead` annotation takes effect only when you use the `@Asynchronous` annotation.
 
 In this sample application, the values for the bulkhead parameters are set to their default values which 
-are **value**=5 and **waitingTaskQueue**=5. These values indicate that after 5 concurrent chat requests 
-reach the VFA service, the next 5 concurrent chat requests are added to the waiting queue.
+are **value**=2 and **waitingTaskQueue**=2. These values indicate that after 2 concurrent chat requests 
+reach the VFA service, the next 2 concurrent chat requests are added to the waiting queue.
 
 The BankService.java file also contains the `@Fallback` annotation. The ServiceFallbackHandler.java file contains the fallback class that is identified by the `@Fallback` annotation. The fallback class runs when the maximum limit of concurrent requests is reached and the waiting queue is full. When the fallback runs, a message displays that allows a customer to schedule an appointment.
 
-The BankService.java file also contains the delay TIMEOUT value that defaults to 20 seconds. The delay is necessary to simulate concurrent requests. Otherwise, the service returns too quickly. If you are unable to make enough requests to fill up the waiting queue within this specified delay time so that you can see the fallback method run, try increasing this value. 
+The BankService.java file also contains the delay TIMEOUT value that defaults to 30 seconds. The delay is necessary to simulate concurrent requests. Otherwise, the service returns too quickly. If you are unable to make enough requests to fill up the waiting queue within this specified delay time so that you can see the fallback method run, try increasing this value. 
 
 The application contains servlet BankServiceServlet which calls the VirtualFinancialAdvisor (VFA) service.
