@@ -39,5 +39,8 @@ var messages = {
     ONE_CHAT_WAITING: "1 chat request is waiting in the queue",
     FIFTY_CHATS_INPROGRESS: "50 chats are currently in progress",
     FIFTY_CHATS_WAITING: "50 chat requests are waiting in the queue",
-    WAIT_BEST_PRACTICE: "It is best practice to have a <b>waitingTaskQueue</b> equal to or larger than the <b>value</b>."
+    WAIT_BEST_PRACTICE: "It is best practice to have a <b>waitingTaskQueue</b> equal to or larger than the <b>value</b>.",
+    JENNY: "Hi&#44 I am Jenny&#44",
+    BOB: "Hi&#44 I am Bob&#44",
+    ADVISOR_INTRO: "a financial advisor from Global eBank. Let me review your account. I&#39ll be with you shortly."
 };
