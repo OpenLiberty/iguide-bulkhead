@@ -10,8 +10,10 @@
 *******************************************************************************/
 var bulkheadCallBack = (function() {
 
+    var bhmessages = bulkhead_Messages.returnMessages();
     var bankServiceFileName = "BankService.java";
     var htmlRootDir = "/guides/iguide-bulkhead/html/";
+    
 
     /** AddLibertyMPFaultTolerance step  begin */
     var addMicroProfileFaultToleranceFeatureButton = function(event) {
@@ -582,7 +584,7 @@ var bulkheadCallBack = (function() {
                     if (startingWaitingQueue) {
                         chatSummary.find(".waitCount").addClass('chatSummaryTransition');
                         chatSummary.find(".waitCount").text(1);
-                        chatSummary.find(".waitChatCount").attr("aria-label", "1 chat request is waiting in the queue");
+                        chatSummary.find(".waitChatCount").attr("aria-label", bhmessages.ONE_CHAT_WAITING);
                         chatSummary.find(".busyChatCount").attr("aria-label", "50 chats are currently in progress");
                     } else {
                         if (elementToBeCounted === ".busyCount") {
