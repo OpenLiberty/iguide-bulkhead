@@ -1,5 +1,7 @@
 
-var messages = {
+var bulkhead_messages = {
+    ABOUT: "About",
+    USER: "User",
     CHAT_REQUEST: "Chat Request",
     END_CHAT: "End Chat",
     THREAD_POOL: "Thread pool queue representing the number of chat requests&#58 ",

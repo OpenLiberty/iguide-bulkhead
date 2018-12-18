@@ -10,7 +10,7 @@
 *******************************************************************************/
 var bulkheadCallBack = (function() {
 
-    var bhmessages = bulkhead_Messages.returnMessages();
+    var bhmessages = bulkheadMessages.returnMessages();
     var bankServiceFileName = "BankService.java";
     var htmlRootDir = "/guides/iguide-bulkhead/html/";
     
