@@ -12,6 +12,7 @@ var bulkheadMessages = (function() {
     var __returnMessages = function() {
         
         return { 
+            ACTIVE_CHAT: bulkhead_messages.ACTIVE_CHAT,
             AVAILABLE_CHAT: bulkhead_messages.AVAILABLE_CHAT,
             AVAILABLE_SLOT: bulkhead_messages.AVAILABLE_SLOT,
             TAKEN_SLOT: bulkhead_messages.TAKEN_SLOT,

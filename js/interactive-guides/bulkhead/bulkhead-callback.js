@@ -585,12 +585,12 @@ var bulkheadCallBack = (function() {
                         chatSummary.find(".waitCount").addClass('chatSummaryTransition');
                         chatSummary.find(".waitCount").text(1);
                         chatSummary.find(".waitChatCount").attr("aria-label", bhmessages.ONE_CHAT_WAITING);
-                        chatSummary.find(".busyChatCount").attr("aria-label", "50 chats are currently in progress");
+                        chatSummary.find(".busyChatCount").attr("aria-label", bhmessages.FIFTY_CHATS_INPROGRESS);
                     } else {
                         if (elementToBeCounted === ".busyCount") {
-                            chatSummary.find(".busyChatCount").attr("aria-label", "50 chats are currently in progress");
+                            chatSummary.find(".busyChatCount").attr("aria-label", bhmessages.FIFTY_CHATS_INPROGRESS);
                         } else {
-                            chatSummary.find(".waitChatCount").attr("aria-label", "50 chat requests are waiting in the queue");
+                            chatSummary.find(".waitChatCount").attr("aria-label", bhmessages.FIFTY_CHATS_WAITING);
                         }
                     }
                 }
