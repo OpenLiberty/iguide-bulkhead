@@ -625,60 +625,73 @@ var bulkheadCallBack = (function() {
             // Get the parameters from the editor and send to the bulkhead
             var content = editor.getEditorContent();
             try{
-                var matchPattern = "@Asynchronous\\s*@Bulkhead\\s*\\((([^\\(\\)])*?)\\)\\s*public Future<Service> serviceForVFA";
+                var matchPattern = "@Asynchronous\\s*@Bulkhead\\s*(\\(([^\\(\\)])*?\\))?\\s*public Future<Service> serviceForVFA";
                 var regexToMatch = new RegExp(matchPattern, "g");
                 var groups = regexToMatch.exec(content);
                 var annotation = groups[1];
-
-                var params = annotation.replace(/[{\s()}]/g, ''); // Remove whitespace and parenthesis
-                params = params.split(',');
-
                 var value;
                 var waitingTaskQueue;
-
-                // Parse their annotation for values
-                params.forEach(function(param, index){
-                    if (param.indexOf('value=') > -1){
-                        value = parseInt(param.substring(param.indexOf('value=') + 6));
-                    }
-                    if (param.indexOf('waitingTaskQueue=') > -1){
-                        waitingTaskQueue = parseInt(param.substring(param.indexOf('waitingTaskQueue=') + 17));
-                    }
-                });
-                
                 var errorPosted = false;
-                if (value != undefined) {
-                    if (!utils.isInteger(value) || value < 1) {                        
-                        editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsGTZero, ["value"]));
-                        errorPosted = true;
-                    } else if (value > 10) {
-                        editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsMaxValue,["value"]));
-                        errorPosted = true;
-                    }    
-                } else {
-                    value = 10; // Set to default value
+
+                if (annotation) {
+                    // Parameters were specified in the annotation
+                    var params = annotation.replace(/[{\s()}]/g, ''); // Remove whitespace and parenthesis
+                    params = params.split(',');
+    
+                    // Parse their annotation for values
+                    params.forEach(function(param, index){
+                        var validParameters = false;
+                        if (param.indexOf('value=') > -1){
+                            value = parseInt(param.substring(param.indexOf('value=') + 6));
+                            if (!isNaN(value)) validParameters = true;
+                        }
+                        if (param.indexOf('waitingTaskQueue=') > -1){
+                            waitingTaskQueue = parseInt(param.substring(param.indexOf('waitingTaskQueue=') + 17));
+                            if (!isNaN(waitingTaskQueue)) validParameters = true;
+                        }
+                        if (!validParameters && param !== "") {
+                            editor.createCustomErrorMessage(bulkheadMessages.invalidParameters);
+                            errorPosted = true;
+                        }
+                    });    
                 }
-                
-                if (waitingTaskQueue != undefined) {
-                    if(!utils.isInteger(waitingTaskQueue) || waitingTaskQueue < 1) {
-                        editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsGTZero, ["waitingTaskQueue"]));
-                        errorPosted = true;
-                    } else if (waitingTaskQueue > 10) {
-                        editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsMaxValue,["waitingTaskQueue"]));
-                        errorPosted = true;
+
+                if (!errorPosted) {
+                    // Parameter value(s) syntax is good....check the values entered.
+                    if (value != undefined) {
+                        if (!utils.isInteger(value) || value < 1) {                        
+                            editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsGTZero, ["value"]));
+                            errorPosted = true;
+                        } else if (value > 10) {
+                            editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsMaxValue,["value"]));
+                            errorPosted = true;
+                        }    
+                    } else {
+                        value = 10; // Set to default value
                     }
-                } else {
-                    waitingTaskQueue = 10;  // Set to default value
+                    
+                    if (waitingTaskQueue != undefined) {
+                        if(!utils.isInteger(waitingTaskQueue) || waitingTaskQueue < 1) {
+                            editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsGTZero, ["waitingTaskQueue"]));
+                            errorPosted = true;
+                        } else if (waitingTaskQueue > 10) {
+                            editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsMaxValue,["waitingTaskQueue"]));
+                            errorPosted = true;
+                        }
+                    } else {
+                        waitingTaskQueue = 10;  // Set to default value
+                    }
                 }
                 
                 if (!errorPosted) {
+                    // All looks good so far...update the playground.
                     if (waitingTaskQueue < value) {
                         editor.createCustomAlertMessage(bulkheadMessages.waitBestPractice);
                         // Do not return here.  Post warning and allow user to continue with their simulation.
                     } else {
                         // Clear out any previous error boxes displayed.
                         editor.closeEditorErrorBox();
-                    }                  
+                    }         
                     // Apply the annotation values to the bulkhead.
                     // If not specified, the bulkhead will use its default value.
                     bulkhead.updateParameters.apply(bulkhead, [value, waitingTaskQueue]);
@@ -691,7 +704,8 @@ var bulkheadCallBack = (function() {
                 }
             }
             catch(e){
-
+                editor.createCustomErrorMessage(bulkheadMessages.invalidParameters);
+                bulkhead.enableActions(false);
             }
         };
         editor.addSaveListener(__listenToContentChanges);
