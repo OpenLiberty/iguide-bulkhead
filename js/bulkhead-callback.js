@@ -484,9 +484,6 @@ var bulkheadCallBack = (function() {
     };
 
     var __browserVirtualAdvisorBaseURL = "https://global-ebank.openliberty.io/virtualFinancialAdvisor/";
-    var __advisors = ["Bob", "Jenny", "Lee", "Mary", "John", "Mike", "Sam", "Sandy", "Joann", "Frank" ];
-    var __advisorColors = ['royalblue', 'gray', 'seagreen'];
-    var __advisorInitials = ["B", "J", "L"];
     var handleNewChatRequestInBrowser = function(stepName, requestNum) {
         var browserChatHTML = htmlRootDir + "virtual-financial-advisor-chat.html";  
         var browserContentHTML = htmlRootDir + "virtual-financial-advisor-connecting.html";  
@@ -496,7 +493,6 @@ var bulkheadCallBack = (function() {
         var browser = contentManager.getBrowser(stepName);
         var pod = contentManager.getPod(stepName);
 
-        browser.contentRootElement.trigger("click");
         // only mark current instruction as complete and delay showing the next instruction until processing is done
         contentManager.markCurrentInstructionComplete(stepName);
         if (stepName === "AsyncWithoutBulkhead") {
@@ -563,6 +559,18 @@ var bulkheadCallBack = (function() {
         if (requestNum < requestLimits) {
             setTimeout(function () {
                 browser.setBrowserContent(browserChatHTML);
+
+                // use a interval timer to make sure the browser content is rendered before accessing the elements
+                var waitingForBrowserContentTimeInterval = setInterval(function () {
+                    if (browser.getIframeDOM().find(".advisorName").length === 1) {
+                        clearInterval(waitingForBrowserContentTimeInterval);
+                        var $stepPod = pod.contentRootElement;
+                        if (requestNum === 1 && $stepPod.length === 1) {
+                            $stepPod.find(".busyCount").text(1);
+                            $stepPod.find(".busyChatCount").attr("aria-label", "1 chat is currently in progress");
+                        }
+                    }
+                }, 10);
             }, 1000);
         }
     };
