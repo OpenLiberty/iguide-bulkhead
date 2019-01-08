@@ -491,7 +491,6 @@ var bulkheadCallBack = (function() {
         var browserErrorUrl = __browserVirtualAdvisorBaseURL + "error";
         var requestLimits = 1;
         var browser = contentManager.getBrowser(stepName);
-        var pod = contentManager.getPod(stepName);
 
         // only mark current instruction as complete and delay showing the next instruction until processing is done
         contentManager.markCurrentInstructionComplete(stepName);
@@ -557,20 +556,24 @@ var bulkheadCallBack = (function() {
         contentManager.setBrowserURL(stepName, browserUrl, 0);
         browser.setBrowserContent(browserContentHTML);
         if (requestNum < requestLimits) {
+            var pod = contentManager.getPod(stepName);
             setTimeout(function () {
                 browser.setBrowserContent(browserChatHTML);
 
-                // use a interval timer to make sure the browser content is rendered before accessing the elements
-                var waitingForBrowserContentTimeInterval = setInterval(function () {
-                    if (browser.getIframeDOM().find(".advisorName").length === 1) {
-                        clearInterval(waitingForBrowserContentTimeInterval);
-                        var $stepPod = pod.contentRootElement;
-                        if (requestNum === 1 && $stepPod.length === 1) {
-                            $stepPod.find(".busyCount").text(1);
-                            $stepPod.find(".busyChatCount").attr("aria-label", "1 chat is currently in progress");
+                // If there is a pod showing a dashboard, update its contents to show 1 chat
+                if (pod !== null) {
+                    // use a interval timer to make sure the browser content is rendered before updating the pod elements
+                    var waitingForBrowserContentTimeInterval = setInterval(function () {
+                        if (browser.getIframeDOM().find(".advisorName").length === 1) {
+                            clearInterval(waitingForBrowserContentTimeInterval);
+                            var $stepPod = pod.contentRootElement;
+                            if (requestNum === 1) {
+                                $stepPod.find(".busyCount").text(1);
+                                $stepPod.find(".busyChatCount").attr("aria-label", "1 chat is currently in progress");
+                            }
                         }
-                    }
-                }, 10);
+                    }, 10);
+                }
             }, 1000);
         }
     };
