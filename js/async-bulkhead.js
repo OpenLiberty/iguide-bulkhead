@@ -61,7 +61,7 @@ var asyncBulkhead = function(){
 
         for (requestCount = 0; requestCount < queueSpots.length && requestCount < this.requestChatCount; requestCount++) {
           queueSpots[requestCount].setAttribute('src', '/guides/iguide-bulkhead/html/images/user_green.svg');
-          queueSpots[requestCount].setAttribute('alt', bhmessages.ACTIVE_CHAT);
+          queueSpots[requestCount].setAttribute('alt', bulkhead_messages.ACTIVE_CHAT);
         }
 
         if (requestCount === this.requestChatCount && requestCount < queueSpots.length) {
