@@ -10,7 +10,6 @@
 *******************************************************************************/
 var bulkheadCallBack = (function() {
 
-    var bhmessages = bulkheadMessages.returnMessages();
     var bankServiceFileName = "BankService.java";
     var htmlRootDir = "/guides/iguide-bulkhead/html/";
     
@@ -584,13 +583,13 @@ var bulkheadCallBack = (function() {
                     if (startingWaitingQueue) {
                         chatSummary.find(".waitCount").addClass('chatSummaryTransition');
                         chatSummary.find(".waitCount").text(1);
-                        chatSummary.find(".waitChatCount").attr("aria-label", bhmessages.ONE_CHAT_WAITING);
-                        chatSummary.find(".busyChatCount").attr("aria-label", bhmessages.FIFTY_CHATS_INPROGRESS);
+                        chatSummary.find(".waitChatCount").attr("aria-label", bulkhead_messages.ONE_CHAT_WAITING);
+                        chatSummary.find(".busyChatCount").attr("aria-label", bulkhead_messages.FIFTY_CHATS_INPROGRESS);
                     } else {
                         if (elementToBeCounted === ".busyCount") {
-                            chatSummary.find(".busyChatCount").attr("aria-label", bhmessages.FIFTY_CHATS_INPROGRESS);
+                            chatSummary.find(".busyChatCount").attr("aria-label", bulkhead_messages.FIFTY_CHATS_INPROGRESS);
                         } else {
-                            chatSummary.find(".waitChatCount").attr("aria-label", bhmessages.FIFTY_CHATS_WAITING);
+                            chatSummary.find(".waitChatCount").attr("aria-label", bulkhead_messages.FIFTY_CHATS_WAITING);
                         }
                     }
                 }
