@@ -16,32 +16,31 @@
             "displayType": "tabbedEditor",
             "enable": false,
             "editorList": [
-             {
-                "displayType": "fileEditor",
-                "fileName": "BankService.java",
-                "preload": [
-                    "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
-                    "import java.util.concurrent.Future;",
-                    "import java.util.concurrent.Executors;",
-                    "import java.util.concurrent.ExecutorService;",
-                    "",
-                    "public class BankService {",
-                    "  @Inject private BankService bankService;",
-                    "  private int counterForVFA = 0;",
-                    "",
-                    "  public Service requestForVFA() {",
-                    "    counterForVFA++;",
-                    "    return bankService.serviceForVFA(counterForVFA);",
-                    "  }",
-                    "",
-                    "  public Service serviceForVFA(int counterForVFA) {",
-                    "    Service chatService = new ChatSession(counterForVFA);",
-                    "    return chatService;",
-                    "  }",
-                    "}"
-                ],
-                "save": false
-             }
+                {
+                    "displayType": "fileEditor",
+                    "fileName": "BankService.java",
+                    "preload": [
+                        "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
+                        "import java.util.concurrent.Future;",
+                        "import java.util.concurrent.Executors;",
+                        "import java.util.concurrent.ExecutorService;",
+                        "",
+                        "public class BankService {",
+                        "  @Inject private BankService bankService;",
+                        "  private int counterForVFA = 0;",
+                        "",
+                        "  public Service requestForVFA() {",
+                        "    counterForVFA++;",
+                        "    return bankService.serviceForVFA(counterForVFA);",
+                        "  }",
+                        "",
+                        "  public Service serviceForVFA(int counterForVFA) {",
+                        "    Service chatService = new ChatSession(counterForVFA);",
+                        "    return chatService;",
+                        "  }",
+                        "}"
+                    ]
+                }
             ]
         }
     ],
@@ -100,48 +99,47 @@
                 "Click <action title='Customer1 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'ExampleScenario', 1)\">Customer1 requests chat</action> to open a chat session with a virtual financial advisor.",
                 "Currently, the microservice allows only one active chat session. The next chat session request fails while the Customer1 chat is still active.<br>Click <action title='Customer2 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'ExampleScenario', 2)\">Customer2 requests chat</action> to see the failure."
             ],
-                    "content":[
-                        {   
-                            "displayType": "webBrowser",
-                            "url": "https://global-ebank.openliberty.io/welcome",
-                            "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
-                            "enableStatusBar": false,
-                            "enableRefreshButton": false,
-                            "active": true
-                        },
-                        {   
-                            "displayType": "tabbedEditor",
-                            "enable": false,
-                            "editorList": [
-                            {
-                                "displayType": "fileEditor",
-                                "fileName": "BankService.java",
-                                "preload": [
-                                    "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
-                                    "import java.util.concurrent.Future;",
-                                    "import java.util.concurrent.Executors;",
-                                    "import java.util.concurrent.ExecutorService;",
-                                    "",
-                                    "public class BankService {",
-                                    "  @Inject private BankService bankService;",
-                                    "  private int counterForVFA = 0;",
-                                    "",
-                                    "  public Service requestForVFA() {",
-                                    "    counterForVFA++;",
-                                    "    return bankService.serviceForVFA(counterForVFA);",
-                                    "  }",
-                                    "",
-                                    "  public Service serviceForVFA(int counterForVFA) {",
-                                    "    Service chatService = new ChatSession(counterForVFA);",
-                                    "    return chatService;",
-                                    "  }",
-                                    "}"
-                                ]
-                            }
-                            ],
-                            "save": false
+            "content":[
+                {   
+                    "displayType": "webBrowser",
+                    "url": "https://global-ebank.openliberty.io/welcome",
+                    "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
+                    "enableStatusBar": false,
+                    "enableRefreshButton": false,
+                    "active": true
+                },
+                {   
+                    "displayType": "tabbedEditor",
+                    "enable": false,
+                    "editorList": [
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "BankService.java",
+                            "preload": [
+                                "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
+                                "import java.util.concurrent.Future;",
+                                "import java.util.concurrent.Executors;",
+                                "import java.util.concurrent.ExecutorService;",
+                                "",
+                                "public class BankService {",
+                                "  @Inject private BankService bankService;",
+                                "  private int counterForVFA = 0;",
+                                "",
+                                "  public Service requestForVFA() {",
+                                "    counterForVFA++;",
+                                "    return bankService.serviceForVFA(counterForVFA);",
+                                "  }",
+                                "",
+                                "  public Service serviceForVFA(int counterForVFA) {",
+                                "    Service chatService = new ChatSession(counterForVFA);",
+                                "    return chatService;",
+                                "  }",
+                                "}"
+                            ]
                         }
                     ]
+                }
+            ]
         },
         {
             "name": "AsyncWithoutBulkhead",
@@ -209,7 +207,6 @@
                                     "to": "13"
                                 }
                             ],
-                            "save": false,
                             "callback": "(function test(editor) {bulkheadCallBack.listenToEditorForJavaConcurrency(editor); })"
                         }
                     ]
@@ -235,81 +232,79 @@
                     "enable": false
                 },
                 {
-                "displayType": "tabbedEditor",
-                "active": true,
-                "activeTab": "server.xml",
-                "editorList": [
-                    {
-                        "displayType": "tabbedEditor",
-                        "fileName": "BankService.java",
-                        "preload": [
-                            "package global.eBank.microservices;",
-                            "import java.util.concurrent.Future;",
-                            "import java.util.concurrent.Executors;",
-                            "import java.util.concurrent.ExecutorService;",
-                            "",
-                            "public class BankService {",
-                            "  @Inject private BankService bankService;",
-                            "  private int counterForVFA = 0;",
-                            "",
-                            "  public Future<Service> requestForVFA() {",
-                            "    counterForVFA++;",
-                            "    ExecutorService executor = Executors.newSingleThreadExecutor();",
-                            "    Future<Service> serviceRequest = executor.submit(() -> {",
-                            "      try {",
-                            "        return bankService.serviceForVFA(counterForVFA);",
-                            "      } catch (Exception ex) {",
-                            "        handleException();",
-                            "      }",
-                            "      return null;",
-                            "    });",
-                            "    return serviceRequest;",
-                            "  }",
-                            "",
-                            "  public Service serviceForVFA(int counterForVFA) {",
-                            "    Service chatService = new ChatSession(counterForVFA);",
-                            "    return chatService;",
-                            "  }",
-                            "}"
-                        ],
-                        "readonly": true,
-                        "save": false
-                    },
-                    {
-                        "displayType": "fileEditor",
-                        "fileName": "server.xml",
-                        "preload": [
-                            "<?xml version=\"1.0\"?>",
-                            "<server description=\"Sample Liberty server\">",
-                            "   <featureManager>",
-                            "      <feature>cdi-1.2</feature>",
-                            "   </featureManager>",
-                            "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
-                            "</server>"
-                        ],
-                        "readonly": [
-                            {
-                                "from": "1",
-                                "to": "3"
-                            },
-                            {
-                                "from": "5",
-                                "to": "7"
-                            }
-                        ],
-                        "writable": [
-                            {
-                                "from": "4",
-                                "to": "4"
-                            }
-                        ],
-                        "save": false,
-                        "callback": "(function test(editor) {bulkheadCallBack.listenToEditorForFeatureInServerXML(editor); })"
-                    }
-                ]
+                    "displayType": "tabbedEditor",
+                    "active": true,
+                    "activeTab": "server.xml",
+                    "editorList": [
+                        {
+                            "displayType": "tabbedEditor",
+                            "fileName": "BankService.java",
+                            "preload": [
+                                "package global.eBank.microservices;",
+                                "import java.util.concurrent.Future;",
+                                "import java.util.concurrent.Executors;",
+                                "import java.util.concurrent.ExecutorService;",
+                                "",
+                                "public class BankService {",
+                                "  @Inject private BankService bankService;",
+                                "  private int counterForVFA = 0;",
+                                "",
+                                "  public Future<Service> requestForVFA() {",
+                                "    counterForVFA++;",
+                                "    ExecutorService executor = Executors.newSingleThreadExecutor();",
+                                "    Future<Service> serviceRequest = executor.submit(() -> {",
+                                "      try {",
+                                "        return bankService.serviceForVFA(counterForVFA);",
+                                "      } catch (Exception ex) {",
+                                "        handleException();",
+                                "      }",
+                                "      return null;",
+                                "    });",
+                                "    return serviceRequest;",
+                                "  }",
+                                "",
+                                "  public Service serviceForVFA(int counterForVFA) {",
+                                "    Service chatService = new ChatSession(counterForVFA);",
+                                "    return chatService;",
+                                "  }",
+                                "}"
+                            ],
+                            "readonly": true
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+                                "      <feature>cdi-1.2</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
+                                "</server>"
+                            ],
+                            "readonly": [
+                                {
+                                    "from": "1",
+                                    "to": "3"
+                                },
+                                {
+                                    "from": "5",
+                                    "to": "7"
+                                }
+                            ],
+                            "writable": [
+                                {
+                                    "from": "4",
+                                    "to": "4"
+                                }
+                            ],
+                            "callback": "(function test(editor) {bulkheadCallBack.listenToEditorForFeatureInServerXML(editor); })"
+                        }
+                    ]
                 }
             ]
-        } ,
+        },
         {
             "name": "BulkheadAnnotation",
             "title": "Adding the @Bulkhead annotation",
@@ -393,7 +388,6 @@
                                     "to": "23"
                                 }
                             ],
-                            "save": false,
                             "callback": "(function test(tabbedEditor) {bulkheadCallBack.listenToEditorForJavaConcurrency(tabbedEditor, 'BankService.java'); })"
                         },
                         {
@@ -409,8 +403,7 @@
                                 "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
                                 "</server>"
                             ],
-                            "readonly": true,
-                            "save": false
+                            "readonly": true
                         }
                     ]
                 }
@@ -508,7 +501,6 @@
                                     "to": "29"
                                 }
                             ],
-                            "save": false,
                             "callback": "(function test(editor) {bulkheadCallBack.listenToEditorForAsyncBulkhead(editor); })"
                         },
                         {
@@ -524,8 +516,7 @@
                                 "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
                                 "</server>"
                             ],
-                            "readonly": true,
-                            "save": false
+                            "readonly": true
                         }
                     ]
                 }
@@ -609,7 +600,6 @@
                                     "to": "16"
                                 }
                             ],
-                            "save": false,
                             "callback": "(function test(editor) {bulkheadCallBack.listenToEditorForAsyncBulkheadFallback(editor); })"
                         },
                         {
@@ -635,8 +625,7 @@
                                 "  }",
                                 "}"
                             ],
-                            "readonly": true,
-                            "save": false
+                            "readonly": true
                         },
                         {
                             "displayType": "fileEditor",
@@ -651,8 +640,7 @@
                                 "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
                                 "</server>"
                             ],
-                            "readonly": true,
-                            "save": false
+                            "readonly": true
                         }
                     ]
                 }
@@ -727,7 +715,6 @@
                                 "to": "18"
                             }
                         ],
-                        "save": false,
                         "callback": "(function test(editor) {bulkheadCallBack.listenToPlaygroundEditorAnnotationChanges(editor); })"
                     }
                 ]
