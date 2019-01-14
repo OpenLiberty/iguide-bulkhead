@@ -10,27 +10,39 @@
       IBM Corporation - initial API and implementation
 -->
 <html>
+    <head> 
+        <script type="text/javascript"> 
+            var script = document.createElement('script');
+                
+            script.onload = function() {
+                var guideRootDir = "/guides/iguide-bulkhead/js/nls/"
+                retrieveExternalizedStrings(guideRootDir);
+            };
+            script.src = '/guides/iguides-common/js/interactive-guides/externalized-string.js';
+            document.getElementsByTagName('head')[0].appendChild(script);
+        </script>    
+    </head>
   <body>
       <div class="bulkhead">
-        <div class="bulkheadRequestButtons">
-          <button class="btn bulkheadButton bulkheadThreadRequestButton" title="Chat request">Chat Request</button>
-          <button class="btn bulkheadButton bulkheadThreadReleaseButton" title="End chat">End Chat</button>          
+        <div class="bulkheadRequestButtons">       
+          <button class="btn bulkheadButton bulkheadThreadRequestButton" data-externalizedTitle="CHAT_REQUEST" data-externalizedString="CHAT_REQUEST"></button>
+          <button class="btn bulkheadButton bulkheadThreadReleaseButton" data-externalizedTitle="END_CHAT" data-externalizedString="END_CHAT"></button>          
         </div>
         <div class="bulkheadQueues">          
           <div class="bulkheadThreadpool bulkheadQueueDiv" tabindex='0'>
-            <span class="bulkheadThreadpoolQueueDescription">Thread pool queue representing the number of chat requests: </span>
-            <div class="bulkheadQueue bulkheadThreadpoolQueue"></div>
+              <span class="bulkheadThreadpoolQueueDescription" data-externalizedString="THREAD_POOL"></span>
+              <div class="bulkheadQueue bulkheadThreadpoolQueue"></div>
           </div>
           <div class="bulkheadWait bulkheadQueueDiv" tabindex='0'>
-            <span class="bulkheadWaitQueueDescription">Waiting tasks queue: </span>
-            <div class="bulkheadQueue bulkheadWaitQueue"></div>
+              <span class="bulkheadWaitQueueDescription" data-externalizedString="WAITING_TASKS"></span>
+          <div class="bulkheadQueue bulkheadWaitQueue"></div>
           </div>
           <div class="bulkheadExceptionDiv" style="display: none;" tabindex='0'>
-            <span class="bulkheadException">Exceeded wait queue size. A <code>BulkheadException</code> is thrown.</span>
+              <span class="bulkheadException" data-externalizedString="EXCEEDED_QUEUE"></span>
           </div>
           <div>
-              <button class="btn bulkheadButton bulkheadResetButton" title="Reset">Reset</button>
-          </div>  
+              <button class="btn bulkheadButton bulkheadResetButton" data-externalizedTitle="RESET" data-externalizedString="RESET"></button>
+           </div>  
         </div>
       </div>
 

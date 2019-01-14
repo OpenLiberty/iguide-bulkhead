@@ -18,7 +18,7 @@
         var script = document.createElement('script');
         
         script.onload = function() {
-            var guideRootDir = "/guides/iguides-common/js/interactive-guides/nls/"
+            var guideRootDir = "/guides/iguide-bulkhead/js/nls/"
             retrieveExternalizedStrings(guideRootDir);
         };
         script.src = '/guides/iguides-common/js/interactive-guides/externalized-string.js';
@@ -35,9 +35,9 @@
         </div>
     </div>
     <div class="chatIntro">
-        <img class="chatIcon" src="/guides/iguide-bulkhead/html/images/chat-icon.svg" alt="chat icon"/>
-        <span class="chatIntroText">Chat with a financial advisor</span>
+        <img class="chatIcon" src="/guides/iguide-bulkhead/html/images/chat-icon.svg" data-externalizedAlt="CHAT_ICON"/>
+        <span class="chatIntroText" data-externalizedString="CHAT_WITH_ADVISOR"></span>
     </div>
-    <div class="spacing errorTextBox">The financial advisor is currently busy with a customer.<br>Please try again later.</div>
+    <div class="spacing errorTextBox" data-externalizedString="ONE_BUSY"></div>
 </body>
 </html>

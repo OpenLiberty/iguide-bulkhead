@@ -59,7 +59,7 @@ var asyncBulkhead = function(){
 
         for (requestCount = 0; requestCount < queueSpots.length && requestCount < this.requestChatCount; requestCount++) {
           queueSpots[requestCount].setAttribute('src', '/guides/iguide-bulkhead/html/images/user_green.svg');
-          queueSpots[requestCount].setAttribute('alt', 'Active chat session');
+          queueSpots[requestCount].setAttribute('alt', bulkhead_messages.ACTIVE_CHAT);
         }
 
         if (requestCount === this.requestChatCount && requestCount < queueSpots.length) {
@@ -67,13 +67,13 @@ var asyncBulkhead = function(){
           var emptyRequestCount;
           for (emptyRequestCount = requestCount; emptyRequestCount < queueSpots.length; emptyRequestCount++) {
             queueSpots[emptyRequestCount].setAttribute('src', '/guides/iguide-bulkhead/html/images/user_outline-green.svg');
-            queueSpots[emptyRequestCount].setAttribute('alt', 'Available chat session');
+            queueSpots[emptyRequestCount].setAttribute('alt', bulkhead_messagess.AVAILABLE_CHAT);
           }
           // No requests for the wait queue.  Fill with empty queue slots.
           queueSpots = waitQueueContainer.find('img');
           for (emptyRequestCount = 0; emptyRequestCount < queueSpots.length; emptyRequestCount++) {
             queueSpots[emptyRequestCount].setAttribute('src', '/guides/iguide-bulkhead/html/images/user_outline-orange.svg');
-            queueSpots[emptyRequestCount].setAttribute('alt', 'Available wait queue slot');
+            queueSpots[emptyRequestCount].setAttribute('alt', bulkhead_messages.AVAILABLE_SLOT);
           }
         } else if (requestCount <= this.requestChatCount) {
           // There are more requests to display.  Spill them over to the wait queue.
@@ -83,7 +83,7 @@ var asyncBulkhead = function(){
                requestCount < this.requestChatCount && waitRequestCount < queueSpots.length;
                requestCount++, waitRequestCount++) {
                  queueSpots[waitRequestCount].setAttribute('src', '/guides/iguide-bulkhead/html/images/user_orange.svg');
-                 queueSpots[waitRequestCount].setAttribute('alt', 'Taken wait queue slot');
+                 queueSpots[waitRequestCount].setAttribute('alt', bulkhead_messages.TAKEN_SLOT);
           }
           if (requestCount !== this.requestChatCount) {
             // Still requests that haven't been processed.  Issue BulkheadException.
@@ -96,7 +96,7 @@ var asyncBulkhead = function(){
             // The wait queue is not full.  Add empty boxes to the wait queue.
             for ( ; waitRequestCount < queueSpots.length; waitRequestCount++) {
               queueSpots[waitRequestCount].setAttribute('src', '/guides/iguide-bulkhead/html/images/user_outline-orange.svg');
-              queueSpots[waitRequestCount].setAttribute('alt', 'Available wait queue slot');
+              queueSpots[waitRequestCount].setAttribute('alt', bulkhead_messages.AVAILABLE_SLOT);
             }
           }
         }
@@ -124,10 +124,9 @@ var asyncBulkhead = function(){
           }
 
           // Update request queue aria-label with the number of requests on the queue.
-          requestQueue.attr('aria-label', 'Number of requested chats: ' + requestQueueSize + '. Size of threadpool: ' + this.value);
-
+         requestQueue.attr('aria-label', bulkhead_messages.REQUESTED_CHATS + requestQueueSize + bulkhead_messages.SIZE_OF_TP + this.value);
           // Update waiting task queue aria-label with the number of requests on the waiting queue.
-          waitingTasksQueue.attr('aria-label', 'Number of waiting threads: ' + waitQueueSize + '. Size of waiting task queue: ' + this.waitingTaskQueue);
+          waitingTasksQueue.attr('aria-label', bulkhead_messages.NUMBER_WAITING + waitQueueSize + bulkhead_messages.SIZE_OF_WAITING + this.waitingTaskQueue);
       },
 
       // Handle chat request and end chat requests

@@ -20,7 +20,7 @@
         var script = document.createElement('script');
         
         script.onload = function() {
-            var guideRootDir = "/guides/iguides-common/js/interactive-guides/nls/"
+            var guideRootDir = "/guides/iguide-bulkhead/js/nls/"
             retrieveExternalizedStrings(guideRootDir);
         };
         script.src = '/guides/iguides-common/js/interactive-guides/externalized-string.js';
@@ -37,23 +37,23 @@
         </div>
     </div>
     <div class="chatIntro">
-        <img class="chatIcon" src="/guides/iguide-bulkhead/html/images/chat-icon.svg" alt="chat icon"/>
-        <span class="chatIntroText">Chat with a financial advisor</span>
+        <img class="chatIcon" src="/guides/iguide-bulkhead/html/images/chat-icon.svg" data-externalizedAlt="CHAT_ICON"/>
+        <span class="chatIntroText" data-externalizedString="CHAT_WITH_ADVISOR"></span>
     </div>
-    <div class="chatAdvisorCount">You are talking to advisor 2.</div>
+    <div class="chatAdvisorCount" data-externalizedString="ADVISOR_TWO"></div>
     <div class="advisorChatBlock">
         <div class="flexContainer">    
             <div class="advisorInitialBlock">
-                <span class="advisorInitial">J</span>
+                <span class="advisorInitial" data-externalizedString="J_INITAL"></span>
             </div>
-            <div class="advisorChat">
-                <span class="advisorName">Hi, I am Jenny,</span> a financial advisor from Global eBank. Let me review your account. I'll be with you shortly.
-            </div>
+            <div class="advisorChat"
+                    data-externalizedString="JENNY"
+             </div>
         </div>
     </div>
     <div class="customerChatBlock flexContainer">
-        <input type="text" class="customerChatInput" aria-label="Chat input from customer" value="For demo only"/>
-        <button class="customerChatSubmitButton" title="For demo only">Submit</button>
+        <input type="text" class="customerChatInput" data-externalizedAriaLabel="CHAT_INPUT" data-externalizedValue="DEMO_ONLY"/>
+        <button class="customerChatSubmitButton" data-externalizedTitle="DEMO_ONLY" data-externalizedString="SUBMIT"></button>
     </div>
 </body>
 
