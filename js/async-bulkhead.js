@@ -67,7 +67,7 @@ var asyncBulkhead = function(){
           var emptyRequestCount;
           for (emptyRequestCount = requestCount; emptyRequestCount < queueSpots.length; emptyRequestCount++) {
             queueSpots[emptyRequestCount].setAttribute('src', '/guides/iguide-bulkhead/html/images/user_outline-green.svg');
-            queueSpots[emptyRequestCount].setAttribute('alt', bulkhead_messagess.AVAILABLE_CHAT);
+            queueSpots[emptyRequestCount].setAttribute('alt', bulkhead_messages.AVAILABLE_CHAT);
           }
           // No requests for the wait queue.  Fill with empty queue slots.
           queueSpots = waitQueueContainer.find('img');

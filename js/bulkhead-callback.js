@@ -640,7 +640,7 @@ var bulkheadCallBack = (function() {
                             if (!isNaN(waitingTaskQueue)) validParameters = true;
                         }
                         if (!validParameters && param !== "") {
-                            editor.createCustomErrorMessage(bulkheadMessages.invalidParameters);
+                            editor.createCustomErrorMessage(bulkhead_messages.INVALID_PARMS);
                             errorPosted = true;
                         }
                     });    
@@ -650,10 +650,10 @@ var bulkheadCallBack = (function() {
                     // Parameter value(s) syntax is good....check the values entered.
                     if (value != undefined) {
                         if (!utils.isInteger(value) || value < 1) {                        
-                            editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsGTZero, ["value"]));
+                            editor.createCustomErrorMessage(utils.formatString(bulkhead_messages.PARMS_GT_ZERO, ["value"]));
                             errorPosted = true;
                         } else if (value > 10) {
-                            editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsMaxValue,["value"]));
+                            editor.createCustomErrorMessage(utils.formatString(bulkhead_messages.PARMS_MAX_VALUE,["value"]));
                             errorPosted = true;
                         }    
                     } else {
@@ -662,10 +662,10 @@ var bulkheadCallBack = (function() {
                     
                     if (waitingTaskQueue != undefined) {
                         if(!utils.isInteger(waitingTaskQueue) || waitingTaskQueue < 1) {
-                            editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsGTZero, ["waitingTaskQueue"]));
+                            editor.createCustomErrorMessage(utils.formatString(bulkhead_messages.PARMS_GT_ZERO, ["waitingTaskQueue"]));
                             errorPosted = true;
                         } else if (waitingTaskQueue > 10) {
-                            editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsMaxValue,["waitingTaskQueue"]));
+                            editor.createCustomErrorMessage(utils.formatString(bulkhead_messages.PARMS_MAX_VALUE,["waitingTaskQueue"]));
                             errorPosted = true;
                         }
                     } else {
@@ -676,7 +676,7 @@ var bulkheadCallBack = (function() {
                 if (!errorPosted) {
                     // All looks good so far...update the playground.
                     if (waitingTaskQueue < value) {
-                        editor.createCustomAlertMessage(bulkheadMessages.waitBestPractice);
+                        editor.createCustomAlertMessage(bulkhead_messages.WAIT_BEST_PRACTICE);
                         // Do not return here.  Post warning and allow user to continue with their simulation.
                     } else {
                         // Clear out any previous error boxes displayed.
@@ -695,7 +695,7 @@ var bulkheadCallBack = (function() {
                 }
             }
             catch(e){
-                editor.createCustomErrorMessage(bulkheadMessages.invalidParameters);
+                editor.createCustomErrorMessage(bulkhead_messages.INVALID_PARMS);
                 bulkhead.enableActions(false);
             }
         };
