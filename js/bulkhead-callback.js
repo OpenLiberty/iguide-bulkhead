@@ -570,6 +570,7 @@ var bulkheadCallBack = (function() {
                             if (requestNum === 1) {
                                 $stepPod.find(".busyCount").text(1);
                                 $stepPod.find(".busyChatCount").attr("aria-label", bulkhead_messages.ONE_CHAT_INPROGRESS);
+                                $stepPod.find(".busyChatCount").attr("data-externalizedarialabel", bulkhead_messages.ONE_CHAT_INPROGRESS);
                             }
                         }
                     }, 10);
@@ -595,12 +596,16 @@ var bulkheadCallBack = (function() {
                         chatSummary.find(".waitCount").text(1);
                         chatSummary.find(".waitChatCount").attr("aria-label", bulkhead_messages.ONE_CHAT_WAITING);
                         chatSummary.find(".busyChatCount").attr("aria-label", bulkhead_messages.FIFTY_CHATS_INPROGRESS);
+                        chatSummary.find(".waitChatCount").attr("data-externalizedarialabel", bulkhead_messages.ONE_CHAT_WAITING);
+                        chatSummary.find(".busyChatCount").attr("data-externalizedarialabel", bulkhead_messages.FIFTY_CHATS_INPROGRESS);
 
                     } else {
                         if (elementToBeCounted === ".busyCount") {
                             chatSummary.find(".busyChatCount").attr("aria-label", bulkhead_messages.FIFTY_CHATS_INPROGRESS);
+                            chatSummary.find(".busyChatCount").attr("data-externalizedarialabel", bulkhead_messages.FIFTY_CHATS_INPROGRESS);
                         } else {
                             chatSummary.find(".waitChatCount").attr("aria-label", bulkhead_messages.FIFTY_CHATS_WAITING);
+                            chatSummary.find(".waitChatCount").attr("data-externalizedarialabel", bulkhead_messages.FIFTY_CHATS_WAITING);
                         }
                     }
                 }

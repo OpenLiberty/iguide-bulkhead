@@ -1,4 +1,9 @@
 
+/****************************
+ *  Note for translators:
+ *       Please do not translate <span class=advisorName> in JENNY and BOB
+ */
+
 var bulkhead_messages = {
     ABOUT: "About",
     USER: "User",
@@ -43,8 +48,8 @@ var bulkhead_messages = {
     FIFTY_CHATS_INPROGRESS: "50 chats are currently in progress",
     FIFTY_CHATS_WAITING: "50 chat requests are waiting in the queue",
     WAIT_BEST_PRACTICE: "It is best practice to have a <b>waitingTaskQueue</b> equal to or larger than the <b>value</b>.",
-    JENNY: "<b>Hi&#44 I am Jenny&#44</b> a financial advisor from Global eBank. Let me review your account. I&#39ll be with you shortly.",
-    BOB: "<b>Hi&#44 I am Bob&#44</b> a financial advisor from Global eBank. Let me review your account. I&#39ll be with you shortly.",
+    JENNY:"<span class=advisorName>Hi&#44 I am Jenny&#44</span> a financial advisor from Global eBank. Let me review your account. I&#39ll be with you shortly.",
+    BOB: "<span class=advisorName>Hi&#44 I am Bob&#44</span> a financial advisor from Global eBank. Let me review your account. I&#39ll be with you shortly.",
     J_INITAL: "J",
     B_INITIAL: "B",
     NINE_AM: "9&#58;00 AM",
