@@ -254,6 +254,9 @@ var bulkheadCallBack = (function() {
             "    return serviceRequest;\n" +
             "  }";
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 10, 13, newContent, 13);
+        // line number to scroll to = insert line + the number of lines to be insert 
+        // for this example 10 + 13 = 23
+        contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, 23);
     };
 
     var __validateEditorContentInJavaConcurrencyStep = function(content) {
@@ -365,6 +368,7 @@ var bulkheadCallBack = (function() {
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
         var newContent = "  @Bulkhead(50)";
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 23, 23, newContent, 1);
+        contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, 24);
     };
 
     var addJavaConcurrencyButton = function(event, stepName) {
@@ -423,9 +427,10 @@ var bulkheadCallBack = (function() {
         params[1] = "waitingTaskQueue=50";
 
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 25, 30, constructAnnotation(params), 7);
+        contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, 32);
         if (hasRequestForVFAMethod === true) {
             __updateAsyncBulkheadMethodInEditor(stepName, false);
-        }
+        }       
     };
 
     var listenToEditorForAsyncBulkhead = function(editor) {
@@ -449,6 +454,7 @@ var bulkheadCallBack = (function() {
         var newContent =
             "  @Fallback(ServiceFallbackHandler.class)"; + 
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 16, 16, newContent, 1);
+        contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, 17);
     };
 
     var listenToEditorForAsyncBulkheadFallback = function(editor) {
@@ -477,6 +483,7 @@ var bulkheadCallBack = (function() {
             contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
         }
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 11, 23, newContent, 4);
+        contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, 15);
 
         if (hasServiceForVFAMethod === true && (performReset === undefined || performReset === true)) {
             __addAsyncBulkheadInEditor(stepName);
