@@ -11,14 +11,14 @@
 -->
 <html>
 <head>
-    <link rel="stylesheet" href="/guides/iguide-bulkhead/css/chat.css">
+    <link rel="stylesheet" href="/guides/iguide-bulkhead/css/bulkhead/chat.css">
     <link rel="stylesheet" href="/guides/iguides-common/css/interactive-guides/bankApp.css">
 
     <script type="text/javascript"> 
         var script = document.createElement('script');
         
         script.onload = function() {
-            var guideRootDir = "/guides/iguides-common/js/interactive-guides/nls/"
+            var guideRootDir = "/guides/iguide-bulkhead/js/nls/bulkhead/"
             retrieveExternalizedStrings(guideRootDir);
         };
         script.src = '/guides/iguides-common/js/interactive-guides/externalized-string.js';
@@ -35,9 +35,9 @@
         </div>
     </div>
     <div class="chatIntro">
-        <img class="chatIcon" src="/guides/iguide-bulkhead/html/images/chat-icon.svg" alt="chat icon"/>
-        <span class="chatIntroText">Chat with a financial advisor</span>
-    </div>
-    <div class="spacing errorTextBox">All financial advisors are currently busy.<br>Please try again later.</div>
+            <img class="chatIcon" src="/guides/iguide-bulkhead/html/images/chat-icon.svg" data-externalizedAlt="CHAT_ICON"/>
+            <span class="chatIntroText" data-externalizedString="CHAT_WITH_ADVISOR"></span>
+        </div>
+    <div class="spacing errorTextBox" data-externalizedString="ONE_BUSY"></div>
 </body>
 </html>

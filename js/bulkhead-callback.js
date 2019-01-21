@@ -576,7 +576,8 @@ var bulkheadCallBack = (function() {
                             var $stepPod = pod.contentRootElement;
                             if (requestNum === 1) {
                                 $stepPod.find(".busyCount").text(1);
-                                $stepPod.find(".busyChatCount").attr("aria-label", "1 chat is currently in progress");
+                                $stepPod.find(".busyChatCount").attr("aria-label", bulkhead_messages.ONE_CHAT_INPROGRESS);
+                                $stepPod.find(".busyChatCount").attr("data-externalizedarialabel", bulkhead_messages.ONE_CHAT_INPROGRESS);
                             }
                         }
                     }, 10);
@@ -600,13 +601,18 @@ var bulkheadCallBack = (function() {
                     if (startingWaitingQueue) {
                         chatSummary.find(".waitCount").addClass('chatSummaryTransition');
                         chatSummary.find(".waitCount").text(1);
-                        chatSummary.find(".waitChatCount").attr("aria-label", "1 chat request is waiting in the queue");
-                        chatSummary.find(".busyChatCount").attr("aria-label", "50 chats are currently in progress");
+                        chatSummary.find(".waitChatCount").attr("aria-label", bulkhead_messages.ONE_CHAT_WAITING);
+                        chatSummary.find(".busyChatCount").attr("aria-label", bulkhead_messages.FIFTY_CHATS_INPROGRESS);
+                        chatSummary.find(".waitChatCount").attr("data-externalizedarialabel", bulkhead_messages.ONE_CHAT_WAITING);
+                        chatSummary.find(".busyChatCount").attr("data-externalizedarialabel", bulkhead_messages.FIFTY_CHATS_INPROGRESS);
+
                     } else {
                         if (elementToBeCounted === ".busyCount") {
-                            chatSummary.find(".busyChatCount").attr("aria-label", "50 chats are currently in progress");
+                            chatSummary.find(".busyChatCount").attr("aria-label", bulkhead_messages.FIFTY_CHATS_INPROGRESS);
+                            chatSummary.find(".busyChatCount").attr("data-externalizedarialabel", bulkhead_messages.FIFTY_CHATS_INPROGRESS);
                         } else {
-                            chatSummary.find(".waitChatCount").attr("aria-label", "50 chat requests are waiting in the queue");
+                            chatSummary.find(".waitChatCount").attr("aria-label", bulkhead_messages.FIFTY_CHATS_WAITING);
+                            chatSummary.find(".waitChatCount").attr("data-externalizedarialabel", bulkhead_messages.FIFTY_CHATS_WAITING);
                         }
                     }
                 }
@@ -646,7 +652,7 @@ var bulkheadCallBack = (function() {
                             if (!isNaN(waitingTaskQueue)) validParameters = true;
                         }
                         if (!validParameters && param !== "") {
-                            editor.createCustomErrorMessage(bulkheadMessages.invalidParameters);
+                            editor.createCustomErrorMessage(bulkhead_messages.INVALID_PARMS);
                             errorPosted = true;
                         }
                     });    
@@ -656,10 +662,10 @@ var bulkheadCallBack = (function() {
                     // Parameter value(s) syntax is good....check the values entered.
                     if (value != undefined) {
                         if (!utils.isInteger(value) || value < 1) {                        
-                            editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsGTZero, ["value"]));
+                            editor.createCustomErrorMessage(utils.formatString(bulkhead_messages.PARMS_GT_ZERO, ["value"]));
                             errorPosted = true;
                         } else if (value > 10) {
-                            editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsMaxValue,["value"]));
+                            editor.createCustomErrorMessage(utils.formatString(bulkhead_messages.PARMS_MAX_VALUE,["value"]));
                             errorPosted = true;
                         }    
                     } else {
@@ -668,10 +674,10 @@ var bulkheadCallBack = (function() {
                     
                     if (waitingTaskQueue != undefined) {
                         if(!utils.isInteger(waitingTaskQueue) || waitingTaskQueue < 1) {
-                            editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsGTZero, ["waitingTaskQueue"]));
+                            editor.createCustomErrorMessage(utils.formatString(bulkhead_messages.PARMS_GT_ZERO, ["waitingTaskQueue"]));
                             errorPosted = true;
                         } else if (waitingTaskQueue > 10) {
-                            editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsMaxValue,["waitingTaskQueue"]));
+                            editor.createCustomErrorMessage(utils.formatString(bulkhead_messages.PARMS_MAX_VALUE,["waitingTaskQueue"]));
                             errorPosted = true;
                         }
                     } else {
@@ -682,7 +688,7 @@ var bulkheadCallBack = (function() {
                 if (!errorPosted) {
                     // All looks good so far...update the playground.
                     if (waitingTaskQueue < value) {
-                        editor.createCustomAlertMessage(bulkheadMessages.waitBestPractice);
+                        editor.createCustomAlertMessage(bulkhead_messages.WAIT_BEST_PRACTICE);
                         // Do not return here.  Post warning and allow user to continue with their simulation.
                     } else {
                         // Clear out any previous error boxes displayed.
@@ -701,7 +707,7 @@ var bulkheadCallBack = (function() {
                 }
             }
             catch(e){
-                editor.createCustomErrorMessage(bulkheadMessages.invalidParameters);
+                editor.createCustomErrorMessage(bulkhead_messages.INVALID_PARMS);
                 bulkhead.enableActions(false);
             }
         };
