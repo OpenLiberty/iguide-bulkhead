@@ -11,13 +11,31 @@ body {
     background-color: #deedf7;
 }
 
-.bankHeading {   
+.bankHeadingBlockFlexContainer { /* The same flexbox will be used to hold the bank heading with and without the account in it */
+    height: 36px;
+    background-color: #deedf7;
+    display: flex;
+    justify-content: space-between;
+}
+
+.bankHeadingBlockFlexContainer > span {
+    margin: auto 10px auto auto;
+}
+
+.bankHeadingBlockFlexContainer > span > img {
+    height: 24px;
+    width: 24px;
+    opacity: 0.41;
+    padding-left: 10px;
+}
+
+.bankHeading {
     font-weight: 500;
     font-size: 16px;
-    color: #343334;
+    color: #5E6B8D;
     letter-spacing: 0;
     text-align: left;
-    padding: 9px 0px 9px 17px;
+    padding: 9px 0px 9px 18px;
 }
 
 .chatAdvisorCount {

@@ -1,13 +1,15 @@
 ---
-layout: interactive-guide
+layout: iguide-multipane
 title: "Limiting the number of concurrent requests to microservices"
+seo-title: Limiting the number of concurrent requests to microservices
 description: Use a MicroProfile Bulkhead policy to limit requests and prevent faults from cascading to the entire system.
+seo-description: Use a MicroProfile Bulkhead policy to limit requests and prevent faults from cascading to the entire system
 tags: ['Interactive', 'MicroProfile', '@Bulkhead', '@Asynchronous', '@Fallback', 'microservices', 'Concurrent requests']
+categories: MicroProfile
 css:
 - interactive-guides/main
 - interactive-guides/step-content
 - interactive-guides/editor
-- interactive-guides/table-of-contents
 - interactive-guides/file-browser
 - interactive-guides/web-browser
 - interactive-guides/pod
@@ -16,16 +18,17 @@ css:
 - interactive-guides/code-mirror/code-mirror
 - interactive-guides/code-mirror/theme/blackboard
 - interactive-guides/code-mirror/theme/elegant
-- bulkhead
-- dashboard
+- bulkhead/bulkhead
+- bulkhead/dashboard
 js:
 - interactive-guides/code-mirror/code-mirror
 - interactive-guides/code-mirror/mode/javascript
 - interactive-guides/code-mirror/display/autorefresh
 - interactive-guides/step-content
 - interactive-guides/json-guide
-- interactive-guides/messages
+- interactive-guides/nls/messages
 - interactive-guides/id
+- interactive-guides/iguide-multipane
 - interactive-guides/modules/cmd-prompt
 - interactive-guides/modules/content-manager
 - interactive-guides/modules/editor
@@ -38,10 +41,10 @@ js:
 - interactive-guides/terminal/terminal
 - interactive-guides/utils
 - interactive-guides/blueprint
+- nls/bulkhead/messages
 - async-bulkhead
 - bulkhead-callback
 - bulkhead-guide
-- bulkhead-messages
 duration: 20 minutes
 related-guides: ['circuit-breaker']
 releasedate: 2018-03-22

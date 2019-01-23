@@ -9,12 +9,7 @@
 *     IBM Corporation - initial API and implementation
 *******************************************************************************/
 .dashboardContainer {
-    font-family: Asap;
-    background: #ffffff !important;
-    border:1px solid  #cbcbcb !important;
-    border-radius: 1px;
-    height: 42px !important;
-    margin-bottom: 2px !important;
+    height: 100%;
     width: 100%;
 }
 
@@ -23,6 +18,7 @@
     width: 100%;    
     table-layout: fixed;
     border-collapse: collapse;
+    height: 100%;
 }               
 
 .oneCount {
@@ -49,10 +45,11 @@
     white-space: nowrap;
 }
 
+th:nth-child(odd):not(:last-child) {
+    border-right: 1px solid #cbcbcb;
+}
+
 .countTableCellLine {
-    border: 1px solid #cbcbcb;
-    width: 1px;
-    height: 41px;
     text-align: center;
 }
 
@@ -62,4 +59,26 @@
 
 .waitCount {
     color: #d04b02;
+}
+
+.chatSummaryTransition {
+    height: 100%;
+    -webkit-animation: fadeinout 1s linear 1 forwards;
+    animation: fadeinout 1s linear 1 forwards;
+}
+
+@-webkit-keyframes fadeinout {
+    0% { opacity: 0; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+@keyframes fadeinout {
+    0% { opacity: 0; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+#guide_content table {
+    margin-top: 1.25em; /* balance out the margin-bottom imposed by guide-multipane */
 }

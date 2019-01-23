@@ -231,6 +231,10 @@ body {
     margin-bottom: 8px;
 }
 
+.timeChoices {
+    display: inline-flex;
+}
+
 .timeChoices input {
     margin-bottom: 9px;
 }
@@ -240,6 +244,7 @@ body {
     width: 15px;
     height: 15px;
     border-radius: 100%;
+    margin-left: 20px;
 }
 
 .scheduleButton {
@@ -262,6 +267,8 @@ body {
 }
 
 .timeResponse {
-    margin-top: 40px;
-    display: none;
+    display: none;  /* will change to display flex when schedule appointment button is clicked */
+    height: calc(100% - 86px);
+    justify-content: center;
+    align-items: center;
 }

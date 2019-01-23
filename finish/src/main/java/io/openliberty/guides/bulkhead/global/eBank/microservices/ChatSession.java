@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package io.openliberty.guides.bulkhead.global.eBank.microservices;
-
+import io.openliberty.guides.bulkhead.global.eBank.rest.Producer;
 
 public class ChatSession extends Service {
  
@@ -19,8 +19,9 @@ public class ChatSession extends Service {
         try {
             this.service = Utils.getHTMLForChatWithVFA(localCounter);  
             Thread.sleep(BankService.TIMEOUT);
+            Producer.adjustRequestCount(false);
         } catch (InterruptedException ie) {
-            System.out.println("InterruptedException " + ie.getMessage());
+            this.service = "<div>" + ie.getMessage() + "</div>";;
         } 
     }
 

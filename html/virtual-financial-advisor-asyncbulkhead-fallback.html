@@ -8,40 +8,35 @@
   Contributors:
       IBM Corporation - initial API and implementation
 -->
-<div id="asyncBulkheadFallbackStep" class="pod-animation-slide-from-right" tabindex="0" aria-label="Virtual financial advisor chat summary and sample browser window">
-    <table class="dashboardContainer" tabindex="0" aria-label="Chat summary">
+<head>    
+        <script type="text/javascript"> 
+            var script = document.createElement('script');
+                    
+            script.onload = function() {
+                   var guideRootDir = "/guides/iguide-bulkhead/js/nls/bulkhead/"
+                   retrieveExternalizedStrings(guideRootDir);
+            };
+             script.src = '/guides/iguides-common/js/interactive-guides/externalized-string.js';
+             document.getElementsByTagName('head')[0].appendChild(script);
+         </script>    
+</head>
+<div class="chatSummaryTransition">
+    <table class="dashboardContainer" tabindex="0" data-externalizedAriaLabel="CHAT_SUMMARY">
         <tr class="chatSummary" tabindex="0">
             <th class="countTableCellLine">
-                <span class="chatLabel" aria-label="50 concurrent chats are allowed">IN PROGRESS</span>
-                <span class="chatCount busyChatCount" aria-label="No chat is in progress">
+                    <span class="chatLabel" data-externalizedAriaLabel="CONCURRENT_CHATS" data-externalizedString="IN_PROGRESS"></span>
+                    <span class="chatCount busyChatCount" data-externalizedAriaLabel="NO_CHAT">
                     <span class="busyCount">0</span>
-                        /50
+                    /50
                 </span>
             </th>
             <th class="countTableCellLine">
-                <span class="chatLabel" aria-label="50 chat requests are allowed in the waiting queue">WAITING</span>
-                <span class="chatCount waitChatCount" aria-label="No request is waiting in the queue">
+                    <span class="chatLabel" data-externalizedAriaLabel="ALLOWED_CHATS" data-externalizedString="WAITING"></span>
+                    <span class="chatCount waitChatCount" data-externalizedAriaLabel="NO_REQUESTS">
                     <span class="waitCount">0</span>
-                        /50
+                    /50
                 </span>
             </th>
         </tr>
     </table>
-    <div class='browserHolder'></div>
 </div>
-<script>
-    var stepName = "Fallback";
-    var stepElementId = "asyncBulkheadFallbackStep";
-    var browser;
-
-    var content = {
-        url: "https://global-ebank.openliberty.io/",
-        browserContent: "/guides/iguide-bulkhead/html/global-eBank.html",
-        enableStatusBar: false,
-        enableRefreshButton: false
-    };
-    webBrowser.create($('#' + stepElementId).find('.browserHolder'), stepName,  content).done(function(newWebBrowser){
-        contentManager.setWebBrowser(stepName, newWebBrowser, 0);
-        browser = newWebBrowser;
-    });
-</script>

@@ -28,10 +28,10 @@ public class BankService {
     // For demo purpose only
     // The length of time (in milliseconds) to pause the currently executing thread 
     // so as to simulate concurrency
-    public static final int TIMEOUT = 20000;
+    public static final int TIMEOUT = 30000;
 
-    public final static int bulkheadValue = 5;
-    public final static int bulkheadWaitingQueue = 5;
+    public final static int bulkheadValue = 2;
+    public final static int bulkheadWaitingQueue = 2;
  
     @Inject private BankService bankService;
     private int counterForVFA = 0;
