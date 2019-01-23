@@ -126,14 +126,7 @@ var bulkheadCallBack = (function() {
         var serverFileName = "server.xml";
 
         var content = contentManager.getTabbedEditorContents(stepName, serverFileName);
-        if (__checkMicroProfileFaultToleranceFeatureContent(content)) {
-            editor.closeEditorErrorBox(stepName);
-            editor.addCodeUpdated();
-            contentManager.markCurrentInstructionComplete(stepName);
-        } else {
-            // display error to fix it
-            editor.createErrorLinkForCallBack(true, __correctEditorError);
-        }
+        utils.validateContentAndSave(stepName, editor, content, __checkMicroProfileFaultToleranceFeatureContent, __correctEditorError);
     };
 
     var __listenToEditorForFeatureInServerXML = function(editor) {
@@ -175,25 +168,21 @@ var bulkheadCallBack = (function() {
             htmlFile = htmlRootDir + "virtual-financial-advisor-asyncbulkhead.html";
         }
 
+        var updateSuccess = false;
         if (__checkEditorContent(stepName, content)) {
-            editor.closeEditorErrorBox(stepName);
-            editor.addCodeUpdated();
+            updateSuccess = true;
             var index = contentManager.getCurrentInstructionIndex();
             if(index === 0){
-                contentManager.markCurrentInstructionComplete(stepName);
                 if (htmlFile) {
                     var stepWidgets = stepContent.getStepWidgets(stepName);
                     stepContent.resizeStepWidgets(stepWidgets, "pod", true);
                     // display the pod with chat button and web browser in it
                     contentManager.setPodContent(stepName, htmlFile);
                 }
-                var stepBrowser = contentManager.getBrowser(stepName);
-                stepBrowser.contentRootElement.trigger("click");
+
             }
-        } else {
-            // display error and provide link to fix it
-            editor.createErrorLinkForCallBack(true, __correctEditorError);
         }
+        utils.handleEditorSave(stepName, editor, updateSuccess, __correctEditorError);
     };
 
     var __checkEditorContent = function(stepName, content) {
