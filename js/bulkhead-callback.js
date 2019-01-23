@@ -619,7 +619,11 @@ var bulkheadCallBack = (function() {
                 var matchPattern = "@Asynchronous\\s*@Bulkhead\\s*(\\(([^\\(\\)])*?\\))?\\s*public Future<Service> serviceForVFA";
                 var regexToMatch = new RegExp(matchPattern, "g");
                 var groups = regexToMatch.exec(content);
+<<<<<<< HEAD
                 var annotation = groups[1];                
+=======
+                var annotation = groups[1];
+>>>>>>> origin/dev
                 var value;
                 var waitingTaskQueue;
                 var errorPosted = false;
@@ -641,7 +645,11 @@ var bulkheadCallBack = (function() {
                             if (!isNaN(waitingTaskQueue)) validParameters = true;
                         }
                         if (!validParameters && param !== "") {
+<<<<<<< HEAD
                             editor.createCustomErrorMessage(bulkhead_messages.INVALID_PARMS);
+=======
+                            editor.createCustomErrorMessage(bulkheadMessages.invalidParameters);
+>>>>>>> origin/dev
                             errorPosted = true;
                         }
                     });    
@@ -651,10 +659,17 @@ var bulkheadCallBack = (function() {
                     // Parameter value(s) syntax is good....check the values entered.
                     if (value != undefined) {
                         if (!utils.isInteger(value) || value < 1) {                        
+<<<<<<< HEAD
                             editor.createCustomErrorMessage(utils.formatString(bulkhead_messages.PARMS_GT_ZERO, ["value"]));
                             errorPosted = true;
                         } else if (value > 10) {
                             editor.createCustomErrorMessage(utils.formatString(bulkhead_messages.PARMS_MAX_VALUE,["value"]));
+=======
+                            editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsGTZero, ["value"]));
+                            errorPosted = true;
+                        } else if (value > 10) {
+                            editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsMaxValue,["value"]));
+>>>>>>> origin/dev
                             errorPosted = true;
                         }    
                     } else {
