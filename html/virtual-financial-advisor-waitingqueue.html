@@ -11,21 +11,38 @@
 -->
 <html>
 <head>
-    <link rel="stylesheet" href="/guides/iguide-bulkhead/css/chat.css">
+    <link rel="stylesheet" href="/guides/iguide-bulkhead/css/bulkhead/chat.css">
+    <link rel="stylesheet" href="/guides/iguides-common/css/interactive-guides/bankApp.css">
+
+    <script type="text/javascript"> 
+        var script = document.createElement('script');
+        
+        script.onload = function() {
+            var guideRootDir = "/guides/iguide-bulkhead/js/nls/bulkhead/"
+            retrieveExternalizedStrings(guideRootDir);
+        };
+        script.src = '/guides/iguides-common/js/interactive-guides/externalized-string.js';
+        document.getElementsByTagName('head')[0].appendChild(script);
+    </script>    
 </head>
 <body>    
-    <div class="bankHeadingBlock">
+    <div class="bankHeadingBlockFlexContainer">
         <div class="bankHeading">Global eBank</div>
+            <span>
+                <img src="/guides/iguides-common/img/interactive-guides/bank-info.svg" data-externalizedAlt="ABOUT">
+                <img src="/guides/iguides-common/img/interactive-guides/bank-user.svg" data-externalizedAlt="USER">
+            </span>
+        </div>
     </div>
     <div class="chatIntro">
-        <img class="chatIcon" src="/guides/iguide-bulkhead/html/images/chat-icon.svg" alt="chat icon"/>
-        <span class="chatIntroText">Chat with a financial advisor</span>
+        <img class="chatIcon" src="/guides/iguide-bulkhead/html/images/chat-icon.svg" data-externalizedAlt="CHAT_ICON"/>
+        <span class="chatIntroText" data-externalizedString="CHAT_WITH_ADVISOR"></span>
     </div>
     <div>
         <p class="dotdotdot"><span>.</span><span>.</span><span>.</span></p>
     </div>
     <div>
-        <p class="errorTextBox">All financial advisors are currently busy.<br>You are number <b>1</b> in the queue.</p>
+        <p class="errorTextBox" data-externalizedString="NUM_IN_QUEUE"></p>
     </div>
 </body>
 </html>

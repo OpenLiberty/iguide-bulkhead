@@ -10,7 +10,9 @@
       IBM Corporation - initial API and implementation
 -->
 <html>
+
 <head>
+    <link href="https://fonts.googleapis.com/css?family=Asap" rel="stylesheet">
     <link rel="stylesheet" href="/guides/iguide-bulkhead/css/bulkhead/chat.css">
     <link rel="stylesheet" href="/guides/iguides-common/css/interactive-guides/bankApp.css">
 
@@ -25,7 +27,7 @@
         document.getElementsByTagName('head')[0].appendChild(script);
     </script>    
 </head>
-<body>    
+<body> 
     <div class="bankHeadingBlockFlexContainer">
         <div class="bankHeading">Global eBank</div>
             <span>
@@ -35,9 +37,24 @@
         </div>
     </div>
     <div class="chatIntro">
-            <img class="chatIcon" src="/guides/iguide-bulkhead/html/images/chat-icon.svg" data-externalizedAlt="CHAT_ICON"/>
-            <span class="chatIntroText" data-externalizedString="CHAT_WITH_ADVISOR"></span>
+        <img class="chatIcon" src="/guides/iguide-bulkhead/html/images/chat-icon.svg" data-externalizedAlt="CHAT_ICON"/>
+        <span class="chatIntroText" data-externalizedString="CHAT_WITH_ADVISOR"></span>
+    </div>
+    <div class="chatAdvisorCount" data-externalizedString="ADVISOR_TWO"></div>
+    <div class="advisorChatBlock">
+        <div class="flexContainer">    
+            <div class="advisorInitialBlock">
+                <span class="advisorInitial" data-externalizedString="J_INITAL"></span>
+            </div>
+            <div class="advisorChat"
+                    data-externalizedString="JENNY"
+             </div>
         </div>
-    <div class="spacing errorTextBox" data-externalizedString="ONE_BUSY"></div>
+    </div>
+    <div class="customerChatBlock flexContainer">
+        <input type="text" class="customerChatInput" data-externalizedAriaLabel="CHAT_INPUT" data-externalizedValue="DEMO_ONLY"/>
+        <button class="customerChatSubmitButton" data-externalizedTitle="DEMO_ONLY" data-externalizedString="SUBMIT"></button>
+    </div>
 </body>
+
 </html>

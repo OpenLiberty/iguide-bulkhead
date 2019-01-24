@@ -9,12 +9,13 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package io.openliberty.guides.bulkhead.global.eBank.microservices;
-
+import io.openliberty.guides.bulkhead.global.eBank.rest.Producer;
 
 public class ScheduleService extends Service {
  
 
     public ScheduleService() {
+        Producer.adjustRequestCount(false);
         this.service = Utils.getHTMLForScheduleAppt(); 
     }
 

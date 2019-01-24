@@ -29,6 +29,7 @@ var bulkheadCallBack = (function() {
 
         // reset content every time annotation is added through the button so as to clear out any
         // manual editing
+        contentManager.focusTabbedEditorByName(stepName, serverFileName);
         contentManager.resetTabbedEditorContents(stepName, serverFileName);
         var content = contentManager.getTabbedEditorContents(stepName, serverFileName);
 
@@ -125,13 +126,7 @@ var bulkheadCallBack = (function() {
         var serverFileName = "server.xml";
 
         var content = contentManager.getTabbedEditorContents(stepName, serverFileName);
-        if (__checkMicroProfileFaultToleranceFeatureContent(content)) {
-            editor.closeEditorErrorBox(stepName);
-            contentManager.markCurrentInstructionComplete(stepName);
-        } else {
-            // display error to fix it
-            editor.createErrorLinkForCallBack(true, __correctEditorError);
-        }
+        utils.validateContentAndSave(stepName, editor, content, __checkMicroProfileFaultToleranceFeatureContent, __correctEditorError);
     };
 
     var __listenToEditorForFeatureInServerXML = function(editor) {
@@ -167,32 +162,27 @@ var bulkheadCallBack = (function() {
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
 
         var htmlFile;
-        if (stepName === "AsyncWithoutBulkhead") {
-            htmlFile = htmlRootDir + "virtual-financial-advisor-async-without-bulkhead.html";
-        } else if (stepName === "BulkheadAnnotation") {
+        if (stepName === "BulkheadAnnotation") {
             htmlFile = htmlRootDir + "virtual-financial-advisor-bulkhead.html";
         } else if (stepName === "AsyncBulkheadAnnotation") {
             htmlFile = htmlRootDir + "virtual-financial-advisor-asyncbulkhead.html";
-        } else if (stepName === "Fallback") {
-            htmlFile = htmlRootDir + "virtual-financial-advisor-asyncbulkhead-fallback.html";
         }
 
+        var updateSuccess = false;
         if (__checkEditorContent(stepName, content)) {
-            editor.closeEditorErrorBox(stepName);
+            updateSuccess = true;
             var index = contentManager.getCurrentInstructionIndex();
             if(index === 0){
-                contentManager.markCurrentInstructionComplete(stepName);
-                contentManager.updateWithNewInstructionNoMarkComplete(stepName);
-                // display the pod with chat button and web browser in it
-                contentManager.setPodContent(stepName, htmlFile);
-                    //htmlRootDir + "virtual-financial-advisor-new-session.html");
-                // resize the height of the tabbed editor
-                contentManager.resizeTabbedEditor(stepName);
+                if (htmlFile) {
+                    var stepWidgets = stepContent.getStepWidgets(stepName);
+                    stepContent.resizeStepWidgets(stepWidgets, "pod", true);
+                    // display the pod with chat button and web browser in it
+                    contentManager.setPodContent(stepName, htmlFile);
+                }
+
             }
-        } else {
-            // display error and provide link to fix it
-            editor.createErrorLinkForCallBack(true, __correctEditorError);
         }
+        utils.handleEditorSave(stepName, editor, updateSuccess, __correctEditorError);
     };
 
     var __checkEditorContent = function(stepName, content) {
@@ -253,6 +243,9 @@ var bulkheadCallBack = (function() {
             "    return serviceRequest;\n" +
             "  }";
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 10, 13, newContent, 13);
+        // line number to scroll to = insert line + the number of lines to be insert 
+        // for this example 10 + 13 = 23
+        contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, 23);
     };
 
     var __validateEditorContentInJavaConcurrencyStep = function(content) {
@@ -359,10 +352,12 @@ var bulkheadCallBack = (function() {
     };
 
     var __addBulkheadInEditor = function(stepName) {
+        contentManager.focusTabbedEditorByName(stepName, bankServiceFileName);
         contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
         var newContent = "  @Bulkhead(50)";
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 23, 23, newContent, 1);
+        contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, 24);
     };
 
     var addJavaConcurrencyButton = function(event, stepName) {
@@ -399,6 +394,7 @@ var bulkheadCallBack = (function() {
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
         var hasRequestForVFAMethod = __checkRequestForVFAMethod(content);
 
+        contentManager.focusTabbedEditorByName(stepName, bankServiceFileName);
         contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
    
         var params = [];
@@ -420,15 +416,14 @@ var bulkheadCallBack = (function() {
         params[1] = "waitingTaskQueue=50";
 
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 25, 30, constructAnnotation(params), 7);
+        contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, 32);
         if (hasRequestForVFAMethod === true) {
             __updateAsyncBulkheadMethodInEditor(stepName, false);
-        }
+        }       
     };
 
     var listenToEditorForAsyncBulkhead = function(editor) {
         editor.addSaveListener(__showPodWithRequestButtonAndBrowser);
-        // Adjust the initial height of the editor to display the entire content
-        __adjustEditorHeight(editor.getStepName(), "510px");
     };
 
     var addFallbackAsyncBulkheadButton = function(event, stepName) {
@@ -448,6 +443,7 @@ var bulkheadCallBack = (function() {
         var newContent =
             "  @Fallback(ServiceFallbackHandler.class)"; + 
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 16, 16, newContent, 1);
+        contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, 17);
     };
 
     var listenToEditorForAsyncBulkheadFallback = function(editor) {
@@ -471,33 +467,19 @@ var bulkheadCallBack = (function() {
                          "    return bankService.serviceForVFA(counterForVFA);\n" +
                          "  }";
 
+        contentManager.focusTabbedEditorByName(stepName, bankServiceFileName);
         if (performReset === undefined || performReset === true) {
             contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
         }
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 11, 23, newContent, 4);
-        // Adjust the height of the editor back to the original height
-        __adjustEditorHeight(stepName, "468px");
+        contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, 15);
 
         if (hasServiceForVFAMethod === true && (performReset === undefined || performReset === true)) {
             __addAsyncBulkheadInEditor(stepName);
         }
     };
 
-    var __adjustEditorHeight = function(stepName, heightToUse) {
-        var containers = $(".subContainerDiv[data-step='" + stepName + "']");
-        $.each( containers, function(index, container) {
-            var editorContainer = $(container).find(".editorContainer");
-            if (editorContainer.length === 1) {
-                editorContainer.css("height", heightToUse);
-                return false; // break out of the loop
-            }
-        });
-    };
-
     var __browserVirtualAdvisorBaseURL = "https://global-ebank.openliberty.io/virtualFinancialAdvisor/";
-    var __advisors = ["Bob", "Jenny", "Lee", "Mary", "John", "Mike", "Sam", "Sandy", "Joann", "Frank" ];
-    var __advisorColors = ['royalblue', 'gray', 'seagreen'];
-    var __advisorInitials = ["B", "J", "L"];
     var handleNewChatRequestInBrowser = function(stepName, requestNum) {
         var browserChatHTML = htmlRootDir + "virtual-financial-advisor-chat.html";  
         var browserContentHTML = htmlRootDir + "virtual-financial-advisor-connecting.html";  
@@ -510,11 +492,13 @@ var bulkheadCallBack = (function() {
         contentManager.markCurrentInstructionComplete(stepName);
         if (stepName === "AsyncWithoutBulkhead") {
             requestLimits = 3;
-            if (requestNum >= requestLimits) {
+            if (requestNum === 2) {
+                browserChatHTML = htmlRootDir + "virtual-financial-advisor-chat-2.html";
+            } else if (requestNum >= requestLimits) {
                 browserContentHTML = htmlRootDir + "virtual-financial-advisor-error-503.html";
                 browserUrl = browserErrorUrl;
             }
-        } else if (stepName === "FinancialAdvisor") {
+        } else if (stepName === "ExampleScenario") {
             requestLimits = 2;
             if (requestNum >= requestLimits) {        
                 browserContentHTML = htmlRootDir + "virtual-financial-advisor-no-available.html";
@@ -568,52 +552,59 @@ var bulkheadCallBack = (function() {
         contentManager.setBrowserURL(stepName, browserUrl, 0);
         browser.setBrowserContent(browserContentHTML);
         if (requestNum < requestLimits) {
+            var pod = contentManager.getPod(stepName);
             setTimeout(function () {
                 browser.setBrowserContent(browserChatHTML);
-                // use a interval timer to make sure the browser content is rendered before accessing the elements
-                var waitingForBrowserContentTimeInterval = setInterval(function () {
-                    if (browser.getIframeDOM().find(".advisorName").length === 1) {
-                        clearInterval(waitingForBrowserContentTimeInterval);
-                        var advisor = __advisors[requestNum - 1];
-                        var advisorBackgroundColor = __advisorColors[requestNum - 1];
-                        var chatAdvisorCount = "You are talking to advisor " + requestNum + ".";
-                        var chatIntro = "Hi, I am " + advisor + ",";
-                        browser.getIframeDOM().find(".chatAdvisorCount").text(chatAdvisorCount);
-                        browser.getIframeDOM().find(".advisorName").text(chatIntro);
-                        browser.getIframeDOM().find(".advisorInitial").text(__advisorInitials[requestNum - 1]);
-                        if (requestNum === 1 && $("#" + stepElementId).length === 1) {
-                            $("#" + stepElementId).find(".busyCount").text(1);
-                            $("#" + stepElementId).find(".busyChatCount").attr("aria-label", "1 chat is currently in progress");
+
+                // If there is a pod showing a dashboard, update its contents to show 1 chat
+                if (pod !== null) {
+                    // use a interval timer to make sure the browser content is rendered before updating the pod elements
+                    var waitingForBrowserContentTimeInterval = setInterval(function () {
+                        if (browser.getIframeDOM().find(".advisorName").length === 1) {
+                            clearInterval(waitingForBrowserContentTimeInterval);
+                            var $stepPod = pod.contentRootElement;
+                            if (requestNum === 1) {
+                                $stepPod.find(".busyCount").text(1);
+                                $stepPod.find(".busyChatCount").attr("aria-label", bulkhead_messages.ONE_CHAT_INPROGRESS);
+                                $stepPod.find(".busyChatCount").attr("data-externalizedarialabel", bulkhead_messages.ONE_CHAT_INPROGRESS);
+                            }
                         }
-                        contentManager.updateWithNewInstructionNoMarkComplete(stepName);
-                    }
-                }, 10);
+                    }, 10);
+                }
             }, 1000);
-        } else {
-            contentManager.updateWithNewInstructionNoMarkComplete(stepName);
         }
     };
 
     var __incrementCounts = function(stepName, startingCount, endingCount, elementToBeCounted, urlForAfterCount, htmlForAfterCount, startingWaitingQueue) {
         var timeInterval = setInterval(function () {
-            $("#" + stepElementId).find(elementToBeCounted).text(startingCount);
-            startingCount++;
-            if (startingCount === endingCount) {
-                clearInterval(timeInterval);
-                contentManager.setBrowserURL(stepName, urlForAfterCount, 0);
-                browser.setBrowserContent(htmlForAfterCount);
-                if (startingWaitingQueue) {
-                    $("#" + stepElementId).find(".waitCount").text(1);
-                    $("#" + stepElementId).find(".waitChatCount").attr("aria-label", "1 chat request is waiting in the queue");
-                    $("#" + stepElementId).find(".busyChatCount").attr("aria-label", "50 chats are currently in progress");
-                } else {
-                    if (elementToBeCounted === ".busyCount") {
-                        $("#" + stepElementId).find(".busyChatCount").attr("aria-label", "50 chats are currently in progress");
+            var pod = contentManager.getPod(stepName);
+            var browser = contentManager.getBrowser(stepName);
+            if (pod && browser) {
+                var chatSummary = pod.contentRootElement.find('.chatSummary');
+                chatSummary.find(elementToBeCounted).text(startingCount);
+                startingCount++;
+                if (startingCount === endingCount) {
+                    clearInterval(timeInterval);
+                    contentManager.setBrowserURL(stepName, urlForAfterCount, 0);
+                    browser.setBrowserContent(htmlForAfterCount);
+                    if (startingWaitingQueue) {
+                        chatSummary.find(".waitCount").addClass('chatSummaryTransition');
+                        chatSummary.find(".waitCount").text(1);
+                        chatSummary.find(".waitChatCount").attr("aria-label", bulkhead_messages.ONE_CHAT_WAITING);
+                        chatSummary.find(".busyChatCount").attr("aria-label", bulkhead_messages.FIFTY_CHATS_INPROGRESS);
+                        chatSummary.find(".waitChatCount").attr("data-externalizedarialabel", bulkhead_messages.ONE_CHAT_WAITING);
+                        chatSummary.find(".busyChatCount").attr("data-externalizedarialabel", bulkhead_messages.FIFTY_CHATS_INPROGRESS);
+
                     } else {
-                        $("#" + stepElementId).find(".waitChatCount").attr("aria-label", "50 chat requests are waiting in the queue");
+                        if (elementToBeCounted === ".busyCount") {
+                            chatSummary.find(".busyChatCount").attr("aria-label", bulkhead_messages.FIFTY_CHATS_INPROGRESS);
+                            chatSummary.find(".busyChatCount").attr("data-externalizedarialabel", bulkhead_messages.FIFTY_CHATS_INPROGRESS);
+                        } else {
+                            chatSummary.find(".waitChatCount").attr("aria-label", bulkhead_messages.FIFTY_CHATS_WAITING);
+                            chatSummary.find(".waitChatCount").attr("data-externalizedarialabel", bulkhead_messages.FIFTY_CHATS_WAITING);
+                        }
                     }
                 }
-                contentManager.updateWithNewInstructionNoMarkComplete(stepName);
             }
         }, 20);
     };
@@ -625,60 +616,74 @@ var bulkheadCallBack = (function() {
             // Get the parameters from the editor and send to the bulkhead
             var content = editor.getEditorContent();
             try{
-                var matchPattern = "@Asynchronous\\s*@Bulkhead\\s*\\((([^\\(\\)])*?)\\)\\s*public Future<Service> serviceForVFA";
+                var matchPattern = "@Asynchronous\\s*@Bulkhead\\s*(\\(([^\\(\\)])*?\\))?\\s*public Future<Service> serviceForVFA";
                 var regexToMatch = new RegExp(matchPattern, "g");
                 var groups = regexToMatch.exec(content);
-                var annotation = groups[1];
-
-                var params = annotation.replace(/[{\s()}]/g, ''); // Remove whitespace and parenthesis
-                params = params.split(',');
-
+                var annotation = groups[1];                
                 var value;
                 var waitingTaskQueue;
-
-                // Parse their annotation for values
-                params.forEach(function(param, index){
-                    if (param.indexOf('value=') > -1){
-                        value = parseInt(param.substring(param.indexOf('value=') + 6));
-                    }
-                    if (param.indexOf('waitingTaskQueue=') > -1){
-                        waitingTaskQueue = parseInt(param.substring(param.indexOf('waitingTaskQueue=') + 17));
-                    }
-                });
-                
                 var errorPosted = false;
-                if (value != undefined) {
-                    if (!utils.isInteger(value) || value < 1) {                        
-                        editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsGTZero, ["value"]));
-                        errorPosted = true;
-                    } else if (value > 10) {
-                        editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsMaxValue,["value"]));
-                        errorPosted = true;
-                    }    
-                } else {
-                    value = 10; // Set to default value
+
+                if (annotation) {
+                    // Parameters were specified in the annotation
+                    var params = annotation.replace(/[{\s()}]/g, ''); // Remove whitespace and parenthesis
+                    params = params.split(',');
+    
+                    // Parse their annotation for values
+                    params.forEach(function(param, index){
+                        var validParameters = false;
+                        if (param.indexOf('value=') > -1){
+                            value = parseInt(param.substring(param.indexOf('value=') + 6));
+                            if (!isNaN(value)) validParameters = true;
+                        }
+                        if (param.indexOf('waitingTaskQueue=') > -1){
+                            waitingTaskQueue = parseInt(param.substring(param.indexOf('waitingTaskQueue=') + 17));
+                            if (!isNaN(waitingTaskQueue)) validParameters = true;
+                        }
+                        if (!validParameters && param !== "") {
+                            editor.createCustomErrorMessage(bulkhead_messages.INVALID_PARMS);
+                            errorPosted = true;
+                        }
+                    });    
                 }
-                
-                if (waitingTaskQueue != undefined) {
-                    if(!utils.isInteger(waitingTaskQueue) || waitingTaskQueue < 1) {
-                        editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsGTZero, ["waitingTaskQueue"]));
-                        errorPosted = true;
-                    } else if (waitingTaskQueue > 10) {
-                        editor.createCustomErrorMessage(utils.formatString(bulkheadMessages.parmsMaxValue,["waitingTaskQueue"]));
-                        errorPosted = true;
+
+                if (!errorPosted) {
+                    // Parameter value(s) syntax is good....check the values entered.
+                    if (value != undefined) {
+                        if (!utils.isInteger(value) || value < 1) {                        
+                            editor.createCustomErrorMessage(utils.formatString(bulkhead_messages.PARMS_GT_ZERO, ["value"]));
+                            errorPosted = true;
+                        } else if (value > 10) {
+                            editor.createCustomErrorMessage(utils.formatString(bulkhead_messages.PARMS_MAX_VALUE,["value"]));
+                            errorPosted = true;
+                        }    
+                    } else {
+                        value = 10; // Set to default value
                     }
-                } else {
-                    waitingTaskQueue = 10;  // Set to default value
+                    
+                    if (waitingTaskQueue != undefined) {
+                        if(!utils.isInteger(waitingTaskQueue) || waitingTaskQueue < 1) {
+                            editor.createCustomErrorMessage(utils.formatString(bulkhead_messages.PARMS_GT_ZERO, ["waitingTaskQueue"]));
+                            errorPosted = true;
+                        } else if (waitingTaskQueue > 10) {
+                            editor.createCustomErrorMessage(utils.formatString(bulkhead_messages.PARMS_MAX_VALUE,["waitingTaskQueue"]));
+                            errorPosted = true;
+                        }
+                    } else {
+                        waitingTaskQueue = 10;  // Set to default value
+                    }
                 }
                 
                 if (!errorPosted) {
+                    // All looks good so far...update the playground.
                     if (waitingTaskQueue < value) {
-                        editor.createCustomAlertMessage(bulkheadMessages.waitBestPractice);
+                        editor.createCustomAlertMessage(bulkhead_messages.WAIT_BEST_PRACTICE);
                         // Do not return here.  Post warning and allow user to continue with their simulation.
                     } else {
                         // Clear out any previous error boxes displayed.
                         editor.closeEditorErrorBox();
-                    }                  
+                    }        
+                    editorInstance.addCodeUpdated();          
                     // Apply the annotation values to the bulkhead.
                     // If not specified, the bulkhead will use its default value.
                     bulkhead.updateParameters.apply(bulkhead, [value, waitingTaskQueue]);
@@ -691,7 +696,8 @@ var bulkheadCallBack = (function() {
                 }
             }
             catch(e){
-
+                editor.createCustomErrorMessage(bulkhead_messages.INVALID_PARMS);
+                bulkhead.enableActions(false);
             }
         };
         editor.addSaveListener(__listenToContentChanges);
