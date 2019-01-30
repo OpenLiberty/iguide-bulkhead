@@ -12,6 +12,10 @@ var bulkheadCallBack = (function() {
 
     var bankServiceFileName = "BankService.java";
     var htmlRootDir = "/guides/iguide-bulkhead/html/";
+    var mapStepNameToScollLine = { 'AsyncWithoutBulkhead': 23, 
+                                   'BulkheadAnnotation': 24, 
+                                   'AsyncBulkheadAnnotation': 32,
+                                   'Fallback': 17 };
 
     /** AddLibertyMPFaultTolerance step  begin */
     var addMicroProfileFaultToleranceFeatureButton = function(event) {
@@ -182,7 +186,7 @@ var bulkheadCallBack = (function() {
 
             }
         }
-        utils.handleEditorSave(stepName, editor, updateSuccess, __correctEditorError);
+        utils.handleEditorSave(stepName, editor, updateSuccess, __correctEditorError, mapStepNameToScollLine[stepName], bankServiceFileName);
     };
 
     var __checkEditorContent = function(stepName, content) {
@@ -245,7 +249,7 @@ var bulkheadCallBack = (function() {
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 10, 13, newContent, 13);
         // line number to scroll to = insert line + the number of lines to be insert 
         // for this example 10 + 13 = 23
-        contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, 23);
+        contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, mapStepNameToScollLine[stepName]);
     };
 
     var __validateEditorContentInJavaConcurrencyStep = function(content) {
@@ -357,7 +361,7 @@ var bulkheadCallBack = (function() {
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
         var newContent = "  @Bulkhead(50)";
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 23, 23, newContent, 1);
-        contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, 24);
+        contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, mapStepNameToScollLine[stepName]);
     };
 
     var addJavaConcurrencyButton = function(event, stepName) {
@@ -416,7 +420,7 @@ var bulkheadCallBack = (function() {
         params[1] = "waitingTaskQueue=50";
 
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 25, 30, constructAnnotation(params), 7);
-        contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, 32);
+        contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, mapStepNameToScollLine[stepName]);
         if (hasRequestForVFAMethod === true) {
             __updateAsyncBulkheadMethodInEditor(stepName, false);
         }       
@@ -443,7 +447,7 @@ var bulkheadCallBack = (function() {
         var newContent =
             "  @Fallback(ServiceFallbackHandler.class)"; + 
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 16, 16, newContent, 1);
-        contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, 17);
+        contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, mapStepNameToScollLine[stepName]);
     };
 
     var listenToEditorForAsyncBulkheadFallback = function(editor) {
@@ -472,7 +476,7 @@ var bulkheadCallBack = (function() {
             contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
         }
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 11, 23, newContent, 4);
-        contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, 15);
+        contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, mapStepNameToScollLine[stepName] - 17);
 
         if (hasServiceForVFAMethod === true && (performReset === undefined || performReset === true)) {
             __addAsyncBulkheadInEditor(stepName);
