@@ -30,7 +30,7 @@ public class Utils {
         "            <span class='advisorInitial'>" + advisorInitials + "</span>" +
         "        </div>" +
         "        <div class='advisorChat'>" +
-        "            <span class='advisorName'>" + chatIntro + "</span> a financial advisor from Global eBank. Let me review your account. I'll be with you shortly." +
+        "            <span class='advisorName'>" + chatIntro + "</span> an AI financial advisor from Global eBank. Let me review your account. I'll be with you shortly." +
         "        </div>" +
         "    </div>" +
         "</div>" +

@@ -93,7 +93,7 @@
             "name": "ExampleScenario",
             "title": "Example: bank scenario",
             "description": [
-                "Imagine that you're developing a VirtualFinancialAdvisor (VFA) microservice for a bank to allow clients to chat online with a virtual financial advisor. The initial naive synchronous implementation of the microservice allows only one customer to chat with a financial advisor at a time. As you progress through the guide, you will see how the number of available chat sessions impacts the service and the system.",
+                "Imagine that you're developing a VirtualFinancialAdvisor (VFA) microservice for a bank to allow clients to chat online with a virtual financial advisor, a resource intensive AI. The initial naive synchronous implementation of the microservice allows only one customer to chat with a financial advisor at a time. As you progress through the guide, you will see how the number of available chat sessions impacts the service and the system.",
                 "Begin by requesting an online chat with a virtual financial advisor."
             ],
             "instruction": [
