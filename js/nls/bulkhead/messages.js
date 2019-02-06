@@ -48,8 +48,8 @@ var bulkhead_messages = {
     FIFTY_CHATS_INPROGRESS: "50 chats are currently in progress",
     FIFTY_CHATS_WAITING: "50 chat requests are waiting in the queue",
     WAIT_BEST_PRACTICE: "It is best practice to have a <b>waitingTaskQueue</b> equal to or larger than the <b>value</b>.",
-    JENNY:"<span class=advisorName>Hi&#44 I am Jenny&#44</span> a financial advisor from Global eBank. Let me review your account. I&#39ll be with you shortly.",
-    BOB: "<span class=advisorName>Hi&#44 I am Bob&#44</span> a financial advisor from Global eBank. Let me review your account. I&#39ll be with you shortly.",
+    JENNY:"<span class=advisorName>Hi&#44 I am Jenny&#44</span> an AI financial advisor from Global eBank. Let me review your account. I&#39ll be with you shortly.",
+    BOB: "<span class=advisorName>Hi&#44 I am Bob&#44</span> an AI financial advisor from Global eBank. Let me review your account. I&#39ll be with you shortly.",
     J_INITAL: "J",
     B_INITIAL: "B",
     NINE_AM: "9&#58;00 AM",
@@ -58,6 +58,5 @@ var bulkhead_messages = {
     INVALID_PARMS: "Parameters entered are not valid",
     WAIT_BEST_PRACTICE: "It is best practice to have a <b>waitingTaskQueue</b> equal to or larger than the <b>value</b>.",
     PARMS_MAX_VALUE: "For simulation purposes&#44 the maximum <b>{0}</b> we can accept is 10.",
-    PARMS_GT_ZERO: "The Bulkhead policy parameter <b>{0}</b> is not valid because it must be greater than or equal to 1.",
-    ADVISOR_INTRO: "a financial advisor from Global eBank. Let me review your account. I&#39ll be with you shortly."
+    PARMS_GT_ZERO: "The Bulkhead policy parameter <b>{0}</b> is not valid because it must be greater than or equal to 1."
 };
