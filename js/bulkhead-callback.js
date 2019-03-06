@@ -14,7 +14,7 @@ var bulkheadCallBack = (function() {
     var htmlRootDir = "/guides/iguide-bulkhead/html/";
     var mapStepNameToScrollLine = { 'AsyncWithoutBulkhead': 23, 
                                    'BulkheadAnnotation': 24, 
-                                   'AsyncBulkheadAnnotation': 23,
+                                   'AsyncBulkheadAnnotation': 32,
                                    'Fallback': 17 };
 
     /** AddLibertyMPFaultTolerance step  begin */
@@ -215,7 +215,8 @@ var bulkheadCallBack = (function() {
      * 
      * @return {*} - contentInfo object containing 
      *      contentIsCorrect - boolean indicating if the content passed step validation
-     *      groups - grouping of code content in writable and read-only content
+     *      groups - grouping of code content in writable and read-only content.  Groups
+     *               only exist if 'contentIsCorrect'.
      */
     var __checkEditorContent = function(stepName, content) {
         var contentInfo = {validContent: false};
@@ -479,10 +480,6 @@ var bulkheadCallBack = (function() {
 
         }
         return contentInfo;
-    };
-
-    var listenToEditorForBulkheadAnnotation = function(editor) {
-        editor.addSaveListener(__showPodWithRequestButtonAndBrowser);
     };
 
     var __addBulkheadInEditor = function(stepName) {
