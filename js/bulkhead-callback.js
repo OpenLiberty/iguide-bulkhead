@@ -178,7 +178,7 @@ var bulkheadCallBack = (function() {
         }
 
         var editorContentInfo = __checkEditorContent(stepName, content);
-        var validContent = editorContentInfo.validContent;
+        var validContent = editorContentInfo.codeMatched;
         if (validContent) {
             var index = contentManager.getCurrentInstructionIndex();
             if(index === 0){
@@ -190,11 +190,10 @@ var bulkheadCallBack = (function() {
                     contentManager.setPodContent(stepName, htmlFile);
                 }
             }
-            if (editorContentInfo.groups) {
-                var readOnlyLinesArray = editorContentInfo.markText;
-                var writableLinesArray = editorContentInfo.markTextWritable;
-                editor.updateSavedContent(content, readOnlyLinesArray, writableLinesArray);
-            }
+            // Save off the valid content in the editor object
+            var readOnlyLinesArray = editorContentInfo.markText;
+            var writableLinesArray = editorContentInfo.markTextWritable;
+            editor.updateSavedContent(content, readOnlyLinesArray, writableLinesArray);
         }
         // Scroll the editor to the line following the bottom-most update in the code.
         // To determine this value, look at the writable text array stored in the editor and
@@ -213,13 +212,19 @@ var bulkheadCallBack = (function() {
      * @param String stepName - name of the step
      * @param String content - content of the editor on the step
      * 
-     * @return {*} - contentInfo object containing 
-     *      contentIsCorrect - boolean indicating if the content passed step validation
-     *      groups - grouping of code content in writable and read-only content.  Groups
-     *               only exist if 'contentIsCorrect'.
+     * @return {*} -  object containing 
+     *      codeMatched - boolean indicating if the content passed step validation
+     *      The following only exists in contentInfo if codeMatched == true.
+     *               [{*}] markTextWritable - array with 1 object indicating 'from' and
+     *                     'to' physical line numbers of the editable code segment 
+     *                     within content.
+     *               [{*}] markText - array of 2 objects indicating 
+     *                     'from' and 'to' physical line numbers of the readonly 
+     *                     code within content, occurring before and after the 
+     *                     editable code segment.
      */
     var __checkEditorContent = function(stepName, content) {
-        var contentInfo = {validContent: false};
+        var contentInfo = {codeMatched: false};
         if (stepName === "AsyncWithoutBulkhead") {
             contentInfo = __validateEditorContentInJavaConcurrencyStep(content);
         } else if (stepName === "BulkheadAnnotation") {
@@ -282,9 +287,7 @@ var bulkheadCallBack = (function() {
     };
 
     var __validateEditorContentInJavaConcurrencyStep = function(content) {
-        var contentInfo = {validContent: false};
-        try {
-            var codesToMatch = "([\\s\\S]*private int counterForVFA = 0;\\s*)" + // boundary which is readonly
+        var pattern = "([\\s\\S]*private int counterForVFA = 0;\\s*)" + // boundary which is readonly
                 "(public\\s+Future\\s*<\\s*Service\\s*>\\s*requestForVFA\\s*\\(\\s*\\)\\s*{\\s*" +
                 "counterForVFA\\s*\\+\\+;\\s*" +
                 "ExecutorService\\s+executor\\s*=\\s*Executors\\s*\\.\\s*newSingleThreadExecutor\\s*\\(\\s*\\)\\s*;\\s*" +
@@ -299,65 +302,23 @@ var bulkheadCallBack = (function() {
                 "return\\s+serviceRequest\\s*;\\s*" +
                 "})" +
                 "(\\s*public Service serviceForVFA[\\s\\S]*)";  // boundary which is readonly
-            var regExp = new RegExp(codesToMatch, "g");
-            var groups = regExp.exec(content);
-            if (groups !== null) {
-                contentInfo.validContent = true;
-            
-                contentInfo.groups = groups;
-                var start = groups[1];
-                var startLines = utils.countLinesOfContent(start);
-                var method = groups[2];    // Group containing the requestForVFA method
-                var methodLines = utils.countLinesOfContent(method) + 1;
-                var end = groups[3];
-                var endLines = utils.countLinesOfContent(end);
 
-                var markText = [{from: 1, to: startLines}, 
-                                {from: startLines + methodLines + 1, to: startLines + methodLines + endLines}];
-                var markTextWritable = [{from: startLines + 1, to: startLines + methodLines}];
-            
-                contentInfo.markText = markText;
-                contentInfo.markTextWritable = markTextWritable;
-            } else {
-                contentInfo.validContent = false;
-            }        
-        } catch (ex) {
-            // do nothing as match is already set to false
-        }
+        // Call utility to see if content matches the pattern above.
+        // If so, get the editable and read-only line numbers of the content.
+        var contentInfo = utils.getContentInfo(content, pattern);
+
         return contentInfo;
     };
 
     var __validateEditorContent_BulkheadStep = function(content) {
-        var contentInfo = {validContent: false};
-        try {
-            var pattern = "([\\s\\S]*return serviceRequest;\\s*}\\s*)" + // readonly boundary
-            "(@Bulkhead\\s*\\(\\s*50\\s*\\))" +
-            "(\\s*public Service serviceForVFA[\\s\\S]*)";          // readonly boundary
-            var regExp = new RegExp(pattern, "g");
-            var groups = regExp.exec(content);
-            if (groups !== null) {
-                contentInfo.validContent = true;
-            
-                contentInfo.groups = groups;
-                var start = groups[1];
-                var startLines = utils.countLinesOfContent(start);
-                var annotation = groups[2]; // Group containing just the @Fallback annotation
-                var annotationLines = utils.countLinesOfContent(annotation) + 1;
-                var end = groups[3];
-                var endLines = utils.countLinesOfContent(end);
+        var pattern = "([\\s\\S]*return serviceRequest;\\s*}\\s*)" +     // readonly boundary
+                      "(@Bulkhead\\s*\\(\\s*50\\s*\\))" +
+                      "(\\s*public Service serviceForVFA[\\s\\S]*)";     // readonly boundary
 
-                var markText = [{from: 1, to: startLines}, 
-                                {from: startLines + annotationLines + 1, to: startLines + annotationLines + endLines}];
-                var markTextWritable = [{from: startLines + 1, to: startLines + annotationLines}];
-            
-                contentInfo.markText = markText;
-                contentInfo.markTextWritable = markTextWritable;
-            } else {
-                contentInfo.validContent = false;
-            }
-        } catch (ex) {
+        // Call utility to see if content matches the pattern above.
+        // If so, get the editable and read-only line numbers of the content.
+        var contentInfo = utils.getContentInfo(content, pattern);
 
-        }
         return contentInfo;
     };
 
@@ -398,7 +359,7 @@ var bulkheadCallBack = (function() {
     };
 
     var __validateEditorContent_AsyncBulkheadStep = function(content) {       
-        var contentInfo={validContent: false};
+        var contentInfo={codeMatched: false};
         try {
             var pattern = "([\\s\\S]*counterForVFA = 0;\\s*)" +      // readonly boundary
             "(public\\s+Future\\s*<\\s*Service\\s*>\\s*requestForVFA\\s*\\(\\s*\\)\\s*{\\s*" +
@@ -416,7 +377,7 @@ var bulkheadCallBack = (function() {
             var regExp = new RegExp(pattern, "g");
             var groups = regExp.exec(content);
             if (groups !== null) {
-                contentInfo.validContent = true;
+                contentInfo.codeMatched = true;
 
                 contentInfo.groups = groups;
                 var start = groups[1];
@@ -438,9 +399,7 @@ var bulkheadCallBack = (function() {
 
                 contentInfo.markText = markText;
                 contentInfo.markTextWritable = markTextWritable;
-            } else {
-                contentInfo.validContent = false;
-            }
+            } 
         } catch (ex) {
 
         }
@@ -448,37 +407,15 @@ var bulkheadCallBack = (function() {
     };
 
     var __validateEditorContent_FallbackStep = function(content) {
-        var contentInfo = {validContent: false};
-        try {
-            var pattern = "([\\s\\S]*return bankService.serviceForVFA\\(counterForVFA\\);\\s*" + // readonly boundary
-            "}\\s*)" + 
-            "(@Fallback\\s*\\(\\s*ServiceFallbackHandler\\s*\\.\\s*class\\s*\\))" +
-            "(\\s*@Asynchronous[\\s\\S]*)"; // readonly boundary
-            var regExp = new RegExp(pattern, "g");
-            var groups = regExp.exec(content);
-            if (groups !== null) {
-                contentInfo.validContent = true;
+        var pattern = "([\\s\\S]*return bankService.serviceForVFA\\(counterForVFA\\);\\s*" +   // readonly boundary
+                      "}\\s*)" + 
+                      "(@Fallback\\s*\\(\\s*ServiceFallbackHandler\\s*\\.\\s*class\\s*\\))" +
+                      "(\\s*@Asynchronous[\\s\\S]*)";   // readonly boundary
 
-                contentInfo.groups = groups;
-                var start = groups[1];
-                var startLines = utils.countLinesOfContent(start);
-                var annotation = groups[2];   // Group containing just the @Fallback annotation
-                var annotationLines = utils.countLinesOfContent(annotation) + 1;
-                var end = groups[3];
-                var endLines = utils.countLinesOfContent(end);
-    
-                var markText = [{from: 1, to: startLines}, 
-                                {from: startLines + annotationLines + 1, to: startLines + annotationLines + endLines}];
-                var markTextWritable = [{from: startLines + 1, to: startLines + annotationLines}];
+        // Call utility to see if content matches the pattern above.
+        // If so, get the editable and read-only line numbers of the content.
+        var contentInfo = utils.getContentInfo(content, pattern);
 
-                contentInfo.markText = markText;
-                contentInfo.markTextWritable = markTextWritable;
-            } else {
-                contentInfo.validContent = false;
-            }
-        } catch (ex) {
-
-        }
         return contentInfo;
     };
 
