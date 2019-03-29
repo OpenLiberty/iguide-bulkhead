@@ -13,7 +13,6 @@ import io.openliberty.guides.bulkhead.global.eBank.rest.Producer;
 
 public class ChatSession extends Service {
  
-
     public ChatSession(int counterForVFA) {
         int localCounter = Utils.calculateAdvisorNum(counterForVFA);
         try {
@@ -21,7 +20,7 @@ public class ChatSession extends Service {
             Thread.sleep(BankService.TIMEOUT);
             Producer.adjustRequestCount(false);
         } catch (InterruptedException ie) {
-            this.service = "<div>" + ie.getMessage() + "</div>";;
+            this.service = "<div>" + ie.getMessage() + "</div>";
         } 
     }
 
