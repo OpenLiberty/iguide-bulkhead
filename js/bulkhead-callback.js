@@ -37,12 +37,12 @@ var bulkheadCallBack = (function() {
         contentManager.resetTabbedEditorContents(stepName, serverFileName);
         var content = contentManager.getTabbedEditorContents(stepName, serverFileName);
 
-        contentManager.insertTabbedEditorContents(stepName, serverFileName, 5, FTFeature);
+        contentManager.insertTabbedEditorContents(stepName, serverFileName, 6, FTFeature);
         var readOnlyLines = [];
-        // mark cdi feature line readonly
+        // mark cdi and mpConcurrency feature line readonly
         readOnlyLines.push({
             from: 4,
-            to: 4
+            to: 5
         });
         contentManager.markTabbedEditorReadOnlyLines(stepName, serverFileName, readOnlyLines);
     };
@@ -93,7 +93,25 @@ var bulkheadCallBack = (function() {
         try {
             var featureMatches = features.match(/<feature>[\s\S]*?<\/feature>/g);
             $(featureMatches).each(function (index, feature) {
-                if (feature.indexOf("<feature>cdi-1.2</feature>") !== -1) {
+                if (feature.indexOf("<feature>cdi-2.0</feature>") !== -1) {
+                    match = true;
+                    return false; // break out of each loop
+                }
+            });
+        }
+        catch (e) {
+        }
+        return match;
+	};
+	
+	var __isMPFaultToleranceInFeatures = function(features) {
+        var match = false;
+        features = features.replace('\n', '');
+        features = features.replace(/\s/g, ''); // Remove whitespace
+        try {
+            var featureMatches = features.match(/<feature>[\s\S]*?<\/feature>/g);
+            $(featureMatches).each(function (index, feature) {
+                if (feature.indexOf("<feature>mpFaultTolerance-1.0</feature>") !== -1) {
                     match = true;
                     return false; // break out of each loop
                 }
@@ -109,13 +127,14 @@ var bulkheadCallBack = (function() {
         var editorContentBreakdown = __getMicroProfileFaultToleranceFeatureContent(content);
         if (editorContentBreakdown.hasOwnProperty("features")) {
             isFTFeatureThere =  __isFaultToleranceInFeatures(editorContentBreakdown.features) &&
-                                __isCDIInFeatures(editorContentBreakdown.features);
+								__isCDIInFeatures(editorContentBreakdown.features) &&
+								__isMPFaultToleranceInFeatures(editorContentBreakdown.features);
             if (isFTFeatureThere) {
                 // check for whether other stuffs are there
                 var features = editorContentBreakdown.features;
                 features = features.replace('\n', '');
                 features = features.replace(/\s/g, '');
-                if (features.length !== "<feature>mpFaultTolerance-1.0</feature><feature>cdi-1.2</feature>".length) {
+                if (features.length !== "<feature>mpFaultTolerance-1.0</feature><feature>cdi-2.0</feature><feature>mpContextPropagation-1.0</feature>".length) {
                     isFTFeatureThere = false; // contains extra text
                 } else {
                     // Syntax is good.  Save off this version of server.xml.
@@ -266,11 +285,13 @@ var bulkheadCallBack = (function() {
         // manual editing
         contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
-        var newContent =
+		var newContent =
+			"  @Produces @ApplicationScoped\n" +
+			"  ManagedExecutor executor = ManagedExecutor.builder().propagated(ThreadContext.CDI).build();\n" +
+			"\n" +
             "  public Future<Service> requestForVFA() {\n" +
             "    counterForVFA++;\n" +
-            "    ExecutorService executor = Executors.newSingleThreadExecutor();\n" +
-            "    Future<Service> serviceRequest = executor.submit(() -> {\n" +
+            "    executor.runAsync(() -> {\n" +
             "      try {\n" +
             "        return bankService.serviceForVFA(counterForVFA);\n" +
             "      } catch (Exception ex) {\n" +
@@ -287,11 +308,11 @@ var bulkheadCallBack = (function() {
     };
 
     var __validateEditorContentInJavaConcurrencyStep = function(content) {
-        var pattern = "([\\s\\S]*private int counterForVFA = 0;\\s*)" + // boundary which is readonly
-                "(public\\s+Future\\s*<\\s*Service\\s*>\\s*requestForVFA\\s*\\(\\s*\\)\\s*{\\s*" +
+		var pattern = "([\\s\\S]*private int counterForVFA = 0;\\s*)" + // boundary which is readonly
+		        "(ManagedExecutor\\s+executor\\s*=\\s*ManagedExecutor\\.builder\\(\\)\\.propagated\\(ThreadContext\\.CDI\\)\\.build\\(\\);\\s*" +
+		        "public\\s+Future\\s*<\\s*Service\\s*>\\s*requestForVFA\\s*\\(\\s*\\)\\s*{\\s*" +
                 "counterForVFA\\s*\\+\\+;\\s*" +
-                "ExecutorService\\s+executor\\s*=\\s*Executors\\s*\\.\\s*newSingleThreadExecutor\\s*\\(\\s*\\)\\s*;\\s*" +
-                "Future\\s*<\\s*Service\\s*>\\s*serviceRequest\\s*=\\s*executor\\s*\\.\\s*submit\\s*\\(\\s*\\(\\s*\\)\\s*->\\s*{\\s*" +
+                "executor\\.runAsync\\(\\s*\\(\\s*\\)\\s*->\\s*{\\s*" +
                 "try\\s*{\\s*" +
                 "return\\s+bankService\\s*.\\s*serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\)\\s*;\\s*" +
                 "}\\s*catch\\s*\\(\\s*Exception\\s+ex\\s*\\)\\s*{\\s*" +
@@ -325,7 +346,9 @@ var bulkheadCallBack = (function() {
     var __checkRequestForVFAMethod = function(content) {
         var match = false;
         try {
-            var pattern = "counterForVFA = 0;\\s*" + // readonly boundary
+			var pattern = "counterForVFA = 0;\\s*" + // readonly boundary
+			        "@Produces\\s+@ApplicationScoped\\s*" +
+			        "ManagedExecutor\\s+executor\\s*=\\s*ManagedExecutor\\.builder\\(\\)\\.propagated\\(ThreadContext\\.CDI\\)\\.build\\(\\);\\s*" +
                     "public\\s+Future\\s*<\\s*Service\\s*>\\s*requestForVFA\\s*\\(\\s*\\)\\s*{\\s*" +
                     "counterForVFA\\s*\\+\\+\\s*;\\s*" +
                     "return\\s+bankService\\s*.\\s*serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\)\\s*;\\s*" +
@@ -347,7 +370,7 @@ var bulkheadCallBack = (function() {
                 "waitingTaskQueue\\s*=\\s*50\\s*\\)\\s*" +
                 "public\\s+Future\\s*<\\s*Service\\s*>\\s*serviceForVFA\\s*\\(\\s*int\\s+counterForVFA\\s*\\)\\s*{\\s*" +
                 "Service\\s+chatService\\s*=\\s*new\\s+ChatSession\\s*\\(\\s*counterForVFA\\s*\\);\\s*" + 
-                "return\\s+CompletableFuture\\s*.\\s*completedFuture\\s*\\(\\s*chatService\\s*\\);\\s*" +
+                "return\\s+executor\\s*.\\s*completedFuture\\s*\\(\\s*chatService\\s*\\);\\s*" +
                 "}\\s*}";
             var regExp = new RegExp(pattern, "g");
             content.match(regExp)[0];
@@ -424,7 +447,8 @@ var bulkheadCallBack = (function() {
         contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
         var newContent = "  @Bulkhead(50)";
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 23, 23, newContent, 1);
+
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 25, 25, newContent, 1);
         contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, mapStepNameToScrollLine[stepName]);
     };
 
@@ -475,7 +499,7 @@ var bulkheadCallBack = (function() {
             bulkheadAnnotation += ")\n" +
                                     "  public Future<Service> serviceForVFA(int counterForVFA) {\n" +
                                     "    Service chatService = new ChatSession(counterForVFA);\n" +
-                                    "    return CompletableFuture.completedFuture(chatService);\n" +
+                                    "    return executor.completedFuture(chatService);\n" +
                                     "  }";
             return bulkheadAnnotation;
         };
@@ -483,8 +507,9 @@ var bulkheadCallBack = (function() {
         params[0] = "value=50";
         params[1] = "waitingTaskQueue=50";
 
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 25, 30, constructAnnotation(params), 7);
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 29, 34, constructAnnotation(params), 7);
         contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, mapStepNameToScrollLine[stepName]);
+
         if (hasRequestForVFAMethod === true) {
             __updateAsyncBulkheadMethodInEditor(stepName, false);
         }       
@@ -539,7 +564,8 @@ var bulkheadCallBack = (function() {
         if (performReset === undefined || performReset === true) {
             contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
         }
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 11, 23, newContent, 4);
+
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 15, 27, newContent, 4);
         contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, mapStepNameToScrollLine[stepName] - 17);
 
         if (hasServiceForVFAMethod === true && (performReset === undefined || performReset === true)) {
