@@ -13,9 +13,9 @@ var bulkheadCallBack = (function() {
     var bankServiceFileName = "BankService.java";
     var htmlRootDir = "/guides/iguide-bulkhead/html/";
     var mapStepNameToScrollLine = { 'AsyncWithoutBulkhead': 23, 
-                                   'BulkheadAnnotation': 24, 
-                                   'AsyncBulkheadAnnotation': 32,
-                                   'Fallback': 17 };
+                                   'BulkheadAnnotation': 28, 
+                                   'AsyncBulkheadAnnotation': 36,
+                                   'Fallback': 21 };
 
     /** AddLibertyMPFaultTolerance step  begin */
     var addMicroProfileFaultToleranceFeatureButton = function(event) {
@@ -535,7 +535,7 @@ var bulkheadCallBack = (function() {
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
         var newContent =
             "  @Fallback(ServiceFallbackHandler.class)"; + 
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 16, 16, newContent, 1);
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 20, 20, newContent, 1);
         contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, mapStepNameToScrollLine[stepName]);
     };
 
