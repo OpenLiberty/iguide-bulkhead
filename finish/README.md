@@ -1,10 +1,9 @@
 # Setup
-
-To use the sample application, extract the [sampleapp_bulkhead.zip] (https://github.com/OpenLiberty/iguide-bulkhead/raw/master/finish/sampleapp_bulkhead.zip) file to your local directory.
-
-Use the 'mvn install' Maven command from the directory that contains the extracted .zip files to build the project and install it in your local repository. The command creates the `target/liberty` directory that contains your Liberty server, bulkheadSampleServer, and starts the server in the background.
-
-To stop the running server, run the Maven command `mvn liberty:stop-server` from the <extract-directory> directory. To start the bulkheadSampleServer, run the Maven command `mvn liberty:start-server` in the <extract-directory> directory.
+From inside the finish directory, build and start the application in Open Liberty with the following command:
+```
+mvn clean package liberty:run-server
+```
+The server will listen on port 9080 by default. You can change the port (for example, to port 9081) by adding `mvn clean package liberty:run-server -DtestServerHttpPort=9081` to the end of the Maven command.
 
 To access the sample application, visit the following URL from your browser:
       http://localhost:9080/bulkheadSample/virtualFinancialAdvisor
