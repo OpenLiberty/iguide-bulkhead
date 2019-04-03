@@ -64,16 +64,16 @@
             <scope>provided</scope>
         </dependency>
 		<dependency>
-			<!--TODO remove SNAPSHOT and confirm coords after release-->
-            <groupId>org.eclipse.microprofile.concurrency</groupId>
-            <artifactId>microprofile-concurrency-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
-           <scope>provided</scope>
-        </dependency>
+    		<groupId>org.eclipse.microprofile.context-propagation</groupId>
+    		<artifactId>microprofile-context-propagation-api</artifactId>
+    		<version>1.0-RC1</version>
+			<scope>provided</scope>
+		</dependency>
     </dependencies>
     <!-- end::dependencies[] -->
     <!-- tag::build[] -->
     <build>
+		<defaultGoal>clean install liberty:run-server</defaultGoal>
 		<finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
@@ -91,7 +91,7 @@
 
                 <configuration>
 					<install>
-						<runtimeUrl>https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/nightly/2019-03-19_1138/openliberty-all-19.0.0.3-cl190320190319-0959.zip</runtimeUrl>
+						<runtimeUrl>https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/nightly/2019-04-03_0520/openliberty-all-19.0.0.4-cl190420190403-0300.zip</runtimeUrl>
 					</install>
                     <serverName>${project.artifactId}Server</serverName>
                     <configFile>src/main/liberty/config/server.xml</configFile>

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package io.openliberty.guides.bulkhead.global.eBank.microservices;
 
-import org.eclipse.microprofile.concurrent.ManagedExecutor;
+import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.faulttolerance.ExecutionContext;
 import org.eclipse.microprofile.faulttolerance.FallbackHandler;
 

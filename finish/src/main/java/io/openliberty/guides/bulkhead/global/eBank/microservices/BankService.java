@@ -17,8 +17,8 @@ import javax.inject.Inject;
 import org.eclipse.microprofile.faulttolerance.Asynchronous;
 import org.eclipse.microprofile.faulttolerance.Bulkhead;
 import org.eclipse.microprofile.faulttolerance.Fallback;
-import org.eclipse.microprofile.concurrent.ManagedExecutor;
-import org.eclipse.microprofile.concurrent.ThreadContext;
+import org.eclipse.microprofile.context.ManagedExecutor;
+import org.eclipse.microprofile.context.ThreadContext;
 
 import java.util.concurrent.Future;
 
