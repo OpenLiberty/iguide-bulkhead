@@ -38,9 +38,7 @@ public class BankService {
 	private int counterForVFA = 0;
 
 	@Produces @ApplicationScoped
-	ManagedExecutor executor = ManagedExecutor.builder().propagated(ThreadContext.CDI).build();
-
-
+	ManagedExecutor executor = ManagedExecutor.builder().propagated(ThreadContext.APPLICATION).build();
 
     public Future<Service> requestForVFA() throws Exception {
         counterForVFA++;

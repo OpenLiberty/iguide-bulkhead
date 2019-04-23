@@ -287,7 +287,7 @@ var bulkheadCallBack = (function() {
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
 		var newContent =
 			"  @Produces @ApplicationScoped\n" +
-			"  ManagedExecutor executor = ManagedExecutor.builder().propagated(ThreadContext.CDI).build();\n" +
+			"  ManagedExecutor executor = ManagedExecutor.builder().propagated(ThreadContext.APPLICATION).build();\n" +
 			"\n" +
             "  public Future<Service> requestForVFA() {\n" +
             "    counterForVFA++;\n" +
@@ -301,7 +301,7 @@ var bulkheadCallBack = (function() {
             "    });\n" +
             "    return serviceRequest;\n" +
             "  }";
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 10, 13, newContent, 13);
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 10, 13, newContent, 15);
         // line number to scroll to = insert line + the number of lines to be insert 
         // for this example 10 + 13 = 23
         contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, mapStepNameToScrollLine[stepName]);
@@ -309,7 +309,8 @@ var bulkheadCallBack = (function() {
 
     var __validateEditorContentInJavaConcurrencyStep = function(content) {
 		var pattern = "([\\s\\S]*private int counterForVFA = 0;\\s*)" + // boundary which is readonly
-		        "(ManagedExecutor\\s+executor\\s*=\\s*ManagedExecutor\\.builder\\(\\)\\.propagated\\(ThreadContext\\.CDI\\)\\.build\\(\\);\\s*" +
+				"(@Produces\\s+@ApplicationScoped\\s*" +
+		        "ManagedExecutor\\s+executor\\s*=\\s*ManagedExecutor\\.builder\\(\\)\\.propagated\\(ThreadContext\\.APPLICATION\\)\\.build\\(\\);\\s*" +
 		        "public\\s+Future\\s*<\\s*Service\\s*>\\s*requestForVFA\\s*\\(\\s*\\)\\s*{\\s*" +
                 "counterForVFA\\s*\\+\\+;\\s*" +
                 "executor\\.runAsync\\(\\s*\\(\\s*\\)\\s*->\\s*{\\s*" +
@@ -348,7 +349,7 @@ var bulkheadCallBack = (function() {
         try {
 			var pattern = "counterForVFA = 0;\\s*" + // readonly boundary
 			        "@Produces\\s+@ApplicationScoped\\s*" +
-			        "ManagedExecutor\\s+executor\\s*=\\s*ManagedExecutor\\.builder\\(\\)\\.propagated\\(ThreadContext\\.CDI\\)\\.build\\(\\);\\s*" +
+			        "ManagedExecutor\\s+executor\\s*=\\s*ManagedExecutor\\.builder\\(\\)\\.propagated\\(ThreadContext\\.APPLICATION\\)\\.build\\(\\);\\s*" +
                     "public\\s+Future\\s*<\\s*Service\\s*>\\s*requestForVFA\\s*\\(\\s*\\)\\s*{\\s*" +
                     "counterForVFA\\s*\\+\\+\\s*;\\s*" +
                     "return\\s+bankService\\s*.\\s*serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\)\\s*;\\s*" +
@@ -384,7 +385,7 @@ var bulkheadCallBack = (function() {
     var __validateEditorContent_AsyncBulkheadStep = function(content) {       
         var contentInfo={codeMatched: false};
         try {
-            var pattern = "([\\s\\S]*counterForVFA = 0;\\s*)" +      // readonly boundary
+            var pattern = "([\\s\\S]ManagedExecutor\\s+executor\\s*=\\s*ManagedExecutor\\.builder\\(\\)\\.propagated\\(ThreadContext\\.APPLICATION\\)\\.build\\(\\);\\s*)" +      // readonly boundary
             "(public\\s+Future\\s*<\\s*Service\\s*>\\s*requestForVFA\\s*\\(\\s*\\)\\s*{\\s*" +
             "counterForVFA\\s*\\+\\+\\s*;\\s*" +
             "return\\s+bankService\\s*.\\s*serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\)\\s*;\\s*" +
@@ -394,7 +395,7 @@ var bulkheadCallBack = (function() {
             "waitingTaskQueue\\s*=\\s*50\\s*\\)\\s*" +
             "public\\s+Future\\s*<\\s*Service\\s*>\\s*serviceForVFA\\s*\\(\\s*int\\s+counterForVFA\\s*\\)\\s*{\\s*" +
             "Service\\s+chatService\\s*=\\s*new\\s+ChatSession\\s*\\(\\s*counterForVFA\\s*\\);\\s*" + 
-            "return\\s+CompletableFuture\\s*.\\s*completedFuture\\s*\\(\\s*chatService\\s*\\);\\s*" +
+            "return\\s+executor\\s*.\\s*completedFuture\\s*\\(\\s*chatService\\s*\\);\\s*" +
             "})" +
             "(\\s*}[\\s\\S]*)";
             var regExp = new RegExp(pattern, "g");

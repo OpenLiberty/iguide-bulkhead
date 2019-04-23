@@ -25,21 +25,21 @@ The chat session is coded to last for a minute.  After a minute has passed you w
       "Chat has ended."
 Afterwards, the next request on the waiting queue will connect to a financial advisor.      
 
-Edit the Java files to change the parameter values of the `@Bulkhead` annotation. If the bulkheadSampleServer server is running, run the `mvn package` Maven command from the directory that contains the extracted .zip file to rebuild the application. The changes take effect without restarting the server. Otherwise, run the `mvn install` Maven command which will start the server.
-
-To restart the application to simulate the chat requests again, you can stop and restart the 
-bulkheadSampleServer server as indicated.
-
-To view the console log, run the following or other alternative way to view the file:
-
-    tail -f <extract-directory>/target/liberty/wlp/usr/servers/bulkheadSampleServer/logs/console.log
+Edit the Java files to change the parameter values of the `@Bulkhead` annotation to 4. If the bulkheadSampleServer server is running, watch for output similar to the following: 
+```
+[INFO] [AUDIT   ] CWWKT0017I: Web application removed (default_host): http://localhost:9080/bulkheadSample/
+[INFO] [AUDIT   ] CWWKZ0009I: The application bulkheadSample has stopped successfully.
+[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://localhost:9080/bulkheadSample/
+[INFO] [AUDIT   ] CWWKZ0003I: The application bulkheadSample updated in 0.189 seconds.
+```
+Now reload each of the 5 tabs, and you will see the first 4 requests are serviced, while the last request is placed in the queue.
 
 # Configuration
 
-The <extract-directory>/src directory contains the BankService.java and ServiceFallbackHandler.java files as shown throughout this guide. 
+The <extract-directory>/src directory contains the `BankService.java` and `ServiceFallbackHandler.java` files as shown throughout this guide. 
 
 ## BankService.java
-The `@Bulkhead` and `@Asynchronous` annotations that are injected into the code are located in BankService.java. 
+The `@Bulkhead` and `@Asynchronous` annotations that are injected into the code are located in `BankService.java`. 
 
 ### @Bulkhead Parameters
 The `@Bulkhead` annotation has parameters to configure its usage.
@@ -48,8 +48,8 @@ The `@Bulkhead` annotation has parameters to configure its usage.
 
 In this sample application, the values for the bulkhead parameters are initially set to **value**=2 and **waitingTaskQueue**=2. These values indicate that after 2 concurrent chat requests reach the virtualFinancialAdvisor service, the next 2 concurrent chat requests are added to the waiting queue.
 
-The BankService.java file also contains the `@Fallback` annotation. The ServiceFallbackHandler.java file contains the fallback class that is identified by the `@Fallback` annotation. The fallback class runs when the maximum limit of concurrent requests is reached and the waiting queue is full. When the fallback runs, a message displays that allows a customer to schedule an appointment.
+The `BankService.java` file also contains the `@Fallback` annotation. The ServiceFallbackHandler.java file contains the fallback class that is identified by the `@Fallback` annotation. The fallback class runs when the maximum limit of concurrent requests is reached and the waiting queue is full. When the fallback runs, a message displays that allows a customer to schedule an appointment.
 
-The BankService.java file also contains the delay TIMEOUT value that defaults to 30 seconds (30000 milliseconds). The delay is necessary to simulate concurrent requests in multiple tabs of the browser and allow you to fill up the waiting queue. Otherwise, we found that the service returns too quickly. If you are unable to make enough requests to fill up the waiting queue within this specified delay time so that you can see the fallback method run, try increasing this value. 
+The `BankService.java` file also contains the delay TIMEOUT value that defaults to 30 seconds (30000 milliseconds). The delay is necessary to simulate concurrent requests in multiple tabs of the browser and allow you to fill up the waiting queue. Otherwise, we found that the service returns too quickly. If you are unable to make enough requests to fill up the waiting queue within this specified delay time so that you can see the fallback method run, try increasing this value. 
 
-The application contains servlet BankServiceServlet which calls the virtualFinancialAdvisor service.
+The application contains a servlet, `BankServiceServlet`, which calls the virtualFinancialAdvisor service.

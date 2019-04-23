@@ -16,8 +16,10 @@ import org.eclipse.microprofile.faulttolerance.FallbackHandler;
 
 import java.util.concurrent.Future;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+@ApplicationScoped
 public class ServiceFallbackHandler implements FallbackHandler<Future<Service>> {
 
     @Inject
