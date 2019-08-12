@@ -41,8 +41,8 @@ public class BankService {
 	ManagedExecutor executor = ManagedExecutor.builder().propagated(ThreadContext.APPLICATION).build();
 
     public Future<Service> requestForVFA() throws Exception {
-        counterForVFA++;
-        return bankService.serviceForVFA(counterForVFA);
+        int counter = ++counterForVFA;
+        return bankService.serviceForVFA(counter);
     }
 
     @Fallback(ServiceFallbackHandler.class)

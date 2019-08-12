@@ -290,10 +290,10 @@ var bulkheadCallBack = (function() {
 			"  ManagedExecutor executor = ManagedExecutor.builder().propagated(ThreadContext.APPLICATION).build();\n" +
 			"\n" +
             "  public Future<Service> requestForVFA() {\n" +
-            "    counterForVFA++;\n" +
+            "    int counter = ++counterForVFA;\n" +
             "    executor.runAsync(() -> {\n" +
             "      try {\n" +
-            "        return bankService.serviceForVFA(counterForVFA);\n" +
+            "        return bankService.serviceForVFA(counter);\n" +
             "      } catch (Exception ex) {\n" +
             "        handleException();\n" +
             "      }\n" +
@@ -312,10 +312,10 @@ var bulkheadCallBack = (function() {
 				"(@Produces\\s+@ApplicationScoped\\s*" +
 		        "ManagedExecutor\\s+executor\\s*=\\s*ManagedExecutor\\.builder\\(\\)\\.propagated\\(ThreadContext\\.APPLICATION\\)\\.build\\(\\);\\s*" +
 		        "public\\s+Future\\s*<\\s*Service\\s*>\\s*requestForVFA\\s*\\(\\s*\\)\\s*{\\s*" +
-                "counterForVFA\\s*\\+\\+;\\s*" +
+                "int\\s*counter\\s*=\\s*\\+\\+counterForVFA\\s*;\\s*" +
                 "executor\\.runAsync\\(\\s*\\(\\s*\\)\\s*->\\s*{\\s*" +
                 "try\\s*{\\s*" +
-                "return\\s+bankService\\s*.\\s*serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\)\\s*;\\s*" +
+                "return\\s+bankService\\s*.\\s*serviceForVFA\\s*\\(\\s*counter\\s*\\)\\s*;\\s*" +
                 "}\\s*catch\\s*\\(\\s*Exception\\s+ex\\s*\\)\\s*{\\s*" +
                 "handleException\\s*\\(\\s*\\)\\s*;\\s*" +
                 "}\\s*" +
@@ -431,7 +431,7 @@ var bulkheadCallBack = (function() {
     };
 
     var __validateEditorContent_FallbackStep = function(content) {
-        var pattern = "([\\s\\S]*return bankService.serviceForVFA\\(counterForVFA\\);\\s*" +   // readonly boundary
+        var pattern = "([\\s\\S]*return bankService.serviceForVFA\\(counter\\);\\s*" +   // readonly boundary
                       "}\\s*)" + 
                       "(@Fallback\\s*\\(\\s*ServiceFallbackHandler\\s*\\.\\s*class\\s*\\))" +
                       "(\\s*@Asynchronous[\\s\\S]*)";   // readonly boundary
