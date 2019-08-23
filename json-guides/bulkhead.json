@@ -150,7 +150,7 @@
 				"<code>Future</code> is a special return type that is used in Java concurrency to fetch the result of a task when it is available. <a href='https://github.com/eclipse/microprofile-context-propagation' target='_blank' rel='noopener noreferrer'>Microprofile Context Propagation</a> allows us to build a <code>ManagedExecutor</code> instance which can propagate context to completion stage actions. Using the <code>@Produces</code> and <code>@ApplicationScoped</code> annotations allow injecting the same ManagedExecutor at other points in the application."
             ],
             "instruction": [
-                "Replace the <code>requestForVFA</code> method on line 10 with the following block of code.<br><codeblock>@Produces @ApplicationScoped\nManagedExecutor executor = ManagedExecutor.builder().propagated(ThreadContext.APPLICATION).build();\n\npublic Future&ltService&gt requestForVFA() {\nint counter = ++counterForVFA;\nFuture<Service> serviceRequest = executor.runAsync(<span title='Lambda Expression'>() -> {\n    try{\n      return bankService.serviceForVFA(counter);\n    } catch (Exception ex) {\n      handleException();\n    }\n    return null;\n  }</span>);\n  return serviceRequest;\n}</codeblock><br>Alternatively, click <action title='Adding Java concurrency' onclick=\"bulkheadCallBack.addJavaConcurrencyButton(event, 'AsyncWithoutBulkhead')\">Replace</action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncWithoutBulkhead')\">Run</action> on the editor menu pane.",
+                "Replace the <code>requestForVFA</code> method on line 10 with the following block of code.<br><codeblock>@Produces @ApplicationScoped\nManagedExecutor executor = ManagedExecutor.builder().propagated( ThreadContext.APPLICATION ).build();\n\npublic Future&ltService&gt requestForVFA() {\nint counter = ++counterForVFA;\nFuture<Service> serviceRequest = executor.runAsync(<span title='Lambda Expression'>() -> {\n    try{\n      return bankService.serviceForVFA(counter);\n    } catch (Exception ex) {\n      handleException();\n    }\n    return null;\n  }</span>);\n  return serviceRequest;\n}</codeblock><br>Alternatively, click <action title='Adding Java concurrency' onclick=\"bulkheadCallBack.addJavaConcurrencyButton(event, 'AsyncWithoutBulkhead')\">Replace</action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncWithoutBulkhead')\">Run</action> on the editor menu pane.",
                 "Click <action title='Customer1 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead', 1)\">Customer1 requests chat</action> to open a chat session with a virtual financial advisor.",
                 "While Customer1 is still chatting with a financial advisor, click <action title='Customer2 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead', 2)\">Customer2 requests chat</action> to open a separate chat session with a virtual financial advisor.",
                 "As more customers request chat sessions with a virtual financial advisor, more sessions become busy. Currently, the code does not implement a limit to the number of available advisor sessions. The VirtualFinancialAdvisor microservice causes the system to slowly run out of CPU or memory resources, which affects other microservices. <br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead', 3)\">50 customer chat requests</action> to see the cascading failure."
@@ -250,7 +250,7 @@
                                 "  private int counterForVFA = 0;",
 								"",
 								"  @Produces @ApplicationScoped",
-  								"  ManagedExecutor executor = ManagedExecutor.builder().propagated(ThreadContext.APPLICATION).build();",
+  								"  ManagedExecutor executor = ManagedExecutor.builder().propagated( ThreadContext.APPLICATION ).build();",
 								"",
                                 "  public Future<Service> requestForVFA() {",
                                 "    int counter = ++counterForVFA;",
@@ -318,7 +318,7 @@
                 "After you modify your <code>server.xml</code> file to <a href='#enabling-microprofile-fault-tolerance-in-open-liberty'> include the Fault Tolerance feature</a>, add a Bulkhead policy to the VirtualFinancialAdvisor microservice."
             ],
             "instruction": [
-                "Add the <code>@Bulkhead</code> annotation with a value of <code>50</code> on line 23, before the <code>serviceForVFA</code> method.<br><codeblock>@Bulkhead(50)</codeblock><br>Alternatively, click <action title='Add @Bulkhead' onclick=\"bulkheadCallBack.addBulkheadButton(event, 'BulkheadAnnotation')\">Add</action>. This annotation limits the number of concurrent chat requests to 50. <br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'BulkheadAnnotation')\">Run</action> on the editor menu pane.",
+                "Add the <code>@Bulkhead</code> annotation with a value of <code>50</code> on line 25, before the <code>serviceForVFA</code> method.<br><codeblock>@Bulkhead(50)</codeblock><br>Alternatively, click <action title='Add @Bulkhead' onclick=\"bulkheadCallBack.addBulkheadButton(event, 'BulkheadAnnotation')\">Add</action>. This annotation limits the number of concurrent chat requests to 50. <br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'BulkheadAnnotation')\">Run</action> on the editor menu pane.",
                 "Click <action title='Customer1 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation', 1)\">Customer1 request chat</action> to open a chat session with a virtual financial advisor.",
                 "As more customers request chat sessions with a virtual financial advisor, all 50 sessions become busy. Once the maximum number of concurrent chat requests is reached, the next chat request is rejected.<br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation', 2)\">50 customer chat requests</action> to fill the <b>IN PROGRESS</b> chats and see how an additional chat session fails to open for the last customer."
             ],
@@ -356,7 +356,7 @@
                                 "  private int counterForVFA = 0;",
 								"",
 								"  @Produces @ApplicationScoped",
-  								"  ManagedExecutor executor = ManagedExecutor.builder().propagated(ThreadContext.APPLICATION).build();",
+  								"  ManagedExecutor executor = ManagedExecutor.builder().propagated( ThreadContext.APPLICATION ).build();",
 								"",
                                 "  public Future<Service> requestForVFA() {",
                                 "    int counter = ++counterForVFA;",
@@ -426,7 +426,7 @@
                 "It is best practice to set the <code>waitingTaskQueue</code> parameter so that it has a value equal to or larger than the <code>value</code> parameter."
             ],
             "instruction": [
-                "The method annotated with an <code>@Asynchronous</code> annotation must return a <code>Future</code>. To add the <code>@Asynchronous</code> annotation, update the <code>@Bulkhead</code> annotation's parameters and change the return type for <code>serviceForVFA</code>, replace the code from lines 29 - 33 with the following block of code.<br><codeblock>@Asynchronous\n@Bulkhead(value = 50, waitingTaskQueue = 50)\npublic Future&ltService&gt serviceForVFA(int counterForVFA) {\n  Service chatService = new ChatSession( counterForVFA );\n  return executor.completedFuture( chatService );\n}</codeblock><br>Alternatively, click <action title='Bulkhead annotation with Asynchronous' onclick=\"bulkheadCallBack.addAsyncBulkheadButton(event, 'AsyncBulkheadAnnotation')\">Replace</action>.<br>Because the <code>@Asynchronous</code> annotation manages thread pools, you no longer need to use <code>Executors</code>. Replace the <code>requestForVFA</code> method on line 11 with the following block of code.<br><codeblock>public Future&ltService&gt requestForVFA() {\n  int counter = ++counterForVFA;\n  return bankService.serviceForVFA(counter);\n}</codeblock><br>Alternatively, click <action title='Update requestForVFA method' onclick=\"bulkheadCallBack.updateAsyncBulkheadMethodButton(event, 'AsyncBulkheadAnnotation')\">Replace</action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncBulkheadAnnotation')\">Run</action> on the editor menu pane.",
+                "The method annotated with an <code>@Asynchronous</code> annotation must return a <code>Future</code>. To add the <code>@Asynchronous</code> annotation, update the <code>@Bulkhead</code> annotation's parameters and change the return type for <code>serviceForVFA</code>, replace the code from lines 29 - 33 with the following block of code.<br><codeblock>@Asynchronous\n@Bulkhead(value = 50, waitingTaskQueue = 50)\npublic Future&ltService&gt serviceForVFA(int counterForVFA) {\n  Service chatService = new ChatSession( counterForVFA );\n  return executor.completedFuture( chatService );\n}</codeblock><br>Alternatively, click <action title='Bulkhead annotation with Asynchronous' onclick=\"bulkheadCallBack.addAsyncBulkheadButton(event, 'AsyncBulkheadAnnotation')\">Replace</action>.<br>Because the <code>@Asynchronous</code> annotation manages thread pools, you no longer need to use <code>Executors</code>. Replace the <code>requestForVFA</code> method on line 15 with the following block of code.<br><codeblock>public Future&ltService&gt requestForVFA() {\n  int counter = ++counterForVFA;\n  return bankService.serviceForVFA(counter);\n}</codeblock><br>Alternatively, click <action title='Update requestForVFA method' onclick=\"bulkheadCallBack.updateAsyncBulkheadMethodButton(event, 'AsyncBulkheadAnnotation')\">Replace</action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncBulkheadAnnotation')\">Run</action> on the editor menu pane.",
                 "Click <action title='Customer1 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation', 1)\">Customer1 requests chat</action> to open a chat session with a virtual financial advisor.",
                 "As more customers request chat sessions with a virtual financial advisor, all 50 sessions become busy. Once the maximum number of concurrent chat requests is reached, the next chat request is placed in the waiting queue.<br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation', 2)\">50 customer chat requests</action> to fill the <b>IN PROGRESS</b> chats and to see that the last customer is placed in the <b>WAITING</b> queue.",
                 "As more customers request chat sessions with a virtual financial advisor, the waiting queue eventually fills up. Our Bulkhead policy limits the maximum number of requests in the waiting queue to 50. The next chat request cannot be started and cannot be added to the waiting queue.<br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation', 3)\">50 customer chat requests</action> to fill the <b>WAITING</b> queue and see that an additional chat session fails to open for the last customer."
@@ -467,7 +467,7 @@
                                 "  private int counterForVFA = 0;",
 								"",
 								"  @Produces @ApplicationScoped",
-								"  ManagedExecutor executor = ManagedExecutor.builder().propagated(ThreadContext.APPLICATION).build();",
+								"  ManagedExecutor executor = ManagedExecutor.builder().propagated( ThreadContext.APPLICATION ).build();",
 								"",
                                 "  public Future<Service> requestForVFA() {",
                                 "    int counter = ++counterForVFA;",
@@ -584,7 +584,7 @@
                                 "  private int counterForVFA = 0;",
 								"",
 								"  @Produces @ApplicationScoped",
-								"  ManagedExecutor executor = ManagedExecutor.builder().propagated(ThreadContext.APPLICATION).build();",
+								"  ManagedExecutor executor = ManagedExecutor.builder().propagated( ThreadContext.APPLICATION ).build();",
 								"",
                                 "  public Future<Service> requestForVFA() {",
                                 "    int counter = ++counterForVFA;",
@@ -679,7 +679,7 @@
               "It is best practice to set the <b>waitingTaskQueue</b> parameter so that it is has a value equal to or larger than the <b>value</b> parameter."
             ],
             "instruction": [
-                "Modify the parameter values for the <code>@Bulkhead</code> annotation on lines 17 and 18 in the editor. In this simulation, the maximum value for <code>value</code> and <code>waitingTaskQueue</code> is 10. <br>Then click Run to use the new values. Repeat the process as many times as you like. <br><br>Click <b>Chat request</b> to initiate a request with a virtual financial advisor or <b>End chat</b> to end an arbitrary chat and observe the simulation."
+                "Modify the parameter values for the <code>@Bulkhead</code> annotation on lines 22 and 23 in the editor. In this simulation, the maximum value for <code>value</code> and <code>waitingTaskQueue</code> is 10. <br>Then click Run to use the new values. Repeat the process as many times as you like. <br><br>Click <b>Chat request</b> to initiate a request with a virtual financial advisor or <b>End chat</b> to end an arbitrary chat and observe the simulation."
             ],
             "content":[
                 {
@@ -709,7 +709,7 @@
 							"  private int counterForVFA = 0;",
 							"",
 							"  @Produces @ApplicationScoped",
-							"  ManagedExecutor executor = ManagedExecutor.builder().propagated(ThreadContext.APPLICATION).build();",
+							"  ManagedExecutor executor = ManagedExecutor.builder().propagated( ThreadContext.APPLICATION ).build();",
                             "",
                             "  public Future<Service> requestForVFA() {",
                             "    int counter = ++counterForVFA;",
