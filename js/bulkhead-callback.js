@@ -310,7 +310,7 @@ var bulkheadCallBack = (function() {
     var __validateEditorContentInJavaConcurrencyStep = function(content) {
 		var pattern = "([\\s\\S]*private int counterForVFA = 0;\\s*)" + // boundary which is readonly
 				"(@Produces\\s+@ApplicationScoped\\s*" +
-		        "ManagedExecutor\\s+executor\\s*=\\s*ManagedExecutor\\.builder\\(\\)\\.propagated\\( ThreadContext\\.APPLICATION \\)\\.build\\(\\);\\s*" +
+		        "ManagedExecutor\\s+executor\\s*=\\s*ManagedExecutor\\.builder\\(\\)\\.propagated\\(\\s*ThreadContext\\.APPLICATION\\s*\\)\\.build\\(\\);\\s*" +
 		        "public\\s+Future\\s*<\\s*Service\\s*>\\s*requestForVFA\\s*\\(\\s*\\)\\s*{\\s*" +
                 "int\\s*counter\\s*=\\s*\\+\\+counterForVFA\\s*;\\s*" +
                 "executor\\.runAsync\\(\\s*\\(\\s*\\)\\s*->\\s*{\\s*" +
@@ -349,7 +349,7 @@ var bulkheadCallBack = (function() {
         try {
 			var pattern = "counterForVFA = 0;\\s*" + // readonly boundary
 			        "@Produces\\s+@ApplicationScoped\\s*" +
-			        "ManagedExecutor\\s+executor\\s*=\\s*ManagedExecutor\\.builder\\(\\)\\.propagated\\( ThreadContext\\.APPLICATION \\)\\.build\\(\\);\\s*" +
+			        "ManagedExecutor\\s+executor\\s*=\\s*ManagedExecutor\\.builder\\(\\)\\.propagated\\(\\s*ThreadContext\\.APPLICATION\\s*\\)\\.build\\(\\);\\s*" +
                     "public\\s+Future\\s*<\\s*Service\\s*>\\s*requestForVFA\\s*\\(\\s*\\)\\s*{\\s*" +
                     "counterForVFA\\s*\\+\\+\\s*;\\s*" +
                     "return\\s+bankService\\s*.\\s*serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\)\\s*;\\s*" +
@@ -385,7 +385,7 @@ var bulkheadCallBack = (function() {
     var __validateEditorContent_AsyncBulkheadStep = function(content) {       
         var contentInfo={codeMatched: false};
         try {
-            var pattern = "([\\s\\S]ManagedExecutor\\s+executor\\s*=\\s*ManagedExecutor\\.builder\\(\\)\\.propagated\\( ThreadContext\\.APPLICATION \\)\\.build\\(\\);\\s*)" +      // readonly boundary
+            var pattern = "([\\s\\S]ManagedExecutor\\s+executor\\s*=\\s*ManagedExecutor\\.builder\\(\\)\\.propagated\\(\\s*ThreadContext\\.APPLICATION\\s*\\)\\.build\\(\\);\\s*)" +      // readonly boundary
             "(public\\s+Future\\s*<\\s*Service\\s*>\\s*requestForVFA\\s*\\(\\s*\\)\\s*{\\s*" +
             "counterForVFA\\s*\\+\\+\\s*;\\s*" +
             "return\\s+bankService\\s*.\\s*serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\)\\s*;\\s*" +
