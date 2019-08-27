@@ -1,4 +1,14 @@
-# Setup
+# Bulkhead Guide Sample
+
+To run this sample, first [download](https://github.com/OpenLiberty/iguide-bulkhead/archive/master.zip) or clone this repo - to clone:
+```
+git clone git@github.com:OpenLiberty/iguide-bulkhead.git
+```
+then navigate to the `finish` directory
+
+## Setup
+
+
 From inside the finish directory, build and start the application in Open Liberty with the following command:
 ```
 mvn clean package liberty:run-server
@@ -34,7 +44,9 @@ Edit the Java files to change the parameter values of the `@Bulkhead` annotation
 ```
 Now reload each of the 5 tabs, and you will see the first 4 requests are serviced, while the last request is placed in the queue.
 
-# Configuration
+Stop the server with `ctrl+c`.
+
+## Configuration
 
 The <extract-directory>/src directory contains the `BankService.java` and `ServiceFallbackHandler.java` files as shown throughout this guide. 
 
