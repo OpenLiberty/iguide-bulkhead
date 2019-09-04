@@ -35,16 +35,17 @@ The chat session is coded to last for a minute.  After a minute has passed you w
       "Chat has ended."
 Afterwards, the next request on the waiting queue will connect to a financial advisor.      
 
-Edit the Java files to change the parameter values of the `@Bulkhead` annotation to 4. If the bulkheadSampleServer server is running, watch for output similar to the following: 
+Edit the Java files to change the parameter values of the `@Bulkhead` annotation to 4. If your IDE supports auto-rebuilding and the bulkheadSampleServer server is running, watch for output similar to the following: 
 ```
 [INFO] [AUDIT   ] CWWKT0017I: Web application removed (default_host): http://localhost:9080/bulkheadSample/
 [INFO] [AUDIT   ] CWWKZ0009I: The application bulkheadSample has stopped successfully.
 [INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://localhost:9080/bulkheadSample/
 [INFO] [AUDIT   ] CWWKZ0003I: The application bulkheadSample updated in 0.189 seconds.
 ```
-Now reload each of the 5 tabs, and you will see the first 4 requests are serviced, while the last request is placed in the queue.
 
-Stop the server with `ctrl+c`.
+Otherwise, stop the server with `ctrl+c` and run `mvn clean package liberty:run-server` to start the server again.
+
+Now reload each of the 5 tabs, and you will see the first 4 requests are serviced, while the last request is placed in the queue.
 
 ## Configuration
 

@@ -14,7 +14,7 @@ var bulkheadCallBack = (function() {
     var htmlRootDir = "/guides/iguide-bulkhead/html/";
     var mapStepNameToScrollLine = { 'AsyncWithoutBulkhead': 23, 
                                    'BulkheadAnnotation': 28, 
-                                   'AsyncBulkheadAnnotation': 36,
+                                   'AsyncBulkheadAnnotation': 34,
                                    'Fallback': 21 };
 
     /** AddLibertyMPFaultTolerance step  begin */
@@ -344,22 +344,22 @@ var bulkheadCallBack = (function() {
         return contentInfo;
     };
 
-    var __checkRequestForVFAMethod = function(content) {
+	var __checkRequestForVFAMethod = function(content) {
         var match = false;
         try {
 			var pattern = "counterForVFA = 0;\\s*" + // readonly boundary
 			        "@Produces\\s+@ApplicationScoped\\s*" +
 			        "ManagedExecutor\\s+executor\\s*=\\s*ManagedExecutor\\.builder\\(\\)\\.propagated\\(\\s*ThreadContext\\.APPLICATION\\s*\\)\\.build\\(\\);\\s*" +
                     "public\\s+Future\\s*<\\s*Service\\s*>\\s*requestForVFA\\s*\\(\\s*\\)\\s*{\\s*" +
-                    "counterForVFA\\s*\\+\\+\\s*;\\s*" +
-                    "return\\s+bankService\\s*.\\s*serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\)\\s*;\\s*" +
+                    "int\\s*counter\\s*=\\s*\\+\\+counterForVFA\\s*;\\s*" +
+                    "return\\s+bankService\\s*.\\s*serviceForVFA\\s*\\(\\s*counter\\s*\\)\\s*;\\s*" +
                     "}\\s*@";
             var regExp = new RegExp(pattern, "g");
             content.match(regExp)[0];
             match = true;
         } catch (ex) {
 
-        }
+		}
         return match;
     };
 
@@ -378,7 +378,7 @@ var bulkheadCallBack = (function() {
             match = true;
         } catch (ex) {
 
-        }
+		}
         return match;
     };
 
@@ -387,8 +387,8 @@ var bulkheadCallBack = (function() {
         try {
             var pattern = "([\\s\\S]ManagedExecutor\\s+executor\\s*=\\s*ManagedExecutor\\.builder\\(\\)\\.propagated\\(\\s*ThreadContext\\.APPLICATION\\s*\\)\\.build\\(\\);\\s*)" +      // readonly boundary
             "(public\\s+Future\\s*<\\s*Service\\s*>\\s*requestForVFA\\s*\\(\\s*\\)\\s*{\\s*" +
-            "counterForVFA\\s*\\+\\+\\s*;\\s*" +
-            "return\\s+bankService\\s*.\\s*serviceForVFA\\s*\\(\\s*counterForVFA\\s*\\)\\s*;\\s*" +
+            "int\\s*counter\\s*=\\s*\\+\\+counterForVFA\\s*;\\s*" +
+            "return\\s+bankService\\s*.\\s*serviceForVFA\\s*\\(\\s*counter\\s*\\)\\s*;\\s*" +
             "})" +
             "(\\s*)" +
             "(@Asynchronous\\s*@Bulkhead\\s*\\(\\s*value\\s*=\\s*50\\s*,\\s*" + 
@@ -508,11 +508,11 @@ var bulkheadCallBack = (function() {
         params[0] = "value=50";
         params[1] = "waitingTaskQueue=50";
 
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 29, 34, constructAnnotation(params), 7);
+        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 28, 32, constructAnnotation(params), 7);
         contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, mapStepNameToScrollLine[stepName]);
 
         if (hasRequestForVFAMethod === true) {
-            __updateAsyncBulkheadMethodInEditor(stepName, false);
+			__updateAsyncBulkheadMethodInEditor(stepName, false);
         }       
     };
 
@@ -552,25 +552,25 @@ var bulkheadCallBack = (function() {
         }
     };
 
-    var __updateAsyncBulkheadMethodInEditor = function(stepName, performReset) {
+	var __updateAsyncBulkheadMethodInEditor = function(stepName, performReset) {
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
         var hasServiceForVFAMethod = __checkServiceForVFAMethod(content);
 
         var newContent = "  public Future<Service> requestForVFA() {\n" +
-                         "    counterForVFA++;\n" + 
-                         "    return bankService.serviceForVFA(counterForVFA);\n" +
-                         "  }";
+                         "    int counter = ++counterForVFA;\n" + 
+                         "    return bankService.serviceForVFA(counter);\n" +
+                         "  }\n";
 
         contentManager.focusTabbedEditorByName(stepName, bankServiceFileName);
         if (performReset === undefined || performReset === true) {
             contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
         }
 
-        contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 15, 27, newContent, 4);
+		contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 15, 27, newContent, 4);
         contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, mapStepNameToScrollLine[stepName] - 17);
 
         if (hasServiceForVFAMethod === true && (performReset === undefined || performReset === true)) {
-            __addAsyncBulkheadInEditor(stepName);
+           __addAsyncBulkheadInEditor(stepName);
         }
     };
 
