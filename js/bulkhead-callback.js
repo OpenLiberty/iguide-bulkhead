@@ -291,7 +291,7 @@ var bulkheadCallBack = (function() {
 			"\n" +
             "  public Future<Service> requestForVFA() {\n" +
             "    int counter = ++counterForVFA;\n" +
-            "    executor.runAsync(() -> {\n" +
+            "    Future<Service> serviceRequest = executor.runAsync(() -> {\n" +
             "      try {\n" +
             "        return bankService.serviceForVFA(counter);\n" +
             "      } catch (Exception ex) {\n" +
@@ -313,7 +313,7 @@ var bulkheadCallBack = (function() {
 		        "ManagedExecutor\\s+executor\\s*=\\s*ManagedExecutor\\.builder\\(\\)\\.propagated\\(\\s*ThreadContext\\.APPLICATION\\s*\\)\\.build\\(\\);\\s*" +
 		        "public\\s+Future\\s*<\\s*Service\\s*>\\s*requestForVFA\\s*\\(\\s*\\)\\s*{\\s*" +
                 "int\\s*counter\\s*=\\s*\\+\\+counterForVFA\\s*;\\s*" +
-                "executor\\.runAsync\\(\\s*\\(\\s*\\)\\s*->\\s*{\\s*" +
+                "Future\\s*<\\s*Service\\s*>\\s*serviceRequest\\s*=\\s*executor\\.runAsync\\(\\s*\\(\\s*\\)\\s*->\\s*{\\s*" +
                 "try\\s*{\\s*" +
                 "return\\s+bankService\\s*.\\s*serviceForVFA\\s*\\(\\s*counter\\s*\\)\\s*;\\s*" +
                 "}\\s*catch\\s*\\(\\s*Exception\\s+ex\\s*\\)\\s*{\\s*" +
