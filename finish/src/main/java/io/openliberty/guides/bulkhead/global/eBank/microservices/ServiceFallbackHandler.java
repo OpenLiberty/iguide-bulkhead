@@ -34,4 +34,4 @@ public class ServiceFallbackHandler implements FallbackHandler<Future<Service>> 
         Service service = new ScheduleService();
         return executor.completedFuture(service);
     }
-} 
+}

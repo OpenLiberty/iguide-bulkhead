@@ -22,23 +22,24 @@ import org.eclipse.microprofile.context.ThreadContext;
 
 import java.util.concurrent.Future;
 
-
 @ApplicationScoped
 public class BankService {
 
     // For demo purpose only
-    // The length of time (in milliseconds) to pause the currently executing thread 
+    // The length of time (in milliseconds) to pause the currently executing thread
     // so as to simulate concurrency
     public static final int TIMEOUT = 30000;
 
     public final static int bulkheadValue = 2;
     public final static int bulkheadWaitingQueue = 2;
- 
-    @Inject private BankService bankService;
-	private int counterForVFA = 0;
 
-	@Produces @ApplicationScoped
-	ManagedExecutor executor = ManagedExecutor.builder().propagated(ThreadContext.APPLICATION).build();
+    @Inject
+    private BankService bankService;
+    private int counterForVFA = 0;
+
+    @Produces
+    @ApplicationScoped
+    ManagedExecutor executor = ManagedExecutor.builder().propagated(ThreadContext.APPLICATION).build();
 
     public Future<Service> requestForVFA() throws Exception {
         int counter = ++counterForVFA;
@@ -50,6 +51,6 @@ public class BankService {
     @Bulkhead(value = bulkheadValue, waitingTaskQueue = bulkheadWaitingQueue)
     public Future<Service> serviceForVFA(int counterForVFA) throws Exception {
         Service chatService = new ChatSession(counterForVFA);
-        return executor.completedFuture(chatService);           
+        return executor.completedFuture(chatService);
     }
 }
