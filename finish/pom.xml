@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project
-    xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -23,7 +21,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <app.name>${project.artifactId}</app.name>
 
-		<version.maven-war-plugin>3.2.2</version.maven-war-plugin>
+        <version.maven-war-plugin>3.2.2</version.maven-war-plugin>
         <version.dockerfile-maven-plugin>1.4.3</version.dockerfile-maven-plugin>
         <version.maven-surefire-plugin>2.19.1</version.maven-surefire-plugin>
         <version.maven-failsafe-plugin>2.19.1</version.maven-failsafe-plugin>
@@ -33,7 +31,7 @@
 
         <package.file>${project.build.directory}/${app.name}.zip</package.file>
         <packaging.type>usr</packaging.type>
-		<version.openliberty-runtime>RELEASE</version.openliberty-runtime>
+        <version.openliberty-runtime>RELEASE</version.openliberty-runtime>
     </properties>
     <!-- end::properties[] -->
     <!-- tag::dependencies[] -->
@@ -55,7 +53,7 @@
             <groupId>org.eclipse.microprofile.fault-tolerance</groupId>
             <artifactId>microprofile-fault-tolerance-api</artifactId>
             <version>1.0</version>
-           <scope>provided</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
@@ -63,18 +61,18 @@
             <version>2.1.1</version>
             <scope>provided</scope>
         </dependency>
-		<dependency>
-    		<groupId>org.eclipse.microprofile.context-propagation</groupId>
-    		<artifactId>microprofile-context-propagation-api</artifactId>
-    		<version>1.0</version>
-			<scope>provided</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.eclipse.microprofile.context-propagation</groupId>
+            <artifactId>microprofile-context-propagation-api</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
     <!-- end::dependencies[] -->
     <!-- tag::build[] -->
     <build>
-		<defaultGoal>clean package liberty:run-server</defaultGoal>
-		<finalName>${project.artifactId}</finalName>
+        <defaultGoal>clean package liberty:run-server</defaultGoal>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -88,16 +86,16 @@
                 <groupId>net.wasdev.wlp.maven.plugins</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
                 <configuration>
-					<assemblyArtifact>
+                    <assemblyArtifact>
                         <groupId>io.openliberty</groupId>
                         <artifactId>openliberty-runtime</artifactId>
                         <version>RELEASE</version>
                         <type>zip</type>
-					</assemblyArtifact>
-					
+                    </assemblyArtifact>
+
                     <serverName>${project.artifactId}Server</serverName>
                     <configFile>src/main/liberty/config/server.xml</configFile>
-					<looseApplication>true</looseApplication>
+                    <looseApplication>true</looseApplication>
                     <stripVersion>true</stripVersion>
                     <packageFile>${package.file}</packageFile>
                     <include>${packaging.type}</include>
