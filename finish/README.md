@@ -1,10 +1,19 @@
-# Setup
+# Bulkhead Guide Sample
 
-To use the sample application, extract the [sampleapp_bulkhead.zip] (https://github.com/OpenLiberty/iguide-bulkhead/raw/master/finish/sampleapp_bulkhead.zip) file to your local directory.
+To run this sample, first [download](https://github.com/OpenLiberty/iguide-bulkhead/archive/master.zip) or clone this repo - to clone:
+```
+git clone git@github.com:OpenLiberty/iguide-bulkhead.git
+```
+then navigate to the `finish` directory
 
-Use the 'mvn install' Maven command from the directory that contains the extracted .zip files to build the project and install it in your local repository. The command creates the `target/liberty` directory that contains your Liberty server, bulkheadSampleServer, and starts the server in the background.
+## Setup
 
-To stop the running server, run the Maven command `mvn liberty:stop-server` from the <extract-directory> directory. To start the bulkheadSampleServer, run the Maven command `mvn liberty:start-server` in the <extract-directory> directory.
+
+From inside the finish directory, build and start the application in Open Liberty with the following command:
+```
+mvn clean package liberty:run-server
+```
+The server will listen on port 9080 by default. You can change the port (for example, to port 9081) by adding `mvn clean package liberty:run-server -DtestServerHttpPort=9081` to the end of the Maven command.
 
 To access the sample application, visit the following URL from your browser:
       http://localhost:9080/bulkheadSample/virtualFinancialAdvisor
@@ -26,21 +35,24 @@ The chat session is coded to last for a minute.  After a minute has passed you w
       "Chat has ended."
 Afterwards, the next request on the waiting queue will connect to a financial advisor.      
 
-Edit the Java files to change the parameter values of the `@Bulkhead` annotation. If the bulkheadSampleServer server is running, run the `mvn package` Maven command from the directory that contains the extracted .zip file to rebuild the application. The changes take effect without restarting the server. Otherwise, run the `mvn install` Maven command which will start the server.
+Edit the Java files to change the parameter values of the `@Bulkhead` annotation to 4. If your IDE supports auto-rebuilding and the bulkheadSampleServer server is running, watch for output similar to the following: 
+```
+[INFO] [AUDIT   ] CWWKT0017I: Web application removed (default_host): http://localhost:9080/bulkheadSample/
+[INFO] [AUDIT   ] CWWKZ0009I: The application bulkheadSample has stopped successfully.
+[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://localhost:9080/bulkheadSample/
+[INFO] [AUDIT   ] CWWKZ0003I: The application bulkheadSample updated in 0.189 seconds.
+```
 
-To restart the application to simulate the chat requests again, you can stop and restart the 
-bulkheadSampleServer server as indicated.
+Otherwise, stop the server with `ctrl+c` and run `mvn clean package liberty:run-server` to start the server again.
 
-To view the console log, run the following or other alternative way to view the file:
+Now reload each of the 5 tabs, and you will see the first 4 requests are serviced, while the last request is placed in the queue.
 
-    tail -f <extract-directory>/target/liberty/wlp/usr/servers/bulkheadSampleServer/logs/console.log
+## Configuration
 
-# Configuration
-
-The <extract-directory>/src directory contains the BankService.java and ServiceFallbackHandler.java files as shown throughout this guide. 
+The <extract-directory>/src directory contains the `BankService.java` and `ServiceFallbackHandler.java` files as shown throughout this guide. 
 
 ## BankService.java
-The `@Bulkhead` and `@Asynchronous` annotations that are injected into the code are located in BankService.java. 
+The `@Bulkhead` and `@Asynchronous` annotations that are injected into the code are located in `BankService.java`. 
 
 ### @Bulkhead Parameters
 The `@Bulkhead` annotation has parameters to configure its usage.
@@ -49,8 +61,8 @@ The `@Bulkhead` annotation has parameters to configure its usage.
 
 In this sample application, the values for the bulkhead parameters are initially set to **value**=2 and **waitingTaskQueue**=2. These values indicate that after 2 concurrent chat requests reach the virtualFinancialAdvisor service, the next 2 concurrent chat requests are added to the waiting queue.
 
-The BankService.java file also contains the `@Fallback` annotation. The ServiceFallbackHandler.java file contains the fallback class that is identified by the `@Fallback` annotation. The fallback class runs when the maximum limit of concurrent requests is reached and the waiting queue is full. When the fallback runs, a message displays that allows a customer to schedule an appointment.
+The `BankService.java` file also contains the `@Fallback` annotation. The ServiceFallbackHandler.java file contains the fallback class that is identified by the `@Fallback` annotation. The fallback class runs when the maximum limit of concurrent requests is reached and the waiting queue is full. When the fallback runs, a message displays that allows a customer to schedule an appointment.
 
-The BankService.java file also contains the delay TIMEOUT value that defaults to 30 seconds (30000 milliseconds). The delay is necessary to simulate concurrent requests in multiple tabs of the browser and allow you to fill up the waiting queue. Otherwise, we found that the service returns too quickly. If you are unable to make enough requests to fill up the waiting queue within this specified delay time so that you can see the fallback method run, try increasing this value. 
+The `BankService.java` file also contains the delay TIMEOUT value that defaults to 30 seconds (30000 milliseconds). The delay is necessary to simulate concurrent requests in multiple tabs of the browser and allow you to fill up the waiting queue. Otherwise, we found that the service returns too quickly. If you are unable to make enough requests to fill up the waiting queue within this specified delay time so that you can see the fallback method run, try increasing this value. 
 
-The application contains servlet BankServiceServlet which calls the virtualFinancialAdvisor service.
+The application contains a servlet, `BankServiceServlet`, which calls the virtualFinancialAdvisor service.

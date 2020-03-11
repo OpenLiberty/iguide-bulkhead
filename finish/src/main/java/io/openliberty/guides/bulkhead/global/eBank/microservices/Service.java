@@ -10,11 +10,9 @@
  *******************************************************************************/
 package io.openliberty.guides.bulkhead.global.eBank.microservices;
 
-
 public class Service {
 
     protected String service = "";
-
 
     public String toString() {
         return this.service;

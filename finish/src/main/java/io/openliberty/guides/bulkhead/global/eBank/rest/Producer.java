@@ -28,7 +28,7 @@ public class Producer {
 
     private static int value = BankService.bulkheadValue;
     private static int waitingTaskQueue = BankService.bulkheadWaitingQueue;
-    private static int requests = 0; 
+    private static int requests = 0;
     private static Future[] waitingInQueueFuture = new Future[waitingTaskQueue];
 
     @Inject
@@ -38,28 +38,28 @@ public class Producer {
     @Path("/vfa")
     @Produces(MediaType.TEXT_HTML)
     public String getVFA() {
-        String returnMsg = "";        
-            
+        String returnMsg = "";
+
         try {
-            int localRequestNum =  adjustRequestCount(true);
+            int localRequestNum = adjustRequestCount(true);
             Future<Service> future = bankService.requestForVFA();
-        
+
             if (localRequestNum > value && localRequestNum <= value + waitingTaskQueue) {
                 int futureNumber = localRequestNum - value - 1;
                 waitingInQueueFuture[futureNumber] = future;
-                returnMsg = Utils.getHTMLForWaitingQueue(localRequestNum-value);
+                returnMsg = Utils.getHTMLForWaitingQueue(localRequestNum - value);
                 return returnMsg;
             }
-                
+
             // You are talking to advisor #
             Service service = future.get();
             returnMsg = service.toString();
         } catch (Exception e) {
             returnMsg = e.getMessage();
-        } 
+        }
         return returnMsg;
     }
-    
+
     @GET
     @Path("/getResultInQueue/{numInQueue}")
     @Produces(MediaType.TEXT_HTML)
@@ -67,9 +67,9 @@ public class Producer {
         if (numInQueue - 1 >= waitingTaskQueue) {
             return "<h3>Unexpected error</h3>";
         }
-        Future<Service> future = waitingInQueueFuture[numInQueue-1];
+        Future<Service> future = waitingInQueueFuture[numInQueue - 1];
         String returnString = "";
-        waitingInQueueFuture[numInQueue-1] = null;
+        waitingInQueueFuture[numInQueue - 1] = null;
         try {
             if (future != null) {
                 Service service = future.get();
@@ -77,7 +77,7 @@ public class Producer {
             }
         } catch (Exception ex) {
             returnString = "<div>Chat has canceled</div>";
-        } 
+        }
         return returnString;
     }
 

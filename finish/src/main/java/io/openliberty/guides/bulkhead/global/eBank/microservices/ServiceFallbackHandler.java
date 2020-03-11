@@ -10,14 +10,20 @@
  *******************************************************************************/
 package io.openliberty.guides.bulkhead.global.eBank.microservices;
 
+import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.faulttolerance.ExecutionContext;
 import org.eclipse.microprofile.faulttolerance.FallbackHandler;
 
 import java.util.concurrent.Future;
-import java.util.concurrent.CompletableFuture;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
+@ApplicationScoped
 public class ServiceFallbackHandler implements FallbackHandler<Future<Service>> {
+
+    @Inject
+    ManagedExecutor executor;
 
     @Override
     public Future<Service> handle(ExecutionContext context) {
@@ -26,6 +32,6 @@ public class ServiceFallbackHandler implements FallbackHandler<Future<Service>> 
 
     private Future<Service> handleFallback(ExecutionContext context) {
         Service service = new ScheduleService();
-        return CompletableFuture.completedFuture(service);
+        return executor.completedFuture(service);
     }
-} 
+}
