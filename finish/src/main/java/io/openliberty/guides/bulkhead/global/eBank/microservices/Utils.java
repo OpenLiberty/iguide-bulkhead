@@ -10,7 +10,6 @@
  *******************************************************************************/
 package io.openliberty.guides.bulkhead.global.eBank.microservices;
 
-
 public class Utils {
 
 
@@ -19,7 +18,7 @@ public class Utils {
 
     public static String getHTMLForChatWithVFA(int requestNum) {
         String advisor = __advisors[requestNum - 1];
-        String chatAdvisorCount  = "You are talking to advisor #" + requestNum;
+        String chatAdvisorCount = "You are talking to advisor #" + requestNum;
         String chatIntro = "Hi, I am " + advisor + ",";
         String advisorInitials = __advisorInitials[requestNum - 1];
 
@@ -92,7 +91,7 @@ public class Utils {
 
     public static int calculateAdvisorNum(int requests) {
         int localCounter = ((requests - 1) % 10) + 1;
-        return localCounter;     
+        return localCounter;
     }
 
 }

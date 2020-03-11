@@ -22,16 +22,16 @@
                     "preload": [
                         "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
                         "import java.util.concurrent.Future;",
-                        "import java.util.concurrent.Executors;",
-                        "import java.util.concurrent.ExecutorService;",
+                        "import org.eclipse.microprofile.context.ManagedExecutor;",
+                        "import org.eclipse.microprofile.context.ThreadContext;",
                         "",
                         "public class BankService {",
                         "  @Inject private BankService bankService;",
                         "  private int counterForVFA = 0;",
                         "",
                         "  public Service requestForVFA() {",
-                        "    counterForVFA++;",
-                        "    return bankService.serviceForVFA(counterForVFA);",
+                        "    int counter = ++counterForVFA;",
+                        "    return bankService.serviceForVFA(counter);",
                         "  }",
                         "",
                         "  public Service serviceForVFA(int counterForVFA) {",
@@ -40,6 +40,20 @@
                         "  }",
                         "}"
                     ]
+                },
+                {
+                    "displayType": "fileEditor",
+                    "fileName": "server.xml",
+                    "preload": [
+                        "<?xml version=\"1.0\"?>",
+                        "<server description=\"Sample Liberty server\">",
+                        "   <featureManager>",
+                        "      <feature>cdi-2.0</feature>",
+                        "      <feature>mpContextPropagation-1.0</feature>",
+                        "   </featureManager>",
+                        "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
+                        "</server>"
+                   ]
                 }
             ]
         }
@@ -119,16 +133,16 @@
                             "preload": [
                                 "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
                                 "import java.util.concurrent.Future;",
-                                "import java.util.concurrent.Executors;",
-                                "import java.util.concurrent.ExecutorService;",
+                                "import org.eclipse.microprofile.context.ManagedExecutor;",
+								"import org.eclipse.microprofile.context.ThreadContext;",
                                 "",
                                 "public class BankService {",
                                 "  @Inject private BankService bankService;",
                                 "  private int counterForVFA = 0;",
                                 "",
                                 "  public Service requestForVFA() {",
-                                "    counterForVFA++;",
-                                "    return bankService.serviceForVFA(counterForVFA);",
+                                "    int counter = ++counterForVFA;",
+                                "    return bankService.serviceForVFA(counter);",
                                 "  }",
                                 "",
                                 "  public Service serviceForVFA(int counterForVFA) {",
@@ -137,6 +151,20 @@
                                 "  }",
                                 "}"
                             ]
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+                                "      <feature>cdi-2.0</feature>",
+                                "      <feature>mpContextPropagation-1.0</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
+                                "</server>"
+                           ]
                         }
                     ]
                 }
@@ -144,14 +172,14 @@
         },
         {
             "name": "AsyncWithoutBulkhead",
-            "title": "Adding Java concurrency with Future and Executors",
+            "title": "Adding concurrency with Future and ManagedExecutor",
             "description": [
-                "The initial synchronous implementation of the VirtualFinancialAdvisor microservice allows only a single virtual financial advisor chat session at a time. Implement Java concurrency with <code>Future</code> and <code>Executors</code> to remove the single chat limitation and allow multiple chat sessions to be available at the same time.",
-                "<code>Future</code> is a special return type that is used in Java concurrency to fetch the result of a task when it is available. The <code>Executors</code> class provides convenient factory methods for creating executor services, which handle running tasks asynchronously.",
-                "Let us start by adding <code>Future</code> and <code>Executors</code> to the code."
+                "The initial synchronous implementation of the VirtualFinancialAdvisor microservice allows only a single virtual financial advisor chat session at a time. Implement concurrency with <code>Future</code> and <code>ManagedExecutor</code> to remove the single chat limitation and allow multiple chat sessions to be available at the same time.",
+                "<code>Future</code> is a special return type that is used in Java concurrency to fetch the result of a task when it is available. <code>ManagedExecutor</code> is a container-managed executor service that creates instances of <code>CompletableFuture</code>, an implementation of <code>Future</code>.",
+				"<a href='https://github.com/eclipse/microprofile-context-propagation' target='_blank' rel='noopener noreferrer'>Microprofile Context Propagation</a> allows us to build a <code>ManagedExecutor</code> instance which can propagate context to completion stage actions. Using the <code>@Produces</code> and <code>@ApplicationScoped</code> annotations allow injecting the same ManagedExecutor at other points in the application."
             ],
             "instruction": [
-                "Replace the <code>requestForVFA</code> method on line 10 with the following block of code.<br><codeblock>public Future&ltService&gt requestForVFA() {\n  counterForVFA++;\n  ExecutorService executor = Executors.newSingleThreadExecutor();\n  Future serviceRequest = executor.submit(<span title='Lambda Expression'>() -> {\n    try{\n      return bankService.serviceForVFA(counterForVFA);\n    } catch (Exception ex) {\n      handleException();\n    }\n    return null;\n  }</span>);\n  return serviceRequest;\n}</codeblock><br>Alternatively, click <action title='Adding Java concurrency' onclick=\"bulkheadCallBack.addJavaConcurrencyButton(event, 'AsyncWithoutBulkhead')\">Replace</action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncWithoutBulkhead')\">Run</action> on the editor menu pane.",
+                "Replace the <code>requestForVFA</code> method on line 10 with the following block of code.<br><codeblock>@Produces @ApplicationScoped\nManagedExecutor executor = ManagedExecutor.builder().propagated( ThreadContext.APPLICATION ).build();\n\npublic Future&ltService&gt requestForVFA() {\nint counter = ++counterForVFA;\nFuture&ltService&gt serviceRequest = executor.runAsync(<span title='Lambda Expression'>() -> {\n    try{\n      return bankService.serviceForVFA(counter);\n    } catch (Exception ex) {\n      handleException();\n    }\n    return null;\n  }</span>);\n  return serviceRequest;\n}</codeblock><br>Alternatively, click <action title='Adding Java concurrency' onclick=\"bulkheadCallBack.addJavaConcurrencyButton(event, 'AsyncWithoutBulkhead')\">Replace</action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncWithoutBulkhead')\">Run</action> on the editor menu pane.",
                 "Click <action title='Customer1 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead', 1)\">Customer1 requests chat</action> to open a chat session with a virtual financial advisor.",
                 "While Customer1 is still chatting with a financial advisor, click <action title='Customer2 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead', 2)\">Customer2 requests chat</action> to open a separate chat session with a virtual financial advisor.",
                 "As more customers request chat sessions with a virtual financial advisor, more sessions become busy. Currently, the code does not implement a limit to the number of available advisor sessions. The VirtualFinancialAdvisor microservice causes the system to slowly run out of CPU or memory resources, which affects other microservices. <br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead', 3)\">50 customer chat requests</action> to see the cascading failure."
@@ -174,16 +202,16 @@
                             "preload": [
                                 "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
                                 "import java.util.concurrent.Future;",
-                                "import java.util.concurrent.Executors;",
-                                "import java.util.concurrent.ExecutorService;",
+                                "import org.eclipse.microprofile.context.ManagedExecutor;",
+								"import org.eclipse.microprofile.context.ThreadContext;",
                                 "",
                                 "public class BankService {",
                                 "  @Inject private BankService bankService;",
                                 "  private int counterForVFA = 0;",
                                 "",
                                 "  public Service requestForVFA() {",
-                                "    counterForVFA++;",
-                                "    return bankService.serviceForVFA(counterForVFA);",
+									"    int counter = ++counterForVFA;",
+									"    return bankService.serviceForVFA(counter);",
                                 "  }",
                                 "",
                                 "  public Service serviceForVFA(int counterForVFA) {",
@@ -209,6 +237,21 @@
                                 }
                             ],
                             "callback": "(function test(editor) {bulkheadCallBack.listenToEditorForJavaConcurrency(editor); })"
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+                                "      <feature>cdi-2.0</feature>",
+                                "      <feature>mpContextPropagation-1.0</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
+                                "</server>"
+                           ],
+                           "readonly": true
                         }
                     ]
                 }
@@ -243,19 +286,21 @@
                             "preload": [
                                 "package global.eBank.microservices;",
                                 "import java.util.concurrent.Future;",
-                                "import java.util.concurrent.Executors;",
-                                "import java.util.concurrent.ExecutorService;",
+                                "import org.eclipse.microprofile.context.ManagedExecutor;",
+								"import org.eclipse.microprofile.context.ThreadContext;",
                                 "",
                                 "public class BankService {",
                                 "  @Inject private BankService bankService;",
                                 "  private int counterForVFA = 0;",
-                                "",
+								"",
+								"  @Produces @ApplicationScoped",
+  								"  ManagedExecutor executor = ManagedExecutor.builder().propagated( ThreadContext.APPLICATION ).build();",
+								"",
                                 "  public Future<Service> requestForVFA() {",
-                                "    counterForVFA++;",
-                                "    ExecutorService executor = Executors.newSingleThreadExecutor();",
-                                "    Future<Service> serviceRequest = executor.submit(() -> {",
+                                "    int counter = ++counterForVFA;",
+                                "    Future<Service> serviceRequest = executor.runAsync(() -> {",
                                 "      try {",
-                                "        return bankService.serviceForVFA(counterForVFA);",
+                                "        return bankService.serviceForVFA(counter);",
                                 "      } catch (Exception ex) {",
                                 "        handleException();",
                                 "      }",
@@ -279,7 +324,8 @@
                                 "<?xml version=\"1.0\"?>",
                                 "<server description=\"Sample Liberty server\">",
                                 "   <featureManager>",
-                                "      <feature>cdi-1.2</feature>",
+								"      <feature>cdi-2.0</feature>",
+								"      <feature>mpContextPropagation-1.0</feature>",
                                 "   </featureManager>",
                                 "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
                                 "</server>"
@@ -287,17 +333,17 @@
                             "readonly": [
                                 {
                                     "from": "1",
-                                    "to": "3"
+                                    "to": "4"
                                 },
                                 {
-                                    "from": "5",
-                                    "to": "7"
+                                    "from": "6",
+                                    "to": "8"
                                 }
                             ],
                             "writable": [
                                 {
-                                    "from": "4",
-                                    "to": "4"
+                                    "from": "5",
+                                    "to": "5"
                                 }
                             ],
                             "callback": "(function test(editor) {bulkheadCallBack.listenToEditorForFeatureInServerXML(editor); })"
@@ -316,7 +362,7 @@
                 "After you modify your <code>server.xml</code> file to <a href='#enabling-microprofile-fault-tolerance-in-open-liberty'> include the Fault Tolerance feature</a>, add a Bulkhead policy to the VirtualFinancialAdvisor microservice."
             ],
             "instruction": [
-                "Add the <code>@Bulkhead</code> annotation with a value of <code>50</code> on line 23, before the <code>serviceForVFA</code> method.<br><codeblock>@Bulkhead(50)</codeblock><br>Alternatively, click <action title='Add @Bulkhead' onclick=\"bulkheadCallBack.addBulkheadButton(event, 'BulkheadAnnotation')\">Add</action>. This annotation limits the number of concurrent chat requests to 50. <br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'BulkheadAnnotation')\">Run</action> on the editor menu pane.",
+                "Add the <code>@Bulkhead</code> annotation with a value of <code>50</code> on line 25, before the <code>serviceForVFA</code> method.<br><codeblock>@Bulkhead(50)</codeblock><br>Alternatively, click <action title='Add @Bulkhead' onclick=\"bulkheadCallBack.addBulkheadButton(event, 'BulkheadAnnotation')\">Add</action>. This annotation limits the number of concurrent chat requests to 50. <br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'BulkheadAnnotation')\">Run</action> on the editor menu pane.",
                 "Click <action title='Customer1 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation', 1)\">Customer1 request chat</action> to open a chat session with a virtual financial advisor.",
                 "As more customers request chat sessions with a virtual financial advisor, all 50 sessions become busy. Once the maximum number of concurrent chat requests is reached, the next chat request is rejected.<br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation', 2)\">50 customer chat requests</action> to fill the <b>IN PROGRESS</b> chats and see how an additional chat session fails to open for the last customer."
             ],
@@ -346,19 +392,21 @@
                             "preload": [
                                 "package global.eBank.microservices;",
                                 "import java.util.concurrent.Future;",
-                                "import java.util.concurrent.Executors;",
-                                "import java.util.concurrent.ExecutorService;",
+                                "import org.eclipse.microprofile.context.ManagedExecutor;",
+								"import org.eclipse.microprofile.context.ThreadContext;",
                                 "",
                                 "public class BankService {",
                                 "  @Inject private BankService bankService;",
                                 "  private int counterForVFA = 0;",
-                                "",
+								"",
+								"  @Produces @ApplicationScoped",
+  								"  ManagedExecutor executor = ManagedExecutor.builder().propagated( ThreadContext.APPLICATION ).build();",
+								"",
                                 "  public Future<Service> requestForVFA() {",
-                                "    counterForVFA++;",
-                                "    ExecutorService executor = Executors.newSingleThreadExecutor();",
-                                "    Future<Service> serviceRequest = executor.submit(() -> {",
+                                "    int counter = ++counterForVFA;",
+                                "    Future<Service> serviceRequest = executor.runAsync(() -> {",
                                 "      try {",
-                                "        return bankService.serviceForVFA(counterForVFA);",
+                                "        return bankService.serviceForVFA(counter);",
                                 "      } catch (Exception ex) {",
                                 "        handleException();",
                                 "      }",
@@ -376,17 +424,17 @@
                             "readonly": [
                                 {
                                     "from": "1",
-                                    "to": "22"
+                                    "to": "24"
                                 },
                                 {
-                                    "from": "24",
-                                    "to": "28"
+                                    "from": "26",
+                                    "to": "30"
                                 }
                             ],
                             "writable": [
                                 {
-                                    "from": "23",
-                                    "to": "23"
+                                    "from": "25",
+                                    "to": "25"
                                 }
                             ],
                             "callback": "(function test(tabbedEditor) {bulkheadCallBack.listenToEditorForJavaConcurrency(tabbedEditor, 'BankService.java'); })"
@@ -398,7 +446,8 @@
                                 "<?xml version=\"1.0\"?>",
                                 "<server description=\"Sample Liberty server\">",
                                 "   <featureManager>",
-                                "      <feature>cdi-1.2</feature>",
+								"      <feature>cdi-2.0</feature>",
+								"      <feature>mpContextPropagation-1.0</feature>",
                                 "      <feature>mpFaultTolerance-1.0</feature>",
                                 "   </featureManager>",
                                 "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
@@ -421,7 +470,7 @@
                 "It is best practice to set the <code>waitingTaskQueue</code> parameter so that it has a value equal to or larger than the <code>value</code> parameter."
             ],
             "instruction": [
-                "The method annotated with an <code>@Asynchronous</code> annotation must return a <code>Future</code>. To add the <code>@Asynchronous</code> annotation, update the <code>@Bulkhead</code> annotation's parameters and change the return type for <code>serviceForVFA</code>, replace the code from lines 25 - 29 with the following block of code.<br><codeblock>@Asynchronous\n@Bulkhead(value = 50, waitingTaskQueue = 50)\npublic Future&ltService&gt serviceForVFA(int counterForVFA) {\n  Service chatService = new ChatSession( counterForVFA );\n  return CompletableFuture.completedFuture( chatService );\n}</codeblock><br>Alternatively, click <action title='Bulkhead annotation with Asynchronous' onclick=\"bulkheadCallBack.addAsyncBulkheadButton(event, 'AsyncBulkheadAnnotation')\">Replace</action>.<br>Because the <code>@Asynchronous</code> annotation manages thread pools, you no longer need to use <code>Executors</code>. Replace the <code>requestForVFA</code> method on line 11 with the following block of code.<br><codeblock>public Future&ltService&gt requestForVFA() {\n  counterForVFA++;\n  return bankService.serviceForVFA(counterForVFA);\n}</codeblock><br>Alternatively, click <action title='Update requestForVFA method' onclick=\"bulkheadCallBack.updateAsyncBulkheadMethodButton(event, 'AsyncBulkheadAnnotation')\">Replace</action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncBulkheadAnnotation')\">Run</action> on the editor menu pane.",
+                "The method annotated with an <code>@Asynchronous</code> annotation must return a <code>Future</code>. To add the <code>@Asynchronous</code> annotation, update the <code>@Bulkhead</code> annotation's parameters and change the return type for <code>serviceForVFA</code>, replace the code from lines 28 - 32 with the following block of code.<br><codeblock>@Asynchronous\n@Bulkhead(value = 50, waitingTaskQueue = 50)\npublic Future&ltService&gt serviceForVFA(int counterForVFA) {\n  Service chatService = new ChatSession( counterForVFA );\n  return executor.completedFuture( chatService );\n}</codeblock><br>Alternatively, click <action title='Bulkhead annotation with Asynchronous' onclick=\"bulkheadCallBack.addAsyncBulkheadButton(event, 'AsyncBulkheadAnnotation')\">Replace</action>.<br>Because the <code>@Asynchronous</code> annotation manages thread pools, you no longer need to use <code>ManagedExecutor</code> in the <code>requestForVFA</code> method. Replace the <code>requestForVFA</code> method on line 15 with the following block of code.<br><codeblock>public Future&ltService&gt requestForVFA() {\n  int counter = ++counterForVFA;\n  return bankService.serviceForVFA(counter);\n}</codeblock><br>Alternatively, click <action title='Update requestForVFA method' onclick=\"bulkheadCallBack.updateAsyncBulkheadMethodButton(event, 'AsyncBulkheadAnnotation')\">Replace</action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncBulkheadAnnotation')\">Run</action> on the editor menu pane.",
                 "Click <action title='Customer1 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation', 1)\">Customer1 requests chat</action> to open a chat session with a virtual financial advisor.",
                 "As more customers request chat sessions with a virtual financial advisor, all 50 sessions become busy. Once the maximum number of concurrent chat requests is reached, the next chat request is placed in the waiting queue.<br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation', 2)\">50 customer chat requests</action> to fill the <b>IN PROGRESS</b> chats and to see that the last customer is placed in the <b>WAITING</b> queue.",
                 "As more customers request chat sessions with a virtual financial advisor, the waiting queue eventually fills up. Our Bulkhead policy limits the maximum number of requests in the waiting queue to 50. The next chat request cannot be started and cannot be added to the waiting queue.<br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation', 3)\">50 customer chat requests</action> to fill the <b>WAITING</b> queue and see that an additional chat session fails to open for the last customer."
@@ -453,19 +502,22 @@
                                 "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
                                 "import java.util.concurrent.Future;",
                                 "import org.eclipse.microprofile.faulttolerance.Asynchronous;",
-                                "import org.eclipse.microprofile.faulttolerance.Bulkhead;",
-                                "import java.util.concurrent.CompletableFuture;",
+								"import org.eclipse.microprofile.faulttolerance.Bulkhead;",
+								"import org.eclipse.microprofile.context.ManagedExecutor;",
+								"import org.eclipse.microprofile.context.ThreadContext;",
                                 "",
                                 "public class BankService {",
                                 "  @Inject private BankService bankService;",
                                 "  private int counterForVFA = 0;",
-                                "",
+								"",
+								"  @Produces @ApplicationScoped",
+								"  ManagedExecutor executor = ManagedExecutor.builder().propagated( ThreadContext.APPLICATION ).build();",
+								"",
                                 "  public Future<Service> requestForVFA() {",
-                                "    counterForVFA++;",
-                                "    ExecutorService executor = Executors.newSingleThreadExecutor();",
-                                "    Future<Service> serviceRequest = executor.submit(() -> {",
+                                "    int counter = ++counterForVFA;",
+                                "    Future<Service> serviceRequest = executor.runAsync(() -> {",
                                 "      try {",
-                                "        return bankService.serviceForVFA(counterForVFA);",
+                                "        return bankService.serviceForVFA(counter);",
                                 "      } catch (Exception ex) {",
                                 "        handleException();",
                                 "      }",
@@ -481,27 +533,28 @@
                                 "  }",
                                 "}",
                                 ""
-                            ],
-                            "readonly": [
+							],
+							
+                           "readonly": [
                                 {
                                     "from": "1",
-                                    "to": "10"
+                                    "to": "14"
                                 },
                                 {
-                                    "from": "30",
-                                    "to": "31"
+                                    "from": "33",
+                                    "to": "34"
                                 }
                             ],
                             "writable": [
                                 {
-                                    "from": "11",
-                                    "to": "23"
+                                    "from": "15",
+                                    "to": "26"
                                 },
                                 {
-                                    "from": "25",
-                                    "to": "29"
+                                    "from": "28",
+                                    "to": "32"
                                 }
-                            ],
+							],
                             "callback": "(function test(editor) {bulkheadCallBack.listenToEditorForAsyncBulkhead(editor); })"
                         },
                         {
@@ -511,7 +564,8 @@
                                 "<?xml version=\"1.0\"?>",
                                 "<server description=\"Sample Liberty server\">",
                                 "   <featureManager>",
-                                "      <feature>cdi-1.2</feature>",
+								"      <feature>cdi-2.0</feature>",
+								"      <feature>mpContextPropagation-1.0</feature>",
                                 "      <feature>mpFaultTolerance-1.0</feature>",
                                 "   </featureManager>",
                                 "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
@@ -531,7 +585,7 @@
                 "The <code>@Fallback</code> annotation identifies a class or a method that automatically runs when a <code>BulkheadException</code> occurs. To use the <code>@Fallback</code> annotation, modify your <code>server.xml</code> file to <a href='#enabling-microprofile-fault-tolerance-in-open-liberty'>include the Fault Tolerance feature</a>. In our scenario, add the <code>ServiceFallbackHandler.class</code>, which implements the <code>FallbackHandler.class</code>, to allow a customer to schedule an appointment. When a customer makes a request for a chat session, and the request cannot be handled because the maximum limit of concurrent requests has been reached and the wait queue is full, the <code>ServiceFallbackHandler.handle</code> method is called. The return type of both methods, <code>ServiceFallbackHandler.handle</code> and <code>BankService.serviceForVFA</code>, must be of type <code>Future&ltService&gt</code>. Otherwise, a <code>FaultToleranceDefinitionException</code> is thrown. <br><br>For more information on using the <code>@Fallback</code> annotation to identify a method, see the <a href='https://openliberty.io/guides/circuit-breaker.html#adding-the-fallback-annotation' target='_blank' rel='noopener noreferrer'>MicroProfile Circuit Breaker </a>guide."
             ],
             "instruction": [
-                "In the <code>BankService.java</code> file, add the <code>@Fallback(ServiceFallbackHandler.class)</code> annotation on line 16.<br><codeblock>@Fallback(ServiceFallbackHandler.class)</codeblock><br>Alternatively, click <action title='Async Bulkhead annotation with Fallback' onclick=\"bulkheadCallBack.addFallbackAsyncBulkheadButton(event, 'Fallback')\">Add</action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'Fallback')\">Run</action> on the editor menu pane.",
+                "In the <code>BankService.java</code> file, add the <code>@Fallback(ServiceFallbackHandler.class)</code> annotation on line 20.<br><codeblock>@Fallback(ServiceFallbackHandler.class)</codeblock><br>Alternatively, click <action title='Async Bulkhead annotation with Fallback' onclick=\"bulkheadCallBack.addFallbackAsyncBulkheadButton(event, 'Fallback')\">Add</action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'Fallback')\">Run</action> on the editor menu pane.",
                 "Click <action title='Customer1 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'Fallback', 1)\">Customer1 requests chat</action> to open a chat session with a virtual financial advisor.",
                 "As more customers request chat sessions with a virtual financial advisor, all 50 sessions become busy. When the maximum number of concurrent chat requests is reached, the next chat request is placed in the waiting queue.<br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'Fallback', 2)\">50 customer chat requests</action> to fill the <b>IN PROGRESS</b> chats and place the last customer in the <b>WAITING</b> queue.",
                 "As more customers request chat sessions with a virtual financial advisor, the waiting queue eventually fills up. Our Bulkhead policy limits the maximum number of requests in the waiting queue to 50. The next chat request cannot be started and cannot be added to the waiting queue. The fallback service runs to handle the next request.<br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'Fallback', 3)\">50 customer chat requests</action> to fill the <b>WAITING</b> queue and see the fallback service ask the last customer to schedule an appointment."
@@ -565,15 +619,19 @@
                                 "import org.eclipse.microprofile.faulttolerance.Asynchronous;",
                                 "import org.eclipse.microprofile.faulttolerance.Bulkhead;",
                                 "import org.eclipse.microprofile.faulttolerance.Fallback;",
-                                "import java.util.concurrent.CompletableFuture;",
+                                "import org.eclipse.microprofile.context.ManagedExecutor;",
+								"import org.eclipse.microprofile.context.ThreadContext;",
                                 "",
                                 "public class BankService {",
                                 "  @Inject private BankService bankService;",
                                 "  private int counterForVFA = 0;",
-                                "",
+								"",
+								"  @Produces @ApplicationScoped",
+								"  ManagedExecutor executor = ManagedExecutor.builder().propagated( ThreadContext.APPLICATION ).build();",
+								"",
                                 "  public Future<Service> requestForVFA() {",
-                                "    counterForVFA++;",
-                                "    return bankService.serviceForVFA(counterForVFA);",
+                                "    int counter = ++counterForVFA;",
+                                "    return bankService.serviceForVFA(counter);",
                                 "  }",
                                 "",
                                 "  @Asynchronous",
@@ -581,24 +639,24 @@
                                 "            waitingTaskQueue = 50)",
                                 "  public Future<Service> serviceForVFA(int counterForVFA) {",
                                 "    Service chatService = new ChatSession(counterForVFA);",
-                                "    return CompletableFuture.completedFuture(chatService);",
+                                "    return executor.completedFuture(chatService);",
                                 "  }",
                                 "}"
                             ],
                             "readonly": [
                                 {
                                     "from": "1",
-                                    "to": "15"
+                                    "to": "19"
                                 },
                                 {
-                                    "from": "17",
-                                    "to": "24"
+                                    "from": "21",
+                                    "to": "28"
                                 }
                             ],
                             "writable": [
                                 {
-                                    "from": "16",
-                                    "to": "16"
+                                    "from": "20",
+                                    "to": "20"
                                 }
                             ],
                             "callback": "(function test(editor) {bulkheadCallBack.listenToEditorForAsyncBulkheadFallback(editor); })"
@@ -610,11 +668,15 @@
                                 "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
                                 "import org.eclipse.microprofile.faulttolerance.ExecutionContext;",
                                 "import org.eclipse.microprofile.faulttolerance.FallbackHandler;",
-                                "import java.util.concurrent.CompletableFuture;",
+                                "import org.eclipse.microprofile.context.ManagedExecutor;",
                                 "import java.util.concurrent.Future;",
-                                "",
+								"",
+								"@ApplicationScoped",
                                 "public class ServiceFallbackHandler implements FallbackHandler<Future<Service>> {",
-                                "",
+								"",
+								"  @Inject",
+								"  ManagedExecutor executor;",
+								"",
                                 "  @Override",
                                 "  public Future<Service> handle(ExecutionContext context) {",
                                 "    return handleFallback(context);",
@@ -622,7 +684,7 @@
                                 "",
                                 "  private Future<Service> handleFallback(ExecutionContext context) {",
                                 "    Service service = new ScheduleService();",
-                                "    return CompletableFuture.completedFuture(service);",
+                                "    return executor.completedFuture(service);",
                                 "  }",
                                 "}"
                             ],
@@ -635,7 +697,8 @@
                                 "<?xml version=\"1.0\"?>",
                                 "<server description=\"Sample Liberty server\">",
                                 "   <featureManager>",
-                                "      <feature>cdi-1.2</feature>",
+								"      <feature>cdi-2.0</feature>",
+								"      <feature>mpContextPropagation-1.0</feature>",
                                 "      <feature>mpFaultTolerance-1.0</feature>",
                                 "   </featureManager>",
                                 "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
@@ -659,7 +722,7 @@
               "It is best practice to set the <b>waitingTaskQueue</b> parameter so that it is has a value equal to or larger than the <b>value</b> parameter."
             ],
             "instruction": [
-                "Modify the parameter values for the <code>@Bulkhead</code> annotation on lines 17 and 18 in the editor. In this simulation, the maximum value for <code>value</code> and <code>waitingTaskQueue</code> is 10. <br>Then click Run to use the new values. Repeat the process as many times as you like. <br><br>Click <b>Chat request</b> to initiate a request with a virtual financial advisor or <b>End chat</b> to end an arbitrary chat and observe the simulation."
+                "Modify the parameter values for the <code>@Bulkhead</code> annotation on lines 22 and 23 in the editor. In this simulation, the maximum value for <code>value</code> and <code>waitingTaskQueue</code> is 10. <br>Then click Run to use the new values. Repeat the process as many times as you like. <br><br>Click <b>Chat request</b> to initiate a request with a virtual financial advisor or <b>End chat</b> to end an arbitrary chat and observe the simulation."
             ],
             "content":[
                 {
@@ -680,15 +743,20 @@
                             "import java.util.concurrent.Future;",
                             "import org.eclipse.microprofile.faulttolerance.Asynchronous;",
                             "import org.eclipse.microprofile.faulttolerance.Bulkhead;",
-                            "import java.util.concurrent.CompletableFuture;",
+							"import org.eclipse.microprofile.context.ManagedExecutor;",
+							"import org.eclipse.microprofile.context.ThreadContext;",
+							"",
                             "public class BankService {",
                             "",
                             "  @Inject private BankService bankService;",
-                            "  private int counterForVFA = 0;",
+							"  private int counterForVFA = 0;",
+							"",
+							"  @Produces @ApplicationScoped",
+							"  ManagedExecutor executor = ManagedExecutor.builder().propagated( ThreadContext.APPLICATION ).build();",
                             "",
                             "  public Future<Service> requestForVFA() {",
-                            "    counterForVFA++;",
-                            "    return bankService.serviceForVFA(counterForVFA);",
+                            "    int counter = ++counterForVFA;",
+                            "    return bankService.serviceForVFA(counter);",
                             "  }",
                             "",
                             "  @Asynchronous",
@@ -696,24 +764,24 @@
                             "            waitingTaskQueue=5)",
                             "  public Future<Service> serviceForVFA(int counterForVFA) {",
                             "    Service chatService = new ChatSession(counterForVFA);",
-                            "    return CompletableFuture.completedFuture(chatService);",
+                            "    return executor.completedFuture(chatService);",
                             "  }",
                             "}"
                         ],
                         "readonly": [
                             {
                                 "from": "1",
-                                "to": "16"
+                                "to": "21"
                             },
                             {
-                                "from": "19",
-                                "to": "23"
+                                "from": "24",
+                                "to": "28"
                             }
                         ],
                         "writable": [
                             {
-                                "from": "17",
-                                "to": "18"
+                                "from": "22",
+                                "to": "23"
                             }
                         ],
                         "callback": "(function test(editor) {bulkheadCallBack.listenToPlaygroundEditorAnnotationChanges(editor); })"
