@@ -12,8 +12,8 @@ var bulkheadCallBack = (function() {
 
     var bankServiceFileName = "BankService.java";
     var htmlRootDir = "/guides/iguide-bulkhead/html/";
-    var mapStepNameToScrollLine = { 'AsyncWithoutBulkhead': 23, 
-                                   'BulkheadAnnotation': 28, 
+    var mapStepNameToScrollLine = { 'AsyncWithoutBulkhead': 23,
+                                   'BulkheadAnnotation': 28,
                                    'AsyncBulkheadAnnotation': 34,
                                    'Fallback': 21 };
 
@@ -27,7 +27,7 @@ var bulkheadCallBack = (function() {
     };
 
     var __addMicroProfileFaultToleranceFeature = function() {
-        var FTFeature = "      <feature>mpFaultTolerance-1.0</feature>";
+        var FTFeature = "      <feature>mpFaultTolerance-2.1</feature>";
         var stepName = stepContent.getCurrentStepName();
         var serverFileName = "server.xml";
 
@@ -75,7 +75,7 @@ var bulkheadCallBack = (function() {
         try {
             var featureMatches = features.match(/<feature>[\s\S]*?<\/feature>/g);
             $(featureMatches).each(function (index, feature) {
-                if (feature.indexOf("<feature>mpFaultTolerance-1.0</feature>") !== -1) {
+                if (feature.indexOf("<feature>mpFaultTolerance-2.1</feature>") !== -1) {
                     match = true;
                     return false; // break out of each loop
                 }
@@ -103,7 +103,7 @@ var bulkheadCallBack = (function() {
         }
         return match;
 	};
-	
+
 	var __isMPFaultToleranceInFeatures = function(features) {
         var match = false;
         features = features.replace('\n', '');
@@ -111,7 +111,7 @@ var bulkheadCallBack = (function() {
         try {
             var featureMatches = features.match(/<feature>[\s\S]*?<\/feature>/g);
             $(featureMatches).each(function (index, feature) {
-                if (feature.indexOf("<feature>mpFaultTolerance-1.0</feature>") !== -1) {
+                if (feature.indexOf("<feature>mpFaultTolerance-2.1</feature>") !== -1) {
                     match = true;
                     return false; // break out of each loop
                 }
@@ -134,11 +134,11 @@ var bulkheadCallBack = (function() {
                 var features = editorContentBreakdown.features;
                 features = features.replace('\n', '');
                 features = features.replace(/\s/g, '');
-                if (features.length !== "<feature>mpFaultTolerance-1.0</feature><feature>cdi-2.0</feature><feature>mpContextPropagation-1.0</feature>".length) {
+                if (features.length !== "<feature>mpFaultTolerance-2.1</feature><feature>cdi-2.0</feature><feature>mpContextPropagation-1.0</feature>".length) {
                     isFTFeatureThere = false; // contains extra text
                 } else {
                     // Syntax is good.  Save off this version of server.xml.
-                    utils.saveFeatureInContent(editor, content, "mpFaultTolerance-1.0");
+                    utils.saveFeatureInContent(editor, content, "mpFaultTolerance-2.1");
                 }
             }
         } else {
@@ -219,27 +219,27 @@ var bulkheadCallBack = (function() {
         // get the last line marked for editing (the .to value).  Then, adjust it by adding
         // 1 since codeMirror starts line numbering at 0 rather than 1, and then add 1 more to
         // get to the line following.
-        var scrollToLine = editor.markTextWritable[editor.markTextWritable.length - 1].to + 2;      
+        var scrollToLine = editor.markTextWritable[editor.markTextWritable.length - 1].to + 2;
         utils.handleEditorSave(stepName, editor, validContent, __correctEditorError, scrollToLine, bankServiceFileName);
     };
 
     /**
      * Invokes the appropriate validator method for the specified step. Returns an
      * object, formed within the validator method, indicating if the contentIsCorrect
-     * (boolean) and regex groups which contain the editor contents, readOnly and 
+     * (boolean) and regex groups which contain the editor contents, readOnly and
      * writable code.
      * @param String stepName - name of the step
      * @param String content - content of the editor on the step
-     * 
-     * @return {*} -  object containing 
+     *
+     * @return {*} -  object containing
      *      codeMatched - boolean indicating if the content passed step validation
      *      The following only exists in contentInfo if codeMatched == true.
      *               [{*}] markTextWritable - array with 1 object indicating 'from' and
-     *                     'to' physical line numbers of the editable code segment 
+     *                     'to' physical line numbers of the editable code segment
      *                     within content.
-     *               [{*}] markText - array of 2 objects indicating 
-     *                     'from' and 'to' physical line numbers of the readonly 
-     *                     code within content, occurring before and after the 
+     *               [{*}] markText - array of 2 objects indicating
+     *                     'from' and 'to' physical line numbers of the readonly
+     *                     code within content, occurring before and after the
      *                     editable code segment.
      */
     var __checkEditorContent = function(stepName, content) {
@@ -271,7 +271,7 @@ var bulkheadCallBack = (function() {
         } else if (stepName === "Fallback") {
             __addFallbackAsyncBulkheadInEditor(stepName);
         } else if (stepName === "AddLibertyMPFaultTolerance") {
-            __addMicroProfileFaultToleranceFeature();    
+            __addMicroProfileFaultToleranceFeature();
         }
 
     };
@@ -302,7 +302,7 @@ var bulkheadCallBack = (function() {
             "    return serviceRequest;\n" +
             "  }";
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 10, 13, newContent, 15);
-        // line number to scroll to = insert line + the number of lines to be insert 
+        // line number to scroll to = insert line + the number of lines to be insert
         // for this example 10 + 13 = 23
         contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, mapStepNameToScrollLine[stepName]);
     };
@@ -367,10 +367,10 @@ var bulkheadCallBack = (function() {
         var match = false;
         try {
             var pattern = ";\\s*}\\s*" +
-                "@Asynchronous\\s*@Bulkhead\\s*\\(\\s*value\\s*=\\s*50\\s*,\\s*" + 
+                "@Asynchronous\\s*@Bulkhead\\s*\\(\\s*value\\s*=\\s*50\\s*,\\s*" +
                 "waitingTaskQueue\\s*=\\s*50\\s*\\)\\s*" +
                 "public\\s+Future\\s*<\\s*Service\\s*>\\s*serviceForVFA\\s*\\(\\s*int\\s+counterForVFA\\s*\\)\\s*{\\s*" +
-                "Service\\s+chatService\\s*=\\s*new\\s+ChatSession\\s*\\(\\s*counterForVFA\\s*\\);\\s*" + 
+                "Service\\s+chatService\\s*=\\s*new\\s+ChatSession\\s*\\(\\s*counterForVFA\\s*\\);\\s*" +
                 "return\\s+executor\\s*.\\s*completedFuture\\s*\\(\\s*chatService\\s*\\);\\s*" +
                 "}\\s*}";
             var regExp = new RegExp(pattern, "g");
@@ -382,7 +382,7 @@ var bulkheadCallBack = (function() {
         return match;
     };
 
-    var __validateEditorContent_AsyncBulkheadStep = function(content) {       
+    var __validateEditorContent_AsyncBulkheadStep = function(content) {
         var contentInfo={codeMatched: false};
         try {
             var pattern = "([\\s\\S]ManagedExecutor\\s+executor\\s*=\\s*ManagedExecutor\\.builder\\(\\)\\.propagated\\(\\s*ThreadContext\\.APPLICATION\\s*\\)\\.build\\(\\);\\s*)" +      // readonly boundary
@@ -391,10 +391,10 @@ var bulkheadCallBack = (function() {
             "return\\s+bankService\\s*.\\s*serviceForVFA\\s*\\(\\s*counter\\s*\\)\\s*;\\s*" +
             "})" +
             "(\\s*)" +
-            "(@Asynchronous\\s*@Bulkhead\\s*\\(\\s*value\\s*=\\s*50\\s*,\\s*" + 
+            "(@Asynchronous\\s*@Bulkhead\\s*\\(\\s*value\\s*=\\s*50\\s*,\\s*" +
             "waitingTaskQueue\\s*=\\s*50\\s*\\)\\s*" +
             "public\\s+Future\\s*<\\s*Service\\s*>\\s*serviceForVFA\\s*\\(\\s*int\\s+counterForVFA\\s*\\)\\s*{\\s*" +
-            "Service\\s+chatService\\s*=\\s*new\\s+ChatSession\\s*\\(\\s*counterForVFA\\s*\\);\\s*" + 
+            "Service\\s+chatService\\s*=\\s*new\\s+ChatSession\\s*\\(\\s*counterForVFA\\s*\\);\\s*" +
             "return\\s+executor\\s*.\\s*completedFuture\\s*\\(\\s*chatService\\s*\\);\\s*" +
             "})" +
             "(\\s*}[\\s\\S]*)";
@@ -414,8 +414,8 @@ var bulkheadCallBack = (function() {
                 var annotationLines = utils.countLinesOfContent(annotation) +1;
                 var end = groups[5];
                 var endLines = utils.countLinesOfContent(end);
-    
-                var markText = [{from: 1, to: startLines}, 
+
+                var markText = [{from: 1, to: startLines},
                                 {from: startLines + methodLines + 1, to: startLines + methodLines + middleLines},
                                 {from: startLines + methodLines + middleLines + annotationLines + 1, to: startLines + methodLines + middleLines + annotationLines + endLines}];
                 var markTextWritable = [{from: startLines + 1, to: startLines + methodLines},
@@ -423,7 +423,7 @@ var bulkheadCallBack = (function() {
 
                 contentInfo.markText = markText;
                 contentInfo.markTextWritable = markTextWritable;
-            } 
+            }
         } catch (ex) {
 
         }
@@ -432,7 +432,7 @@ var bulkheadCallBack = (function() {
 
     var __validateEditorContent_FallbackStep = function(content) {
         var pattern = "([\\s\\S]*return bankService.serviceForVFA\\(counter\\);\\s*" +   // readonly boundary
-                      "}\\s*)" + 
+                      "}\\s*)" +
                       "(@Fallback\\s*\\(\\s*ServiceFallbackHandler\\s*\\.\\s*class\\s*\\))" +
                       "(\\s*@Asynchronous[\\s\\S]*)";   // readonly boundary
 
@@ -489,7 +489,7 @@ var bulkheadCallBack = (function() {
 
         contentManager.focusTabbedEditorByName(stepName, bankServiceFileName);
         contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
-   
+
         var params = [];
         var constructAnnotation = function(params) {
             var bulkheadAnnotation = "  @Asynchronous\n" +
@@ -513,7 +513,7 @@ var bulkheadCallBack = (function() {
 
         if (hasRequestForVFAMethod === true) {
 			__updateAsyncBulkheadMethodInEditor(stepName, false);
-        }       
+        }
     };
 
     var listenToEditorForAsyncBulkhead = function(editor) {
@@ -535,7 +535,7 @@ var bulkheadCallBack = (function() {
         contentManager.resetTabbedEditorContents(stepName, bankServiceFileName);
         var content = contentManager.getTabbedEditorContents(stepName, bankServiceFileName);
         var newContent =
-            "  @Fallback(ServiceFallbackHandler.class)"; + 
+            "  @Fallback(ServiceFallbackHandler.class)"; +
         contentManager.replaceTabbedEditorContents(stepName, bankServiceFileName, 20, 20, newContent, 1);
         contentManager.scrollTabbedEditorToView(stepName, bankServiceFileName, mapStepNameToScrollLine[stepName]);
     };
@@ -557,7 +557,7 @@ var bulkheadCallBack = (function() {
         var hasServiceForVFAMethod = __checkServiceForVFAMethod(content);
 
         var newContent = "  public Future<Service> requestForVFA() {\n" +
-                         "    int counter = ++counterForVFA;\n" + 
+                         "    int counter = ++counterForVFA;\n" +
                          "    return bankService.serviceForVFA(counter);\n" +
                          "  }\n";
 
@@ -576,8 +576,8 @@ var bulkheadCallBack = (function() {
 
     var __browserVirtualAdvisorBaseURL = "https://global-ebank.openliberty.io/virtualFinancialAdvisor/";
     var handleNewChatRequestInBrowser = function(stepName, requestNum) {
-        var browserChatHTML = htmlRootDir + "virtual-financial-advisor-chat.html";  
-        var browserContentHTML = htmlRootDir + "virtual-financial-advisor-connecting.html";  
+        var browserChatHTML = htmlRootDir + "virtual-financial-advisor-chat.html";
+        var browserContentHTML = htmlRootDir + "virtual-financial-advisor-connecting.html";
         var browserUrl = __browserVirtualAdvisorBaseURL + "Advisor" + requestNum;
         var browserErrorUrl = __browserVirtualAdvisorBaseURL + "error";
         var requestLimits = 1;
@@ -595,7 +595,7 @@ var bulkheadCallBack = (function() {
             }
         } else if (stepName === "ExampleScenario") {
             requestLimits = 2;
-            if (requestNum >= requestLimits) {        
+            if (requestNum >= requestLimits) {
                 browserContentHTML = htmlRootDir + "virtual-financial-advisor-no-available.html";
                 browserUrl = browserErrorUrl;
             }
@@ -630,7 +630,7 @@ var bulkheadCallBack = (function() {
             requestLimits = 2;
             if (requestNum === 2) {
                 browser.setBrowserContent(htmlRootDir + "virtual-financial-advisor-processing.html");
-                __incrementCounts(stepName, 2, 51, ".busyCount", __browserVirtualAdvisorBaseURL + "waitingqueue", 
+                __incrementCounts(stepName, 2, 51, ".busyCount", __browserVirtualAdvisorBaseURL + "waitingqueue",
                                  htmlRootDir + "virtual-financial-advisor-waitingqueue.html", true);
                 return;
             } else if (requestNum === 3) {
@@ -714,7 +714,7 @@ var bulkheadCallBack = (function() {
                 var matchPattern = "@Asynchronous\\s*@Bulkhead\\s*(\\(([^\\(\\)])*?\\))?\\s*public Future<Service> serviceForVFA";
                 var regexToMatch = new RegExp(matchPattern, "g");
                 var groups = regexToMatch.exec(content);
-                var annotation = groups[1];                
+                var annotation = groups[1];
                 var value;
                 var waitingTaskQueue;
                 var errorPosted = false;
@@ -723,7 +723,7 @@ var bulkheadCallBack = (function() {
                     // Parameters were specified in the annotation
                     var params = annotation.replace(/[{\s()}]/g, ''); // Remove whitespace and parenthesis
                     params = params.split(',');
-    
+
                     // Parse their annotation for values
                     params.forEach(function(param, index){
                         var validParameters = false;
@@ -739,23 +739,23 @@ var bulkheadCallBack = (function() {
                             editor.createCustomErrorMessage(bulkhead_messages.INVALID_PARMS);
                             errorPosted = true;
                         }
-                    });    
+                    });
                 }
 
                 if (!errorPosted) {
                     // Parameter value(s) syntax is good....check the values entered.
                     if (value != undefined) {
-                        if (!utils.isInteger(value) || value < 1) {                        
+                        if (!utils.isInteger(value) || value < 1) {
                             editor.createCustomErrorMessage(utils.formatString(bulkhead_messages.PARMS_GT_ZERO, ["value"]));
                             errorPosted = true;
                         } else if (value > 10) {
                             editor.createCustomErrorMessage(utils.formatString(bulkhead_messages.PARMS_MAX_VALUE,["value"]));
                             errorPosted = true;
-                        }    
+                        }
                     } else {
                         value = 10; // Set to default value
                     }
-                    
+
                     if (waitingTaskQueue != undefined) {
                         if(!utils.isInteger(waitingTaskQueue) || waitingTaskQueue < 1) {
                             editor.createCustomErrorMessage(utils.formatString(bulkhead_messages.PARMS_GT_ZERO, ["waitingTaskQueue"]));
@@ -768,7 +768,7 @@ var bulkheadCallBack = (function() {
                         waitingTaskQueue = 10;  // Set to default value
                     }
                 }
-                
+
                 if (!errorPosted) {
                     // All looks good so far...update the playground.
                     if (waitingTaskQueue < value) {
@@ -777,8 +777,8 @@ var bulkheadCallBack = (function() {
                     } else {
                         // Clear out any previous error boxes displayed.
                         editor.closeEditorErrorBox();
-                    }        
-                    editorInstance.addCodeUpdated();          
+                    }
+                    editorInstance.addCodeUpdated();
                     // Apply the annotation values to the bulkhead.
                     // If not specified, the bulkhead will use its default value.
                     bulkhead.updateParameters.apply(bulkhead, [value, waitingTaskQueue]);
