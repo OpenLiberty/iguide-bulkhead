@@ -46,9 +46,9 @@ body {
     padding: 17px 0px 0px 17px;
 }
 
-.chatIntro { 
+.chatIntro {
     /* background: #F2FAFF; */
-    background-color: rgba(222,237,247,0.44); 
+    background-color: rgba(222,237,247,0.44);
     height: 50px;
 }
 
@@ -80,11 +80,11 @@ body {
     flex-wrap: nowrap;
 }
 
-.advisorInitialBlock { 
+.advisorInitialBlock {
     opacity: 0.76;
     /*border:1px solid #34bc6e;*/
-    border:1px solid #E3700D;
-    width: 30px; 
+    border:1px solid #803C00;
+    width: 30px;
     height: 30px;
     border-radius: 100%;
     margin: 10px 0px 8px 10px;
@@ -94,7 +94,7 @@ body {
 }
 
 .advisorInitial {
-    color: #E3700D; /* #34bc6e; */
+    color: #803C00; /* #34bc6e; */
     float: left;  /* The rest of the css here is to position the text in the middle of the circle */
     width: 100%;
     padding-top: 50%;
@@ -115,7 +115,7 @@ body {
 }
 
 .advisorName {
-    font-weight: 500; 
+    font-weight: 500;
 }
 
 .customerChatBlock {
@@ -141,7 +141,7 @@ body {
 
 .customerChatSubmitButton {
     margin: 15px 13px 13px 0;
-    background: #919191;
+    background:#6F7878;
     color: #ffffff;
     border-radius: 2px;
     width: 83px;
@@ -257,7 +257,7 @@ body {
 .scheduleButton {
     margin: 10px 16px;
     padding: 0px 16px 0px 17px;
-    background-color: #919191;
+    background-color: #6F7878;
     border-radius: 2px;
     width: 83px;
     height: 32px;
