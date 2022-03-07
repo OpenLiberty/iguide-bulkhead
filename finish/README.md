@@ -1,6 +1,6 @@
 # Bulkhead Guide Sample
 
-To run this sample, first [download](https://github.com/OpenLiberty/iguide-bulkhead/archive/master.zip) or clone this repo - to clone:
+To run this sample, first [download](https://codeload.github.com/OpenLiberty/iguide-bulkhead/zip/prod) or clone this repo - to clone:
 ```
 git clone git@github.com:OpenLiberty/iguide-bulkhead.git
 ```
